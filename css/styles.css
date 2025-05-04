@@ -16,6 +16,7 @@ body {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
+    position: relative;
 }
 
 h1, h2, h3 {
@@ -148,6 +149,52 @@ nav ul li a:hover {
     padding: 60px 0;
 }
 
+/* Example chat bubbles outside the main chatbot */
+.example-chat-left, .example-chat-right {
+    position: absolute;
+    max-width: 250px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 1;
+}
+
+.example-chat-left {
+    left: 50px;
+    top: 150px;
+}
+
+.example-chat-right {
+    right: 50px;
+    top: 250px;
+}
+
+.example-chat-left .message-bubble, 
+.example-chat-right .message-bubble {
+    padding: 12px 16px;
+    border-radius: 18px;
+    word-wrap: break-word;
+}
+
+.example-chat-left .blue, 
+.example-chat-right .blue {
+    background-color: #e7f2ff;
+    color: #0066ff;
+    font-weight: 500;
+}
+
+.example-chat-left .white, 
+.example-chat-right .white {
+    background-color: #ffffff;
+    color: #333;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.example-chat-left .border-green, 
+.example-chat-right .border-green {
+    border-left: 4px solid #4CAF50;
+}
+
 .chatbot-container {
     max-width: 800px;
     margin: 0 auto;
@@ -155,6 +202,8 @@ nav ul li a:hover {
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     background-color: white;
+    position: relative;
+    z-index: 2;
 }
 
 .chatbot-header {
@@ -509,6 +558,12 @@ footer {
 }
 
 /* Responsive styles */
+@media (max-width: 1200px) {
+    .example-chat-left, .example-chat-right {
+        display: none; /* Hide on smaller screens */
+    }
+}
+
 @media (max-width: 768px) {
     header .container {
         flex-direction: column;

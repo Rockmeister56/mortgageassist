@@ -83,34 +83,11 @@ document.addEventListener('DOMContentLoaded', function() {
         chatOptions.classList.remove('show');
     });
 
-    // Handle form submission
+    // Form submission is now handled by FormSubmit.co
+    // We will still add an event listener for logging purposes
     contactForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        // Get form data
-        const name = document.getElementById('name').value;
-        const businessName = document.getElementById('businessName').value;
-        const phone = document.getElementById('phone').value;
-        const bestTime = document.getElementById('bestTime').value;
-        const preferredDate = document.getElementById('preferredDate').value;
-        
-        // Here you would typically send this data to a server
-        // For demo purposes, we'll just log it and show a success message
-        console.log({
-            name,
-            businessName,
-            phone,
-            bestTime,
-            preferredDate
-        });
-        
-        // Show success message
-        alert('Thank you for your inquiry! We will contact you shortly.');
-        
-        // Reset form and close modal
-        contactForm.reset();
-        modal.style.display = 'none';
-        document.body.style.overflow = 'auto'; // Enable scrolling again
+        // Don't prevent default - let the form submit to FormSubmit.co
+        console.log('Form submitted to ' + contactForm.action);
     });
 
     // Smooth scrolling for navigation links

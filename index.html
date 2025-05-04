@@ -10,9 +10,7 @@
 <body>
     <header>
         <div class="container">
-            <div class="logo">
-                <a href="#"><span class="blue">MORTGAGE</span>ASSIST</a>
-            </div>
+            <div class="logo"><a href="#"><span class="blue">MORTGAGE</span>ASSIST</a></div>
             <nav>
                 <ul>
                     <li><a href="#features">Features</a></li>
@@ -39,6 +37,22 @@
     <section id="chatbot" class="chatbot-section">
         <div class="container">
             <h2>Ask Our AI Assistant</h2>
+            
+            <!-- Left chat bubble example (outside the chatbot) -->
+            <div class="example-chat-left">
+                <div class="user-message">
+                    <div class="message-bubble blue">
+                        What's my loan's interest rate?
+                    </div>
+                </div>
+                <div class="ai-message">
+                    <div class="message-bubble white border-green">
+                        Your rate is 6.25% (30-year fixed).
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Chatbot container -->
             <div class="chatbot-container">
                 <div class="chatbot-header">
                     <span>mortgage AI.pdf</span>
@@ -60,38 +74,8 @@
                 </div>
 
                 <div class="chatbot-messages" id="chatMessages">
-                    <div class="message-row">
-                        <div class="message-left">
-                            <div class="user-message">
-                                <div class="message-bubble blue">
-                                    What's my loan's interest rate?
-                                </div>
-                            </div>
-                            <div class="ai-message">
-                                <div class="message-bubble white border-green">
-                                    Your rate is 6.25% (30-year fixed).
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                     <div class="intro-message" id="introMessage">
                         Hi! What can I help you with?
-                    </div>
-
-                    <div class="message-row">
-                        <div class="message-right">
-                            <div class="user-message">
-                                <div class="message-bubble blue">
-                                    What documents do I need to upload?
-                                </div>
-                            </div>
-                            <div class="ai-message">
-                                <div class="message-bubble white border-green">
-                                    You're missing your 2023 W-2. Upload here.
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
@@ -106,6 +90,20 @@
                 </div>
                 <div class="chatbot-footer">
                     <span>Powered By Chatbase.co</span>
+                </div>
+            </div>
+            
+            <!-- Right chat bubble example (outside the chatbot) -->
+            <div class="example-chat-right">
+                <div class="user-message">
+                    <div class="message-bubble blue">
+                        What documents do I need to upload?
+                    </div>
+                </div>
+                <div class="ai-message">
+                    <div class="message-bubble white border-green">
+                        You're missing your 2023 W-2. Upload here.
+                    </div>
                 </div>
             </div>
         </div>
@@ -234,12 +232,21 @@
         </div>
     </footer>
 
-    <!-- Contact Form Modal - Updated to match the original -->
+    <!-- Contact Form Modal - Updated to send emails -->
     <div id="contactModal" class="modal">
         <div class="modal-content">
             <span class="close-btn">&times;</span>
             <h2>Get a Quote</h2>
-            <form id="contactForm">
+            <form id="contactForm" action="https://formsubmit.co/brett@ca-foundation.com" method="POST">
+                <!-- FormSubmit honeypot to prevent spam -->
+                <input type="text" name="_honey" style="display:none">
+                
+                <!-- Disable captcha -->
+                <input type="hidden" name="_captcha" value="false">
+                
+                <!-- Specify redirect after submission -->
+                <input type="hidden" name="_next" value="https://mortgageassist.netlify.app/thanks.html">
+                
                 <div class="form-group">
                     <label for="name">Your Name</label>
                     <input type="text" id="name" name="name" required>
