@@ -3,120 +3,208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MortgageAssist - Instant Mortgage Questions and Answers</title>
+    <title>MortgageAssist - AI-Powered Mortgage Support</title>
     <link rel="stylesheet" href="css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
-        <div class="header-container">
-            <a href="/" class="logo">MORTGAGE<span>ASSIST</span></a>
+        <div class="container">
+            <div class="logo">
+                <a href="#"><span class="blue">MORTGAGE</span>ASSIST</a>
+            </div>
             <nav>
                 <ul>
                     <li><a href="#features">Features</a></li>
                     <li><a href="#how-it-works">How It Works</a></li>
-                    <form name="contact" method="POST" netlify>
-                        <!-- Your form fields go here -->
-                        <input type="text" name="name" placeholder="Your Name" required>
-                        <input type="text" name="business" placeholder="Business Name" required>
-                        <!-- etc. -->
-                      </form>
                     <li><a href="#testimonials">Testimonials</a></li>
                     <li><a href="#faq">FAQ</a></li>
-                    <li><a href="#" id="howMuchBtn" class="button">How Much?</a></li>
+                    <li><a href="#" class="btn-primary" id="howMuchBtn">How Much?</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
     <section class="hero">
-        <div class="hero-content">
-            <h1>Mortgage Questions? Get Answers Instantly.</h1>
-            <p>Skip the hold music. Our AI assistant helps with loan status, paperwork, and rate updates—day or night.</p>
-            <a href="#chatbot" class="button">Ask Your Mortgage Question →</a>
+        <div class="container">
+            <div class="hero-content">
+                <div class="key-icon">🔑</div>
+                <h1>Mortgage Questions? Get Answers Instantly.</h1>
+                <p>Skip the hold music. Our AI assistant helps with loan status, paperwork, and rate updates—day or night.</p>
+                <a href="#chatbot" class="btn-primary">Ask Your Mortgage Question →</a>
+            </div>
         </div>
     </section>
 
     <section id="chatbot" class="chatbot-section">
-        <h2>Ask Our AI Assistant</h2>
-        <div class="chatbot-container">
-            <div class="chatbot-header">
-                <div>mortgage AI.pdf</div>
-                <div class="chatbot-menu">
-                    <button id="startChatBtn">Start a new chat</button>
-                    <button id="endChatBtn">End chat</button>
-                    <button id="viewHistoryBtn">View recent chats</button>
+        <div class="container">
+            <h2>Ask Our AI Assistant</h2>
+            <div class="chatbot-container">
+                <div class="chatbot-header">
+                    <span>mortgage AI.pdf</span>
+                    <button class="options-btn">⋮</button>
+                </div>
+                <div class="chatbot-messages" id="chatMessages">
+                    <div class="message user">
+                        <div class="message-bubble">What's my loan's interest rate?</div>
+                    </div>
+                    <div class="message ai">
+                        <div class="message-bubble">Your rate is 6.25% (30-year fixed).</div>
+                    </div>
+                    <div class="message user">
+                        <div class="message-bubble">What documents do I need to upload?</div>
+                    </div>
+                    <div class="message ai">
+                        <div class="message-bubble">You're missing your 2023 W-2. Upload here.</div>
+                    </div>
+                </div>
+                <div class="chatbot-input">
+                    <input type="text" id="messageInput" placeholder="Message...">
+                    <button id="sendMessage"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg></button>
+                </div>
+                <div class="chatbot-footer">
+                    <span>Powered By Chatbase.co</span>
                 </div>
             </div>
-            <div class="chatbot-messages">
-                <!-- Chat messages will appear here -->
-            </div>
-            <div class="chatbot-input">
-                <input type="text" placeholder="Message..." aria-label="Type your message">
-                <button type="submit" aria-label="Send message">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z"/>
-                    </svg>
-                </button>
-            </div>
-            <div class="chatbase-attribution">Powered By Chatbase.co</div>
         </div>
     </section>
 
-    <section id="features" class="benefits">
-        <h2>Key Benefits</h2>
-        <div class="benefits-grid">
-            <div class="benefit-card">
-                <div class="benefit-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#2563eb" viewBox="0 0 16 16">
-                        <path d="M0 0h1v15h15v1H0V0Zm14.817 3.113a.5.5 0 0 1 .07.704l-4.5 5.5a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61 4.15-5.073a.5.5 0 0 1 .704-.07Z"/>
-                    </svg>
+    <section id="features" class="benefits-section">
+        <div class="container">
+            <h2>Key Benefits</h2>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">📈</div>
+                    <h3>Loan Status Updates</h3>
+                    <p>Get real-time updates on your application progress</p>
+                    <div class="quote">"Where's my application in underwriting?"</div>
                 </div>
-                <h3>Loan Status Updates</h3>
-                <p>Get real-time updates on your application progress</p>
-                <p class="benefit-example">"Where's my application in underwriting?"</p>
-            </div>
-            <div class="benefit-card">
-                <div class="benefit-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#2563eb" viewBox="0 0 16 16">
-                        <path d="M5 4a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1H5zm-.5 2.5A.5.5 0 0 1 5 6h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5zM5 8a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1H5zm0 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1H5z"/>
-                        <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2zm10-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1z"/>
-                    </svg>
+                <div class="benefit-card">
+                    <div class="benefit-icon">📋</div>
+                    <h3>Document Checklists</h3>
+                    <p>Never miss important paperwork deadlines</p>
+                    <div class="quote">"What's needed for closing?"</div>
                 </div>
-                <h3>Document Checklists</h3>
-                <p>Never miss important paperwork deadlines</p>
-                <p class="benefit-example">"What's needed for closing?"</p>
-            </div>
-            <div class="benefit-card">
-                <div class="benefit-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#2563eb" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5zm-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5z"/>
-                    </svg>
+                <div class="benefit-card">
+                    <div class="benefit-icon">↕️</div>
+                    <h3>Rate Comparisons</h3>
+                    <p>Make informed decisions about rate locking</p>
+                    <div class="quote">"Should I lock my rate today?"</div>
                 </div>
-                <h3>Rate Comparisons</h3>
-                <p>Make informed decisions about rate locking</p>
-                <p class="benefit-example">"Should I lock my rate today?"</p>
-            </div>
-            <div class="benefit-card">
-                <div class="benefit-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#2563eb" viewBox="0 0 16 16">
-                        <path d="M1.5 2a.5.5 0 0 1 .5-.5h11.5a.5.5 0 0 1 0 1H2a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h6.5a.5.5 0 0 1 0 1H2a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h11.5a.5.5 0 0 1 0 1H2a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h6.5a.5.5 0 0 1 0 1H2a.5.5 0 0 1-.5-.5z"/>
-                    </svg>
+                <div class="benefit-card">
+                    <div class="benefit-icon">📊</div>
+                    <h3>Payment Calculators</h3>
+                    <p>Instantly see how changes affect your payment</p>
+                    <div class="quote">"What's my new monthly payment?"</div>
                 </div>
-                <h3>Payment Calculators</h3>
-                <p>Instantly see how changes affect your payment</p>
-                <p class="benefit-example">"What's my new monthly payment?"</p>
             </div>
         </div>
     </section>
 
     <section id="how-it-works" class="how-it-works">
-        <h2>How It Works</h2>
-        <div class="steps-container">
-            <div class="step">
-                <div class="step-number">1</div>
-                <h3>Ask</h3>
-                <p>Type your question (e.g., "Has my appraisal been scheduled?").</p>
+        <div class="container">
+            <h2>How It Works</h2>
+            <div class="steps-container">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Ask</h3>
+                    <p>Type your question (e.g., "Has my appraisal been scheduled?").</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Answer</h3>
+                    <p>AI responds instantly with accurate details.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Act</h3>
+                    <p>Upload files or book a call if needed.</p>
+                </div>
             </div>
-            <div class="step">
-                <div class="step-number">2</div>
+        </div>
+    </section>
+
+    <section id="testimonials" class="testimonials">
+        <div class="container">
+            <h2>What Our Clients Say</h2>
+            <div class="testimonial">
+                <p class="quote">"Clients love the instant updates—our team saves 15+ hours/week!"</p>
+                <p class="author">- [Loan Officer Name], [Company]</p>
+            </div>
+            <div class="stat">
+                <div class="stat-number">40%</div>
+                <div class="stat-description">fewer calls to our office since launch</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="faq" class="faq-section">
+        <div class="container">
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <h3>How do I lock my rate?</h3>
+                    <p>You can lock your rate through our AI assistant or by contacting your loan officer directly. Rate locks typically last for 30, 45, or 60 days depending on your loan.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>What's the next step in my process?</h3>
+                    <p>Our AI assistant can provide real-time updates on where you are in the mortgage process and what's needed next. Just ask "What's my next step?" or "What's my loan status?"</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Can I change my loan type?</h3>
+                    <p>Yes, in many cases you can change your loan type during the application process. Ask our AI assistant about your options or schedule a call with your loan officer to discuss the benefits of different loan programs.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-info">
+                <div class="footer-item">Secure & confidential</div>
+                <div class="footer-item">NMLS-licensed expertise</div>
+                <div class="footer-item">Bank-level encryption</div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Contact Form Modal -->
+    <div id="contactModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>Get a Quote</h2>
+            <form id="contactForm">
+                <div class="form-group">
+                    <label for="name">Your Name</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="loanType">Loan Type</label>
+                    <select id="loanType" name="loanType">
+                        <option value="purchase">Purchase</option>
+                        <option value="refinance">Refinance</option>
+                        <option value="heloc">HELOC</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="message">Questions or Comments</label>
+                    <textarea id="message" name="message" rows="4"></textarea>
+                </div>
+                <button type="submit" class="btn-primary">Submit Request</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script src="js/chatbot.js"></script>
+</body>
+</html>

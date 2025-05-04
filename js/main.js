@@ -1,67 +1,74 @@
-// main.js
-
-// Modal functionality for "How Much?" button
+// Wait for DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
-    // Get the modal
-    const modal = document.getElementById('quoteModal');
-    
-    // Get the button that opens the modal
+    // Modal functionality
+    const modal = document.getElementById('contactModal');
     const btn = document.getElementById('howMuchBtn');
-    
-    // Get the <span> element that closes the modal
-    const closeBtn = document.getElementsByClassName('close')[0];
-    
-    // When the user clicks the button, open the modal 
-    btn.onclick = function() {
+    const closeBtn = document.querySelector('.close-btn');
+    const contactForm = document.getElementById('contactForm');
+
+    // Open modal when "How Much?" button is clicked
+    btn.addEventListener('click', function(e) {
+        e.preventDefault();
         modal.style.display = 'block';
-    }
-    
-    // When the user clicks on <span> (x), close the modal
-    closeBtn.onclick = function() {
+        document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
+    });
+
+    // Close modal when X is clicked
+    closeBtn.addEventListener('click', function() {
         modal.style.display = 'none';
-    }
-    
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function(event) {
-        if (event.target == modal) {
+        document.body.style.overflow = 'auto'; // Enable scrolling again
+    });
+
+    // Close modal when clicking outside the modal content
+    window.addEventListener('click', function(e) {
+        if (e.target === modal) {
             modal.style.display = 'none';
+            document.body.style.overflow = 'auto'; // Enable scrolling again
         }
-    }
-    
-    // Form submission handling
-    const quoteForm = document.getElementById('quoteForm');
-    quoteForm.addEventListener('submit', function(e) {
+    });
+
+    // Handle form submission
+    contactForm.addEventListener('submit', function(e) {
         e.preventDefault();
         
-        const formData = new FormData(quoteForm);
-        const formEntries = Object.fromEntries(formData.entries());
+        // Get form data
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const phone = document.getElementById('phone').value;
+        const loanType = document.getElementById('loanType').value;
+        const message = document.getElementById('message').value;
         
-        // Send data to the email address
-        emailFormData(formEntries);
-        
-        // Close the modal and show confirmation
-        modal.style.display = 'none';
-        alert('Thank you! Your information has been submitted.');
-        quoteForm.reset();
-    });
-    
-    // Function to send form data to email
-    function emailFormData(data) {
-        // In a real implementation, you would use a serverless function or service
-        // to send this data to the specified email address
-        console.log('Sending data to brett@ca-foundation.us', data);
-        
-        // This is where you would integrate with Netlify Forms or a similar service
-        // For example with Netlify, the form would automatically capture submissions
-    }
-    
-    // Smooth scrolling for "Ask Your Mortgage Question" button
-    const askBtn = document.querySelector('a[href="#chatbot"]');
-    if (askBtn) {
-        askBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            const chatbotSection = document.getElementById('chatbot');
-            chatbotSection.scrollIntoView({ behavior: 'smooth' });
+        // Here you would typically send this data to a server
+        // For demo purposes, we'll just log it and show a success message
+        console.log({
+            name,
+            email,
+            phone,
+            loanType,
+            message
         });
-    }
+        
+        // Show success message
+        alert('Thank you for your inquiry! We will contact you shortly.');
+        
+        // Reset form and close modal
+        contactForm.reset();
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto'; // Enable scrolling again
+    });
+
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                window.scrollTo({
+                    top: target.offsetTop - 80, // Account for fixed header
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
 });
