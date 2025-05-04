@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MortgageAssist - Instant Mortgage Questions and Answers</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="/" class="logo">MORTGAGE<span>ASSIST</span></a>
+            <nav>
+                <ul>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#how-it-works">How It Works</a></li>
+                    <form name="contact" method="POST" netlify>
+                        <!-- Your form fields go here -->
+                        <input type="text" name="name" placeholder="Your Name" required>
+                        <input type="text" name="business" placeholder="Business Name" required>
+                        <!-- etc. -->
+                      </form>
+                    <li><a href="#testimonials">Testimonials</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                    <li><a href="#" id="howMuchBtn" class="button">How Much?</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Mortgage Questions? Get Answers Instantly.</h1>
+            <p>Skip the hold music. Our AI assistant helps with loan status, paperwork, and rate updates—day or night.</p>
+            <a href="#chatbot" class="button">Ask Your Mortgage Question →</a>
+        </div>
+    </section>
+
+    <section id="chatbot" class="chatbot-section">
+        <h2>Ask Our AI Assistant</h2>
+        <div class="chatbot-container">
+            <div class="chatbot-header">
+                <div>mortgage AI.pdf</div>
+                <div class="chatbot-menu">
+                    <button id="startChatBtn">Start a new chat</button>
+                    <button id="endChatBtn">End chat</button>
+                    <button id="viewHistoryBtn">View recent chats</button>
+                </div>
+            </div>
+            <div class="chatbot-messages">
+                <!-- Chat messages will appear here -->
+            </div>
+            <div class="chatbot-input">
+                <input type="text" placeholder="Message..." aria-label="Type your message">
+                <button type="submit" aria-label="Send message">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="chatbase-attribution">Powered By Chatbase.co</div>
+        </div>
+    </section>
+
+    <section id="features" class="benefits">
+        <h2>Key Benefits</h2>
+        <div class="benefits-grid">
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#2563eb" viewBox="0 0 16 16">
+                        <path d="M0 0h1v15h15v1H0V0Zm14.817 3.113a.5.5 0 0 1 .07.704l-4.5 5.5a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61 4.15-5.073a.5.5 0 0 1 .704-.07Z"/>
+                    </svg>
+                </div>
+                <h3>Loan Status Updates</h3>
+                <p>Get real-time updates on your application progress</p>
+                <p class="benefit-example">"Where's my application in underwriting?"</p>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#2563eb" viewBox="0 0 16 16">
+                        <path d="M5 4a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1H5zm-.5 2.5A.5.5 0 0 1 5 6h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5zM5 8a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1H5zm0 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1H5z"/>
+                        <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2zm10-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1z"/>
+                    </svg>
+                </div>
+                <h3>Document Checklists</h3>
+                <p>Never miss important paperwork deadlines</p>
+                <p class="benefit-example">"What's needed for closing?"</p>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#2563eb" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5zm-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5z"/>
+                    </svg>
+                </div>
+                <h3>Rate Comparisons</h3>
+                <p>Make informed decisions about rate locking</p>
+                <p class="benefit-example">"Should I lock my rate today?"</p>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#2563eb" viewBox="0 0 16 16">
+                        <path d="M1.5 2a.5.5 0 0 1 .5-.5h11.5a.5.5 0 0 1 0 1H2a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h6.5a.5.5 0 0 1 0 1H2a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h11.5a.5.5 0 0 1 0 1H2a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h6.5a.5.5 0 0 1 0 1H2a.5.5 0 0 1-.5-.5z"/>
+                    </svg>
+                </div>
+                <h3>Payment Calculators</h3>
+                <p>Instantly see how changes affect your payment</p>
+                <p class="benefit-example">"What's my new monthly payment?"</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="how-it-works" class="how-it-works">
+        <h2>How It Works</h2>
+        <div class="steps-container">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3>Ask</h3>
+                <p>Type your question (e.g., "Has my appraisal been scheduled?").</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
