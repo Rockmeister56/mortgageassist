@@ -53,45 +53,14 @@
                     </div>
                 </div>
                 
-                <!-- Chatbot container -->
+                <!-- Chatbase embed iframe -->
                 <div class="chatbot-container">
-                    <div class="chatbot-header">
-                        <span>mortgage AI.pdf</span>
-                        <button class="options-btn" id="optionsBtn">⋮</button>
-                        <div class="dropdown-menu" id="chatOptions">
-                            <div class="dropdown-item" id="startNewChat">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
-                                Start a new chat
-                            </div>
-                            <div class="dropdown-item" id="endChat">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="8" y1="12" x2="16" y2="12"></line></svg>
-                                End chat
-                            </div>
-                            <div class="dropdown-item" id="viewRecentChats">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
-                                View recent chats
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="chatbot-messages" id="chatMessages">
-                        <div class="intro-message" id="introMessage">
-                            Hi! What can I help you with?
-                        </div>
-                    </div>
-
-                    <div class="chatbot-input">
-                        <input type="text" id="messageInput" placeholder="Message...">
-                        <button id="sendMessage">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <line x1="22" y1="2" x2="11" y2="13"></line>
-                                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                            </svg>
-                        </button>
-                    </div>
-                    <div class="chatbot-footer">
-                        <span>Powered By Chatbase.co</span>
-                    </div>
+                    <iframe
+                        src="https://www.chatbase.co/chatbot-iframe/JKHQAJDGl0bRE-7LSQkv4"
+                        width="100%"
+                        style="height: 520px;"
+                        frameborder="0"
+                    ></iframe>
                 </div>
                 
                 <!-- Right chat bubble example -->
@@ -239,8 +208,8 @@
         <div class="modal-content">
             <span class="close-btn">&times;</span>
             <h2>Get a Quote</h2>
-            <!-- This is the form with Netlify attributes -->
-            <form id="contactForm" name="contact" method="POST" data-netlify="true" action="/thanks.html">
+            <!-- Using Netlify Forms -->
+            <form id="contactForm" name="contact" method="POST" data-netlify="true">
                 <!-- Netlify form name -->
                 <input type="hidden" name="form-name" value="contact">
                 
@@ -269,7 +238,16 @@
         </div>
     </div>
 
+    <!-- Hidden form for Netlify Forms detection -->
+    <form name="contact" netlify netlify-honeypot="bot-field" hidden>
+        <input type="text" name="name" />
+        <input type="text" name="businessName" />
+        <input type="tel" name="phone" />
+        <input type="text" name="bestTime" />
+        <input type="date" name="preferredDate" />
+    </form>
+
     <script src="js/main.js"></script>
-    <script src="js/chatbot.js"></script>
+    <!-- Removed the chatbot.js script since we're using the Chatbase iframe -->
 </body>
 </html>
