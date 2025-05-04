@@ -6,6 +6,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const closeBtn = document.querySelector('.close-btn');
     const contactForm = document.getElementById('contactForm');
 
+    // Chat options dropdown
+    const optionsBtn = document.getElementById('optionsBtn');
+    const chatOptions = document.getElementById('chatOptions');
+    const startNewChatBtn = document.getElementById('startNewChat');
+    const endChatBtn = document.getElementById('endChat');
+    const viewRecentChatsBtn = document.getElementById('viewRecentChats');
+
     // Open modal when "How Much?" button is clicked
     btn.addEventListener('click', function(e) {
         e.preventDefault();
@@ -27,25 +34,74 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Toggle chat options dropdown
+    optionsBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        chatOptions.classList.toggle('show');
+    });
+
+    // Close dropdown when clicking elsewhere
+    document.addEventListener('click', function() {
+        chatOptions.classList.remove('show');
+    });
+
+    // Chat dropdown options functionality
+    startNewChatBtn.addEventListener('click', function() {
+        const chatMessages = document.getElementById('chatMessages');
+        // Clear all messages except the intro message
+        while (chatMessages.firstChild) {
+            chatMessages.removeChild(chatMessages.firstChild);
+        }
+        
+        // Add back the intro message
+        const introMessage = document.createElement('div');
+        introMessage.className = 'intro-message';
+        introMessage.textContent = 'Hi! What can I help you with?';
+        chatMessages.appendChild(introMessage);
+        
+        chatOptions.classList.remove('show');
+    });
+
+    endChatBtn.addEventListener('click', function() {
+        const chatMessages = document.getElementById('chatMessages');
+        // Clear all messages
+        while (chatMessages.firstChild) {
+            chatMessages.removeChild(chatMessages.firstChild);
+        }
+        
+        // Add end message
+        const endMessage = document.createElement('div');
+        endMessage.className = 'intro-message';
+        endMessage.textContent = 'Chat ended. Thank you for using our service.';
+        chatMessages.appendChild(endMessage);
+        
+        chatOptions.classList.remove('show');
+    });
+
+    viewRecentChatsBtn.addEventListener('click', function() {
+        alert('View recent chats functionality would connect to your chat history database.');
+        chatOptions.classList.remove('show');
+    });
+
     // Handle form submission
     contactForm.addEventListener('submit', function(e) {
         e.preventDefault();
         
         // Get form data
         const name = document.getElementById('name').value;
-        const email = document.getElementById('email').value;
+        const businessName = document.getElementById('businessName').value;
         const phone = document.getElementById('phone').value;
-        const loanType = document.getElementById('loanType').value;
-        const message = document.getElementById('message').value;
+        const bestTime = document.getElementById('bestTime').value;
+        const preferredDate = document.getElementById('preferredDate').value;
         
         // Here you would typically send this data to a server
         // For demo purposes, we'll just log it and show a success message
         console.log({
             name,
-            email,
+            businessName,
             phone,
-            loanType,
-            message
+            bestTime,
+            preferredDate
         });
         
         // Show success message

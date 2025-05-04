@@ -19,17 +19,60 @@ document.addEventListener('DOMContentLoaded', function() {
         "default": "I don't have specific information about that. Would you like me to connect you with a loan officer for more assistance?"
     };
     
-    // Function to add a message to the chat
-    function addMessage(text, isUser = false) {
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `message ${isUser ? 'user' : 'ai'}`;
+    // Function to add user message to chat
+    function addUserMessage(text) {
+        const messageRow = document.createElement('div');
+        messageRow.className = 'message-row';
         
-        const bubbleDiv = document.createElement('div');
-        bubbleDiv.className = 'message-bubble';
-        bubbleDiv.textContent = text;
+        const messageRight = document.createElement('div');
+        messageRight.className = 'message-right';
         
-        messageDiv.appendChild(bubbleDiv);
-        chatMessages.appendChild(messageDiv);
+        const userMessage = document.createElement('div');
+        userMessage.className = 'user-message';
+        
+        const messageBubble = document.createElement('div');
+        messageBubble.className = 'message-bubble blue';
+        messageBubble.textContent = text;
+        
+        userMessage.appendChild(messageBubble);
+        messageRight.appendChild(userMessage);
+        messageRow.appendChild(messageRight);
+        chatMessages.appendChild(messageRow);
+        
+        // Scroll to the bottom of the chat
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+    
+    // Function to add AI message to chat
+    function addAIMessage(text) {
+        // Check if the last message row contains a message-right div
+        const lastRow = chatMessages.lastChild;
+        let messageContainer;
+        
+        if (lastRow && lastRow.querySelector('.message-right')) {
+            // Add to the last message-right container
+            messageContainer = lastRow.querySelector('.message-right');
+        } else {
+            // Create new row and left container
+            const messageRow = document.createElement('div');
+            messageRow.className = 'message-row';
+            
+            messageContainer = document.createElement('div');
+            messageContainer.className = 'message-left';
+            
+            messageRow.appendChild(messageContainer);
+            chatMessages.appendChild(messageRow);
+        }
+        
+        const aiMessage = document.createElement('div');
+        aiMessage.className = 'ai-message';
+        
+        const messageBubble = document.createElement('div');
+        messageBubble.className = 'message-bubble white border-green';
+        messageBubble.textContent = text;
+        
+        aiMessage.appendChild(messageBubble);
+        messageContainer.appendChild(aiMessage);
         
         // Scroll to the bottom of the chat
         chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -57,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (message !== '') {
             // Add user message to chat
-            addMessage(message, true);
+            addUserMessage(message);
             
             // Clear input field
             messageInput.value = '';
@@ -66,7 +109,7 @@ document.addEventListener('DOMContentLoaded', function() {
             setTimeout(() => {
                 // Get and add AI response
                 const response = getResponse(message);
-                addMessage(response);
+                addAIMessage(response);
             }, 1000);
         }
     }
