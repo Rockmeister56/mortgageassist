@@ -19,22 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
         modal.style.display = 'block';
         document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
     });
-
-    function startAIDemo() {
-    // 1. Disable the demo button
-    document.getElementById('aiDemoButton').disabled = true;
-    document.getElementById('aiDemoButton').innerHTML = '🤖 AI Working...';
     
-    // 2. Start the AI form filling sequence
-    simulateAIFormFilling();
-}
-
-function simulateAIFormFilling() {
-    // Your AI magic happens here!
-    // Fill form fields with realistic data
-    // Show typing animations
-    // Display AI avatar guidance
-}
 
     // Close modal when X is clicked
     closeBtn.addEventListener('click', function() {
@@ -105,6 +90,22 @@ function simulateAIFormFilling() {
         // Don't prevent default - let the form submit to FormSubmit.co
         console.log('Form submitted to ' + contactForm.action);
     });
+
+    function startAIDemo() {
+    // 1. Disable the demo button
+    document.getElementById('aiDemoButton').disabled = true;
+    document.getElementById('aiDemoButton').innerHTML = '🤖 AI Working...';
+    
+    // 2. Start the AI form filling sequence
+    simulateAIFormFilling();
+}
+
+function simulateAIFormFilling() {
+    // Your AI magic happens here!
+    // Fill form fields with realistic data
+    // Show typing animations
+    // Display AI avatar guidance
+}
 
     // Smooth scrolling for navigation links
     document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
