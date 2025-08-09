@@ -20,6 +20,22 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
     });
 
+    function startAIDemo() {
+    // 1. Disable the demo button
+    document.getElementById('aiDemoButton').disabled = true;
+    document.getElementById('aiDemoButton').innerHTML = '🤖 AI Working...';
+    
+    // 2. Start the AI form filling sequence
+    simulateAIFormFilling();
+}
+
+function simulateAIFormFilling() {
+    // Your AI magic happens here!
+    // Fill form fields with realistic data
+    // Show typing animations
+    // Display AI avatar guidance
+}
+
     // Close modal when X is clicked
     closeBtn.addEventListener('click', function() {
         modal.style.display = 'none';
