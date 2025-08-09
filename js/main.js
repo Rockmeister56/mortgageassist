@@ -101,10 +101,45 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 
 function simulateAIFormFilling() {
-    // Your AI magic happens here!
-    // Fill form fields with realistic data
-    // Show typing animations
-    // Display AI avatar guidance
+    // Get form fields by their actual names/selectors
+    const fields = [
+        {element: document.querySelector('input[name="name"]'), value: "John Smith", delay: 1000},
+        {element: document.querySelector('input[name="business"]'), value: "Tech Solutions LLC", delay: 2000}, 
+        {element: document.querySelector('input[name="phone"]'), value: "(555) 123-4567", delay: 3000},
+        {element: document.querySelector('input[name="bestTime"]'), value: "Morning 9-11 AM", delay: 4000},
+        {element: document.querySelector('input[name="preferredDate"]'), value: "2024-12-20", delay: 5000}
+    ];
+    
+    // Fill each field with realistic typing animation
+    fields.forEach(field => {
+        if (field.element) {
+            setTimeout(() => {
+                typeText(field.element, field.value);
+            }, field.delay);
+        }
+    });
+    
+    // Reset button after demo completes
+    setTimeout(() => {
+        const button = document.getElementById('aiDemoButton');
+        button.innerHTML = '✅ Demo Complete! Try Again?';
+        button.disabled = false;
+        button.style.background = 'linear-gradient(135deg, #4CAF50, #45a049)';
+    }, 6000);
+}
+
+function typeText(element, text) {
+    element.focus();
+    element.value = '';
+    let i = 0;
+    const timer = setInterval(() => {
+        element.value += text[i];
+        i++;
+        if (i >= text.length) {
+            clearInterval(timer);
+            element.blur();
+        }
+    }, 100); // Typing speed
 }
 
     // Smooth scrolling for navigation links
