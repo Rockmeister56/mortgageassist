@@ -207,7 +207,29 @@
     <div id="contactModal" class="modal">
         <div class="modal-content">
             <span class="close-btn">&times;</span>
-            <h2>Get a Quote</h2>
+            <!-- Enhanced Header with Your Logo + Avatar + Repositioned Title -->
+<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding: 10px 0;">
+    
+    <!-- LEFT SIDE: Your Business Logo + Get a Quote -->
+    <div style="flex: 1;">
+        <!-- Your Business Logo -->
+        <img src="https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/form-assets/logos/logo_5f42f026-051a-42c7-833d-375fcac74252_1754796297597_logo3.png" 
+             style="height: 50px; margin-bottom: 8px; display: block;">
+        <!-- Repositioned Get a Quote -->
+        <h2 style="margin: 0; font-size: 24px; color: #333;">Get a Quote</h2>
+    </div>
+    
+    <!-- RIGHT SIDE: Interactive AI Avatar -->
+    <div style="flex: 0 0 auto; text-align: center;">
+        <img src="https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/avatars/avatar_1754795551491_AI%20assist%20with%20button.png" 
+             onclick="activateAIAssistant()" 
+             style="width: 120px; cursor: pointer; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: transform 0.3s;"
+             onmouseover="this.style.transform='scale(1.05)'"
+             onmouseout="this.style.transform='scale(1.0)'">
+        <p style="margin: 5px 0 0 0; font-size: 12px; color: #666;">👋 Click to activate AI!</p>
+    </div>
+    
+</div>
             <!-- Using Netlify Forms -->
             <form id="contactForm" name="contact" method="POST" data-netlify="true">
                 <!-- Netlify form name -->
