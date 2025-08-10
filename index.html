@@ -1189,63 +1189,6 @@ function closeAllAIInterfaces() {
     formFieldsArray = [];
 }
 
-// FIXED: Better Form Assistant that doesn't skip fields
-function handleFormFieldResponse(response) {
-    const currentField = formFieldsArray[currentFormFieldIndex];
-    if (!currentField) return;
-    
-    // Clean up the response
-    const cleanResponse = response.trim();
-    
-    // Fill the field with the response
-    currentField.value = cleanResponse;
-    currentField.focus();
-    
-    // Trigger events to ensure the form recognizes the input
-    currentField.dispatchEvent(new Event('input', { bubbles: true }));
-    currentField.dispatchEvent(new Event('change', { bubbles: true }));
-    currentField.dispatchEvent(new Event('blur', { bubbles: true }));
-    
-    // Confirm the entry
-    speakMessage(`Got it! ${cleanResponse}. Let me record that for you.`);
-    
-    // Wait a moment to ensure the field is filled
-    setTimeout(() => {
-        // Move to next field
-        currentFormFieldIndex++;
-        
-        setTimeout(() => {
-            askForNextFormField();
-        }, 1000); // Increased delay to ensure proper processing
-    }, 500);
-}
-
-// FIXED: Better field detection to not skip fields
-function startVoiceFormProcess(fields) {
-    // Get ALL form inputs, including selects
-    const allInputs = document.querySelectorAll('input[type="text"], input[type="tel"], input[type="email"], input[name*="name"], input[placeholder*="name"], input[placeholder*="phone"], input[placeholder*="business"], select, input[placeholder*="time"]');
-    
-    formFieldsArray = Array.from(allInputs).filter(field => {
-        // Only include visible fields
-        return field.offsetParent !== null && !field.disabled && !field.readOnly;
-    });
-    
-    currentFormFieldIndex = 0;
-    isFormAssistantActive = true;
-    
-    if (!recognition) {
-        initializeSpeechRecognition();
-    }
-    
-    createFormAssistIndicator();
-    
-    speakMessage("Hi! Let me help you fill out this form. I'll ask you for each piece of information and make sure every field gets filled.");
-    
-    setTimeout(() => {
-        askForNextFormField();
-    }, 3000);
-}
-
 
 // Initialize
 document.addEventListener('DOMContentLoaded', function() {
