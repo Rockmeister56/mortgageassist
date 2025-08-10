@@ -1074,13 +1074,20 @@ function toggleVoiceChat() {
     }
 }
 
-function startVoiceChatListening() {
-    if (!recognition || isFormAssistantActive) {
-        if (isFormAssistantActive) {
-            addAIMessage("Form assistant is active. Please complete the form filling first.");
-        } else {
-            addAIMessage("Sorry, voice recognition isn't supported in your browser. Please type your question instead.");
-        }
+async function startVoiceChatListening() {
+    if (!recognition) {
+        addAIMessage("Sorry, voice recognition isn't supported in your browser. Please type your question instead.");
+        return;
+    }
+    
+    // REQUEST MICROPHONE PERMISSION FIRST
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        stream.getTracks().forEach(track => track.stop()); // Stop immediately, we just needed permission
+        console.log('✅ Microphone permission granted!');
+    } catch (error) {
+        console.log('❌ Microphone permission denied:', error);
+        addAIMessage("Microphone permission is required. Please allow microphone access and try again.");
         return;
     }
     
@@ -1090,7 +1097,7 @@ function startVoiceChatListening() {
     
     if (indicator) indicator.style.display = 'block';
     if (micIcon) {
-        micIcon.style.filter = 'brightness(0.7) sepia(1) hue-rotate(340deg) saturate(2)'; // Red tint
+        micIcon.style.filter = 'brightness(0.7) sepia(1) hue-rotate(340deg) saturate(2)';
     }
     
     try {
