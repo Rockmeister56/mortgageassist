@@ -538,19 +538,56 @@ function createFormAssistIndicator() {
     document.body.insertAdjacentHTML('beforeend', indicatorHTML);
 }
 
+function highlightCurrentField(field) {
+    console.log('Highlighting field:', field.id);
+    
+    // Remove previous highlights
+    document.querySelectorAll('input, select').forEach(f => {
+        f.style.border = '';
+        f.style.boxShadow = '';
+    });
+    
+    // Highlight current field
+    field.style.border = '3px solid #4CAF50';
+    field.style.boxShadow = '0 0 15px rgba(76,175,80,0.6)';
+    field.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
 function askForNextFormField() {
+    console.log('13. Inside askForNextFormField, currentIndex:', currentFormFieldIndex);
+    console.log('14. Total fields:', formFieldsArray.length);
+    
     if (currentFormFieldIndex >= formFieldsArray.length) {
-        // We're done!
+        console.log('15. All fields completed!');
         completeFormAssistant();
         return;
     }
     
     const currentField = formFieldsArray[currentFormFieldIndex];
     if (!currentField) {
+        console.log('16. Current field is null, skipping...');
         currentFormFieldIndex++;
         askForNextFormField();
         return;
     }
+    
+    console.log('17. Processing field:', currentField.id);
+    
+    // Highlight the current field
+    highlightCurrentField(currentField);
+    
+    // Ask for the appropriate information based on field type
+    const question = getQuestionForField(currentField);
+    console.log('18. Question:', question);
+    speakMessage(question);
+    
+    // Start listening for the response
+    setTimeout(() => {
+        console.log('19. Starting to listen for response...');
+        startFormFieldListening();
+    }, 2000);
+}
+
     
     // Highlight the current field
     highlightCurrentField(currentField);
@@ -563,7 +600,6 @@ function askForNextFormField() {
     setTimeout(() => {
         startFormFieldListening();
     }, 2000);
-}
 
 function getQuestionForField(field) {
     const fieldId = field.id?.toLowerCase() || '';
