@@ -439,34 +439,63 @@ function showEnhancedAIMenu() {
 function startFormAssistant() {
     closeAllAIInterfaces();
     
-    console.log('Starting form assistant...'); // Debug - MOVED UP
+    console.log('1. Starting form assistant...'); 
     
-    // FIRST: Make sure the modal is open
+    // Make sure the modal is open
     const modal = document.getElementById('contactModal');
     if (modal) {
-        modal.style.display = 'block'; // Force modal open
-        console.log('Modal opened');
+        modal.style.display = 'block';
+        console.log('2. Modal opened');
     }
     
-    // IMPROVED: Find fields by exact IDs from your HTML  
     const formFields = [
-        document.getElementById('name'),           // Your Name
-        document.getElementById('businessName'),   // Business Name  
-        document.getElementById('phone'),          // Phone Number
-        document.getElementById('bestTime'),       // Best Time to Contact
-        document.getElementById('preferredDate')   // Preferred Date
-    ].filter(field => field !== null); // Removed offsetParent check temporarily
+        document.getElementById('name'),           
+        document.getElementById('businessName'),   
+        document.getElementById('phone'),          
+        document.getElementById('bestTime'),       
+        document.getElementById('preferredDate')   
+    ].filter(field => field !== null);
     
-    console.log('Found fields:', formFields.length, formFields.map(f => f ? f.id : 'null')); // Debug BEFORE check
+    console.log('3. Found fields:', formFields.length, formFields.map(f => f.id));
     
     if (formFields.length === 0) {
-        console.log('No fields found - modal may be hidden!');
-        speakMessage("I don't see any form fields on this page. Let me open the form first, then try again.");
+        console.log('4. ERROR: No fields found!');
+        speakMessage("I don't see any form fields on this page.");
         return;
     }
     
-    console.log('Starting voice form process...');
+    console.log('5. Calling startVoiceFormProcess...');
     startVoiceFormProcess(formFields);
+}
+
+function startVoiceFormProcess(fields) {
+    console.log('6. Inside startVoiceFormProcess with', fields.length, 'fields');
+    
+    formFieldsArray = fields;
+    currentFormFieldIndex = 0;
+    isFormAssistantActive = true;
+    
+    console.log('7. Variables set, checking recognition...');
+    
+    // Initialize speech recognition for form filling
+    if (!recognition) {
+        console.log('8. Initializing speech recognition...');
+        initializeSpeechRecognition();
+    } else {
+        console.log('8. Recognition already exists');
+    }
+    
+    console.log('9. Creating form indicator...');
+    createFormAssistIndicator();
+    
+    console.log('10. About to speak greeting...');
+    speakMessage("Hi! Let me help you fill out this form. I'll ask you for each piece of information.");
+    
+    console.log('11. Setting timeout for first question...');
+    setTimeout(() => {
+        console.log('12. Timeout fired, calling askForNextFormField...');
+        askForNextFormField();
+    }, 3000);
 }
 
 function startVoiceFormProcess(fields) {
