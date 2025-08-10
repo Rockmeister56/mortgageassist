@@ -298,6 +298,257 @@
 
     <script src="js/main.js"></script>
     <!-- Removed the chatbot.js script since we're using the Chatbase iframe -->
+<script>
+// AI Avatar Knowledge Base - Expert Mortgage Content
+const mortgageKnowledge = {
+    greetings: [
+        "Hi! I'm your AI mortgage assistant. I have expert knowledge from top mortgage guides. How can I help you today?",
+        "Hello! I'm here to help you navigate the mortgage process with confidence. What questions do you have?",
+        "Welcome! I'm trained on the latest mortgage information and I'm ready to assist you. What would you like to know?"
+    ],
+    
+    basicQuestions: {
+        "what is a mortgage": "A mortgage is a loan used to finance your home purchase. The lender pays for the home upfront, and you repay in monthly installments over 15-30 years. Your payment includes principal, interest, property taxes, homeowners insurance, and PMI if you put less than 20% down.",
+        
+        "mortgage types": "There are 4 main types: **Conventional** (3% down, 620+ credit), **FHA** (3.5% down, 580+ credit, great for first-time buyers), **VA** (0% down for veterans), and **USDA** (0% down for rural areas). Each has different requirements and benefits.",
+        
+        "down payment": "Down payments typically range from 0-20%. FHA loans need just 3.5%, conventional loans start at 3%, while VA and USDA can be 0%. The more you put down, the lower your monthly payment and the less you'll pay in mortgage insurance.",
+        
+        "credit score": "Credit requirements vary: Conventional loans need 620+, FHA accepts 580+ (500 with 10% down), VA has no minimum, and USDA typically wants 640+. Higher scores get better rates!"
+    },
+    
+    qualificationHelp: {
+        "do i qualify": "Qualification depends on 4 key factors: **Credit Score** (580+ for most programs), **Income** (stable employment history), **Debt-to-Income ratio** (usually under 43-50%), and **Down Payment** (as low as 0-3.5%). I can help you assess each area!",
+        
+        "debt to income": "Your debt-to-income ratio is your monthly debt payments divided by gross monthly income. Most loans require under 43-50%. This includes credit cards, car loans, student loans, and your future mortgage payment.",
+        
+        "pre approval": "Pre-approval is different from pre-qualification! Pre-approval means the lender has verified your income, assets, and credit. It's much stronger than pre-qualification and shows sellers you're serious. Get pre-approved before house hunting!"
+    },
+    
+    expertAdvice: {
+        "how much can i afford": "CRITICAL: Just because a lender approves you for an amount doesn't mean you can afford it! Consider your other financial goals, emergency fund, and monthly budget. A good rule is keeping total housing costs under 28-30% of gross income.",
+        
+        "avoid mistakes": "Top mistakes to avoid: 1) Not getting pre-approved first, 2) Not shopping multiple lenders, 3) Focusing only on monthly payment instead of total cost, 4) Avoiding loans with prepayment penalties, 5) Not reading all the fine print!",
+        
+        "best loan type": "The best loan depends on YOUR situation. If you're a veteran, VA is usually best. If you have limited funds, FHA might work. If you have great credit and 20% down, conventional often has the best rates. What's your situation?"
+    }
+};
+
+// Main Avatar Activation Function
+function activateAIAssistant() {
+    // Create AI Chat Interface
+    createAIChatInterface();
+    
+    // Welcome message
+    setTimeout(() => {
+        addAIMessage(getRandomGreeting());
+        addAIMessage("I can help with: 🏠 Mortgage basics, 💰 Qualification questions, 📋 Loan types, 🎯 Expert advice, and ⚡ Fill out your form automatically!");
+        showQuickOptions();
+    }, 500);
+}
+
+// Create Chat Interface
+function createAIChatInterface() {
+    // Remove existing chat if present
+    const existingChat = document.getElementById('aiChatInterface');
+    if (existingChat) existingChat.remove();
+    
+    // Create chat container
+    const chatHTML = `
+        <div id="aiChatInterface" style="
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 90%; max-width: 500px; height: 600px;
+            background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 10000; display: flex; flex-direction: column;
+        ">
+            <!-- Header -->
+            <div style="
+                background: linear-gradient(135deg, #4CAF50, #45a049); color: white; 
+                padding: 15px; border-radius: 15px 15px 0 0; text-align: center;
+            ">
+                <h3 style="margin: 0; font-size: 18px;">🤖 AI Mortgage Assistant</h3>
+                <button onclick="closeAIChat()" style="
+                    position: absolute; top: 10px; right: 15px; background: none; 
+                    border: none; color: white; font-size: 20px; cursor: pointer;
+                ">×</button>
+            </div>
+            
+            <!-- Chat Messages -->
+            <div id="chatMessages" style="
+                flex: 1; padding: 15px; overflow-y: auto; background: #f8f9fa;
+            "></div>
+            
+            <!-- Input Area -->
+            <div style="padding: 15px; border-top: 1px solid #eee;">
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="userInput" placeholder="Ask me anything about mortgages..." style="
+                        flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 20px;
+                        font-size: 14px;
+                    " onkeypress="if(event.key==='Enter') sendUserMessage()">
+                    <button onclick="sendUserMessage()" style="
+                        background: #4CAF50; color: white; border: none; border-radius: 50%;
+                        width: 40px; height: 40px; cursor: pointer; font-size: 16px;
+                    ">→</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Backdrop -->
+        <div id="chatBackdrop" onclick="closeAIChat()" style="
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 9999;
+        "></div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', chatHTML);
+    document.getElementById('userInput').focus();
+}
+
+// Quick Options Buttons
+function showQuickOptions() {
+    const options = `
+        <div style="margin: 10px 0;">
+            <button onclick="handleQuickQuestion('what is a mortgage')" class="quick-option">🏠 What is a mortgage?</button>
+            <button onclick="handleQuickQuestion('mortgage types')" class="quick-option">📋 Loan types</button>
+            <button onclick="handleQuickQuestion('do i qualify')" class="quick-option">💰 Do I qualify?</button>
+            <button onclick="startFormDemo()" class="quick-option">⚡ Fill my form</button>
+        </div>
+        <style>
+            .quick-option {
+                background: #e3f2fd; border: 1px solid #2196f3; border-radius: 15px;
+                padding: 8px 12px; margin: 3px; font-size: 12px; cursor: pointer;
+                color: #1976d2; transition: all 0.3s;
+            }
+            .quick-option:hover {
+                background: #2196f3; color: white;
+            }
+        </style>
+    `;
+    document.getElementById('chatMessages').insertAdjacentHTML('beforeend', options);
+    scrollToBottom();
+}
+
+// Handle User Messages
+function sendUserMessage() {
+    const input = document.getElementById('userInput');
+    const message = input.value.trim();
+    if (!message) return;
+    
+    addUserMessage(message);
+    input.value = '';
+    
+    // Process AI response
+    setTimeout(() => {
+        const response = getAIResponse(message);
+        addAIMessage(response);
+    }, 800);
+}
+
+// Get AI Response
+function getAIResponse(userMessage) {
+    const message = userMessage.toLowerCase();
+    
+    // Check for specific topics
+    for (const [key, value] of Object.entries(mortgageKnowledge.basicQuestions)) {
+        if (message.includes(key.replace(/\s+/g, '')) || message.includes(key)) {
+            return value;
+        }
+    }
+    
+    for (const [key, value] of Object.entries(mortgageKnowledge.qualificationHelp)) {
+        if (message.includes(key.replace(/\s+/g, '')) || message.includes(key)) {
+            return value;
+        }
+    }
+    
+    for (const [key, value] of Object.entries(mortgageKnowledge.expertAdvice)) {
+        if (message.includes(key.replace(/\s+/g, '')) || message.includes(key)) {
+            return value;
+        }
+    }
+    
+    // Default helpful response
+    return "That's a great question! I have expert knowledge about mortgages, loan types, qualification requirements, and the home buying process. Could you be more specific? For example, ask me about 'FHA loans' or 'how much down payment do I need?'";
+}
+
+// Quick Question Handler
+function handleQuickQuestion(topic) {
+    addUserMessage(topic.charAt(0).toUpperCase() + topic.slice(1) + "?");
+    setTimeout(() => {
+        const response = mortgageKnowledge.basicQuestions[topic] || mortgageKnowledge.qualificationHelp[topic];
+        addAIMessage(response);
+    }, 500);
+}
+
+// Form Demo Integration
+function startFormDemo() {
+    addAIMessage("Perfect! Let me fill out your form with sample data to show you how this works. Watch this! ⚡");
+    closeAIChat();
+    setTimeout(() => {
+        simulateAIFormFilling(); // Your existing form filling function
+    }, 1000);
+}
+
+// Message Functions
+function addAIMessage(message) {
+    const chatMessages = document.getElementById('chatMessages');
+    chatMessages.insertAdjacentHTML('beforeend', `
+        <div style="margin-bottom: 15px;">
+            <div style="display: flex; align-items: flex-start; gap: 10px;">
+                <div style="
+                    background: #4CAF50; color: white; border-radius: 50%; 
+                    width: 30px; height: 30px; display: flex; align-items: center; 
+                    justify-content: center; font-size: 14px; flex-shrink: 0;
+                ">🤖</div>
+                <div style="
+                    background: #e8f5e8; padding: 10px 15px; border-radius: 15px 15px 15px 5px;
+                    max-width: 80%; font-size: 14px; line-height: 1.4;
+                ">${message}</div>
+            </div>
+        </div>
+    `);
+    scrollToBottom();
+}
+
+function addUserMessage(message) {
+    const chatMessages = document.getElementById('chatMessages');
+    chatMessages.insertAdjacentHTML('beforeend', `
+        <div style="margin-bottom: 15px; text-align: right;">
+            <div style="display: flex; align-items: flex-start; gap: 10px; justify-content: flex-end;">
+                <div style="
+                    background: #2196f3; color: white; padding: 10px 15px; 
+                    border-radius: 15px 15px 5px 15px; max-width: 80%; 
+                    font-size: 14px; line-height: 1.4;
+                ">${message}</div>
+                <div style="
+                    background: #2196f3; color: white; border-radius: 50%; 
+                    width: 30px; height: 30px; display: flex; align-items: center; 
+                    justify-content: center; font-size: 14px; flex-shrink: 0;
+                ">👤</div>
+            </div>
+        </div>
+    `);
+    scrollToBottom();
+}
+
+// Utility Functions
+function getRandomGreeting() {
+    return mortgageKnowledge.greetings[Math.floor(Math.random() * mortgageKnowledge.greetings.length)];
+}
+
+function scrollToBottom() {
+    const chatMessages = document.getElementById('chatMessages');
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function closeAIChat() {
+    const chatInterface = document.getElementById('aiChatInterface');
+    const backdrop = document.getElementById('chatBackdrop');
+    if (chatInterface) chatInterface.remove();
+    if (backdrop) backdrop.remove();
+}
+</script>
+
 </body>
 </html>
 
