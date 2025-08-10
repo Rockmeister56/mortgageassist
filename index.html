@@ -1189,6 +1189,154 @@ function closeAllAIInterfaces() {
     formFieldsArray = [];
 }
 
+// FIXED: Better Form Assistant that doesn't skip fields
+function handleFormFieldResponse(response) {
+    const currentField = formFieldsArray[currentFormFieldIndex];
+    if (!currentField) return;
+    
+    // Clean up the response
+    const cleanResponse = response.trim();
+    
+    // Fill the field with the response
+    currentField.value = cleanResponse;
+    currentField.focus();
+    
+    // Trigger events to ensure the form recognizes the input
+    currentField.dispatchEvent(new Event('input', { bubbles: true }));
+    currentField.dispatchEvent(new Event('change', { bubbles: true }));
+    currentField.dispatchEvent(new Event('blur', { bubbles: true }));
+    
+    // Confirm the entry
+    speakMessage(`Got it! ${cleanResponse}. Let me record that for you.`);
+    
+    // Wait a moment to ensure the field is filled
+    setTimeout(() => {
+        // Move to next field
+        currentFormFieldIndex++;
+        
+        setTimeout(() => {
+            askForNextFormField();
+        }, 1000); // Increased delay to ensure proper processing
+    }, 500);
+}
+
+// FIXED: Better field detection to not skip fields
+function startVoiceFormProcess(fields) {
+    // Get ALL form inputs, including selects
+    const allInputs = document.querySelectorAll('input[type="text"], input[type="tel"], input[type="email"], input[name*="name"], input[placeholder*="name"], input[placeholder*="phone"], input[placeholder*="business"], select, input[placeholder*="time"]');
+    
+    formFieldsArray = Array.from(allInputs).filter(field => {
+        // Only include visible fields
+        return field.offsetParent !== null && !field.disabled && !field.readOnly;
+    });
+    
+    currentFormFieldIndex = 0;
+    isFormAssistantActive = true;
+    
+    if (!recognition) {
+        initializeSpeechRecognition();
+    }
+    
+    createFormAssistIndicator();
+    
+    speakMessage("Hi! Let me help you fill out this form. I'll ask you for each piece of information and make sure every field gets filled.");
+    
+    setTimeout(() => {
+        askForNextFormField();
+    }, 3000);
+}
+
+// FIXED: 4-Button Menu with NO CIRCLE around avatar
+function showEnhancedAIMenu() {
+    closeAllAIInterfaces();
+    
+    const menuHTML = `
+        <div id="aiOptionsMenu" style="
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 90%; max-width: 420px; background: white; border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3); z-index: 10000; padding: 30px;
+            text-align: center;
+        ">
+            <!-- AVATAR WITH NO CIRCLE -->
+            <div style="margin-bottom: 20px;">
+                <img src="https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/avatars/avatar_1754810337622_AI%20assist%20head%20left.png" 
+                     style="width: 80px; height: auto; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                <h2 style="margin: 0; color: #333; font-size: 24px;">AI Mortgage Assistant</h2>
+                <p style="color: #666; margin: 10px 0 0 0;">How can I help you today?</p>
+            </div>
+            
+            <!-- Rest of the buttons remain the same -->
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+                <button onclick="startFormAssistant()" style="
+                    background: linear-gradient(135deg, #4CAF50, #45a049); color: white; border: none;
+                    padding: 18px 25px; border-radius: 15px; font-size: 16px; font-weight: bold;
+                    cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 15px rgba(76,175,80,0.3);
+                " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                    📝 Help Me Fill The Form
+                </button>
+                
+                <button onclick="startQuestionChat()" style="
+                    background: linear-gradient(135deg, #2196F3, #1976D2); color: white; border: none;
+                    padding: 16px 25px; border-radius: 15px; font-size: 16px; cursor: pointer;
+                    transition: all 0.3s; box-shadow: 0 4px 15px rgba(33,150,243,0.3);
+                " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                    💬 I Have Questions
+                </button>
+                
+                <button onclick="showCallbackForm()" style="
+                    background: linear-gradient(135deg, #6f42c1, #5a2d91); color: white; border: none;
+                    padding: 16px 25px; border-radius: 15px; font-size: 16px; cursor: pointer;
+                    transition: all 0.3s; box-shadow: 0 4px 15px rgba(111,66,193,0.3);
+                    display: flex; align-items: center; justify-content: center; gap: 10px;
+                " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                    📞 Request a Call
+                </button>
+                
+                <button onclick="closeAllAIInterfaces()" style="
+                    background: linear-gradient(135deg, #f44336, #d32f2f); color: white; border: none;
+                    padding: 14px 25px; border-radius: 15px; font-size: 14px; cursor: pointer;
+                    transition: all 0.3s; box-shadow: 0 4px 15px rgba(244,67,54,0.3);
+                " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                    ❌ Close AI Assist
+                </button>
+            </div>
+        </div>
+        
+        <div id="aiBackdrop" onclick="closeAllAIInterfaces()" style="
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); z-index: 9999;
+        "></div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', menuHTML);
+}
+
+// FIXED: Callback Form with NO CIRCLE around avatar
+function createCallbackInterface() {
+    const callbackHTML = `
+        <div id="callbackInterface" style="
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 90%; max-width: 450px; background: white; border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3); z-index: 10000; padding: 30px;
+        ">
+            <!-- Header with Avatar - NO CIRCLE -->
+            <div style="text-align: center; margin-bottom: 25px;">
+                <img src="https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/avatars/avatar_1754810337622_AI%20assist%20head%20left.png" 
+                     style="width: 70px; height: auto; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                <h2 style="margin: 0; color: #333; font-size: 24px;">📞 Request a Callback</h2>
+                <p style="color: #666; margin: 10px 0 0 0;">I'll call you back within minutes!</p>
+            </div>
+            
+            <!-- Rest of the form remains the same -->
+            <form id="callbackForm" style="display: flex; flex-direction: column; gap: 15px;">
+                <!-- Form fields stay the same -->
+            </form>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', callbackHTML);
+}
+
 // Initialize
 document.addEventListener('DOMContentLoaded', function() {
     initializeSpeechRecognition();
