@@ -588,22 +588,33 @@ function askForNextFormField() {
     }, 2000);
 }
 
+function startFormFieldListening() {
+    console.log('20. Inside startFormFieldListening');
     
-    // Highlight the current field
-    highlightCurrentField(currentField);
+    if (!recognition) {
+        console.log('21. No recognition available');
+        speakMessage("Sorry, voice recognition isn't available. Please type your response in the highlighted field.");
+        return;
+    }
     
-    // Ask for the appropriate information based on field type
-    const question = getQuestionForField(currentField);
-    speakMessage(question);
+    console.log('22. Starting speech recognition...');
     
-    // Start listening for the response
-    setTimeout(() => {
-        startFormFieldListening();
-    }, 2000);
+    try {
+        recognition.start();
+        isListening = true;
+        console.log('23. Recognition started successfully');
+    } catch (error) {
+        console.log('24. Recognition start error:', error);
+        speakMessage("Please speak your response now, or type it in the highlighted field.");
+    }
+}
+
 
 function getQuestionForField(field) {
     const fieldId = field.id?.toLowerCase() || '';
     const fieldName = field.name?.toLowerCase() || '';
+    
+    console.log('Getting question for field:', fieldId, fieldName);
     
     // Match your exact field IDs
     if (fieldId === 'name' || fieldName === 'name') {
@@ -629,6 +640,17 @@ function getQuestionForField(field) {
     // Generic fallback
     return `Please tell me your ${fieldId || fieldName || 'information'}.`;
 }
+    // Highlight the current field
+    highlightCurrentField(currentField);
+    
+    // Ask for the appropriate information based on field type
+    const question = getQuestionForField(currentField);
+    speakMessage(question);
+    
+    // Start listening for the response
+    setTimeout(() => {
+        startFormFieldListening();
+    }, 2000);
 
 function handleFormFieldResponse(response) {
     const currentField = formFieldsArray[currentFormFieldIndex];
