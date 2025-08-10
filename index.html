@@ -439,21 +439,33 @@ function showEnhancedAIMenu() {
 function startFormAssistant() {
     closeAllAIInterfaces();
     
-    // IMPROVED: Find fields by exact IDs from your HTML
+    console.log('Starting form assistant...'); // Debug - MOVED UP
+    
+    // FIRST: Make sure the modal is open
+    const modal = document.getElementById('contactModal');
+    if (modal) {
+        modal.style.display = 'block'; // Force modal open
+        console.log('Modal opened');
+    }
+    
+    // IMPROVED: Find fields by exact IDs from your HTML  
     const formFields = [
         document.getElementById('name'),           // Your Name
         document.getElementById('businessName'),   // Business Name  
         document.getElementById('phone'),          // Phone Number
         document.getElementById('bestTime'),       // Best Time to Contact
         document.getElementById('preferredDate')   // Preferred Date
-    ].filter(field => field !== null && field.offsetParent !== null); // Only visible fields
+    ].filter(field => field !== null); // Removed offsetParent check temporarily
+    
+    console.log('Found fields:', formFields.length, formFields.map(f => f ? f.id : 'null')); // Debug BEFORE check
     
     if (formFields.length === 0) {
-        speakMessage("I don't see any form fields on this page. Please make sure the form is visible and try again.");
+        console.log('No fields found - modal may be hidden!');
+        speakMessage("I don't see any form fields on this page. Let me open the form first, then try again.");
         return;
     }
     
-    console.log('Found fields:', formFields.map(f => f.id)); // Debug log
+    console.log('Starting voice form process...');
     startVoiceFormProcess(formFields);
 }
 
