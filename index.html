@@ -299,254 +299,529 @@
     <script src="js/main.js"></script>
     <!-- Removed the chatbot.js script since we're using the Chatbase iframe -->
 <script>
-// AI Avatar Knowledge Base - Expert Mortgage Content
+// Enhanced AI Avatar System with Voice Capabilities
 const mortgageKnowledge = {
     greetings: [
-        "Hi! I'm your AI mortgage assistant. I have expert knowledge from top mortgage guides. How can I help you today?",
-        "Hello! I'm here to help you navigate the mortgage process with confidence. What questions do you have?",
-        "Welcome! I'm trained on the latest mortgage information and I'm ready to assist you. What would you like to know?"
+        "Hi! I'm your AI mortgage assistant with expert knowledge from top mortgage guides.",
+        "Hello! I'm here to guide you through the mortgage process step by step.",
+        "Welcome! I can speak with you, fill your form, or answer any mortgage questions."
     ],
     
-    basicQuestions: {
-        "what is a mortgage": "A mortgage is a loan used to finance your home purchase. The lender pays for the home upfront, and you repay in monthly installments over 15-30 years. Your payment includes principal, interest, property taxes, homeowners insurance, and PMI if you put less than 20% down.",
-        
-        "mortgage types": "There are 4 main types: **Conventional** (3% down, 620+ credit), **FHA** (3.5% down, 580+ credit, great for first-time buyers), **VA** (0% down for veterans), and **USDA** (0% down for rural areas). Each has different requirements and benefits.",
-        
-        "down payment": "Down payments typically range from 0-20%. FHA loans need just 3.5%, conventional loans start at 3%, while VA and USDA can be 0%. The more you put down, the lower your monthly payment and the less you'll pay in mortgage insurance.",
-        
-        "credit score": "Credit requirements vary: Conventional loans need 620+, FHA accepts 580+ (500 with 10% down), VA has no minimum, and USDA typically wants 640+. Higher scores get better rates!"
+    voicePersonality: {
+        rate: 0.85,
+        pitch: 1.0,
+        volume: 0.9,
+        voicePreference: 'female' // or 'male'
     },
     
-    qualificationHelp: {
-        "do i qualify": "Qualification depends on 4 key factors: **Credit Score** (580+ for most programs), **Income** (stable employment history), **Debt-to-Income ratio** (usually under 43-50%), and **Down Payment** (as low as 0-3.5%). I can help you assess each area!",
-        
-        "debt to income": "Your debt-to-income ratio is your monthly debt payments divided by gross monthly income. Most loans require under 43-50%. This includes credit cards, car loans, student loans, and your future mortgage payment.",
-        
-        "pre approval": "Pre-approval is different from pre-qualification! Pre-approval means the lender has verified your income, assets, and credit. It's much stronger than pre-qualification and shows sellers you're serious. Get pre-approved before house hunting!"
-    },
+    formQuestions: [
+        {field: 'name', question: "Let's start with your full name. What should I call you?", placeholder: "Your Name"},
+        {field: 'business', question: "Great! Now, what's your business or company name?", placeholder: "Business Name"},
+        {field: 'phone', question: "Perfect! What's the best phone number to reach you?", placeholder: "Phone Number"},
+        {field: 'bestTime', question: "When's the best time to contact you?", placeholder: "Best Time to Contact"},
+        {field: 'preferredDate', question: "And what date would you prefer for us to contact you?", placeholder: "Preferred Date"}
+    ],
     
-    expertAdvice: {
-        "how much can i afford": "CRITICAL: Just because a lender approves you for an amount doesn't mean you can afford it! Consider your other financial goals, emergency fund, and monthly budget. A good rule is keeping total housing costs under 28-30% of gross income.",
-        
-        "avoid mistakes": "Top mistakes to avoid: 1) Not getting pre-approved first, 2) Not shopping multiple lenders, 3) Focusing only on monthly payment instead of total cost, 4) Avoiding loans with prepayment penalties, 5) Not reading all the fine print!",
-        
-        "best loan type": "The best loan depends on YOUR situation. If you're a veteran, VA is usually best. If you have limited funds, FHA might work. If you have great credit and 20% down, conventional often has the best rates. What's your situation?"
+    expertResponses: {
+        "mortgage basics": "A mortgage is a loan to buy your home. You pay it back monthly over 15-30 years. Your payment includes principal, interest, taxes, and insurance.",
+        "loan types": "Main types are: Conventional (3% down, 620+ credit), FHA (3.5% down, 580+ credit), VA (0% down for veterans), and USDA (0% down, rural areas).",
+        "qualification": "You need good credit, stable income, acceptable debt-to-income ratio, and down payment. I can help assess your situation!",
+        "down payment": "Down payments range from 0-20%. FHA needs just 3.5%, conventional starts at 3%, VA and USDA can be 0%."
     }
 };
 
-// Main Avatar Activation Function
-function activateAIAssistant() {
-    // Create AI Chat Interface
-    createAIChatInterface();
-    
-    // Welcome message
-    setTimeout(() => {
-        addAIMessage(getRandomGreeting());
-        addAIMessage("I can help with: 🏠 Mortgage basics, 💰 Qualification questions, 📋 Loan types, 🎯 Expert advice, and ⚡ Fill out your form automatically!");
-        showQuickOptions();
-    }, 500);
+// Voice System Setup
+let speechSynthesis = window.speechSynthesis;
+let recognition = null;
+let currentFormStep = 0;
+let isListening = false;
+let userFormData = {};
+
+// Initialize Speech Recognition
+function initializeSpeechRecognition() {
+    if ('webkitSpeechRecognition' in window) {
+        recognition = new webkitSpeechRecognition();
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.lang = 'en-US';
+        
+        recognition.onresult = function(event) {
+            const transcript = event.results[0][0].transcript.trim();
+            console.log('User said:', transcript);
+            handleVoiceInput(transcript);
+        };
+        
+        recognition.onerror = function(event) {
+            console.log('Speech recognition error:', event.error);
+            speakToUser("I didn't catch that. Could you please repeat?");
+            setTimeout(startListening, 1000);
+        };
+        
+        recognition.onend = function() {
+            isListening = false;
+        };
+    }
 }
 
-// Create Chat Interface
-function createAIChatInterface() {
-    // Remove existing chat if present
-    const existingChat = document.getElementById('aiChatInterface');
-    if (existingChat) existingChat.remove();
+// Main Avatar Activation - 3 OPTIONS
+function activateAIAssistant() {
+    initializeSpeechRecognition();
+    showAIOptionsMenu();
+}
+
+// Create 3-Option Menu
+function showAIOptionsMenu() {
+    // Remove existing interfaces
+    closeAllAIInterfaces();
     
-    // Create chat container
-    const chatHTML = `
-        <div id="aiChatInterface" style="
+    const optionsHTML = `
+        <div id="aiOptionsMenu" style="
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 90%; max-width: 500px; height: 600px;
-            background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            z-index: 10000; display: flex; flex-direction: column;
+            width: 90%; max-width: 450px; background: white; border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3); z-index: 10000; padding: 30px;
+            text-align: center;
         ">
-            <!-- Header -->
-            <div style="
-                background: linear-gradient(135deg, #4CAF50, #45a049); color: white; 
-                padding: 15px; border-radius: 15px 15px 0 0; text-align: center;
-            ">
-                <h3 style="margin: 0; font-size: 18px;">🤖 AI Mortgage Assistant</h3>
-                <button onclick="closeAIChat()" style="
-                    position: absolute; top: 10px; right: 15px; background: none; 
-                    border: none; color: white; font-size: 20px; cursor: pointer;
-                ">×</button>
+            <div style="margin-bottom: 25px;">
+                <div style="font-size: 40px; margin-bottom: 10px;">🤖</div>
+                <h2 style="margin: 0; color: #333; font-size: 24px;">AI Mortgage Assistant</h2>
+                <p style="color: #666; margin: 10px 0 0 0;">How would you like me to help you today?</p>
             </div>
             
-            <!-- Chat Messages -->
-            <div id="chatMessages" style="
-                flex: 1; padding: 15px; overflow-y: auto; background: #f8f9fa;
-            "></div>
-            
-            <!-- Input Area -->
-            <div style="padding: 15px; border-top: 1px solid #eee;">
-                <div style="display: flex; gap: 10px;">
-                    <input type="text" id="userInput" placeholder="Ask me anything about mortgages..." style="
-                        flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 20px;
-                        font-size: 14px;
-                    " onkeypress="if(event.key==='Enter') sendUserMessage()">
-                    <button onclick="sendUserMessage()" style="
-                        background: #4CAF50; color: white; border: none; border-radius: 50%;
-                        width: 40px; height: 40px; cursor: pointer; font-size: 16px;
-                    ">→</button>
-                </div>
+            <div style="display: flex; flex-direction: column; gap: 15px;">
+                <button onclick="startVoiceAssistant()" style="
+                    background: linear-gradient(135deg, #FF6B6B, #FF5252); color: white; border: none;
+                    padding: 18px 25px; border-radius: 15px; font-size: 16px; cursor: pointer;
+                    transition: all 0.3s; box-shadow: 0 4px 15px rgba(255,107,107,0.3);
+                " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                    🎤 Talk With Me (Voice Guided)
+                </button>
+                
+                <button onclick="startGuidedForm()" style="
+                    background: linear-gradient(135deg, #4CAF50, #45a049); color: white; border: none;
+                    padding: 18px 25px; border-radius: 15px; font-size: 16px; cursor: pointer;
+                    transition: all 0.3s; box-shadow: 0 4px 15px rgba(76,175,80,0.3);
+                " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                    📝 Help Me Fill The Form
+                </button>
+                
+                <button onclick="startChatQuestions()" style="
+                    background: linear-gradient(135deg, #2196F3, #1976D2); color: white; border: none;
+                    padding: 18px 25px; border-radius: 15px; font-size: 16px; cursor: pointer;
+                    transition: all 0.3s; box-shadow: 0 4px 15px rgba(33,150,243,0.3);
+                " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                    💬 I Have Questions
+                </button>
             </div>
+            
+            <button onclick="closeAllAIInterfaces()" style="
+                position: absolute; top: 15px; right: 20px; background: none; border: none;
+                color: #999; font-size: 24px; cursor: pointer;
+            ">×</button>
         </div>
         
-        <!-- Backdrop -->
-        <div id="chatBackdrop" onclick="closeAIChat()" style="
+        <div id="aiBackdrop" onclick="closeAllAIInterfaces()" style="
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5); z-index: 9999;
+            background: rgba(0,0,0,0.6); z-index: 9999;
         "></div>
     `;
     
-    document.body.insertAdjacentHTML('beforeend', chatHTML);
-    document.getElementById('userInput').focus();
+    document.body.insertAdjacentHTML('beforeend', optionsHTML);
 }
 
-// Quick Options Buttons
-function showQuickOptions() {
-    const options = `
-        <div style="margin: 10px 0;">
-            <button onclick="handleQuickQuestion('what is a mortgage')" class="quick-option">🏠 What is a mortgage?</button>
-            <button onclick="handleQuickQuestion('mortgage types')" class="quick-option">📋 Loan types</button>
-            <button onclick="handleQuickQuestion('do i qualify')" class="quick-option">💰 Do I qualify?</button>
-            <button onclick="startFormDemo()" class="quick-option">⚡ Fill my form</button>
+// OPTION 1: Voice Assistant
+function startVoiceAssistant() {
+    closeAllAIInterfaces();
+    createVoiceInterface();
+    
+    setTimeout(() => {
+        speakToUser("Hi there! I'm your AI mortgage assistant. I'll help you complete your application by talking with you. Let's get started!");
+        
+        setTimeout(() => {
+            currentFormStep = 0;
+            userFormData = {};
+            askNextFormQuestion();
+        }, 3000);
+    }, 500);
+}
+
+// Create Voice Interface
+function createVoiceInterface() {
+    const voiceHTML = `
+        <div id="voiceInterface" style="
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 90%; max-width: 500px; background: white; border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3); z-index: 10000; padding: 30px;
+            text-align: center;
+        ">
+            <div style="margin-bottom: 20px;">
+                <div id="voiceAvatar" style="font-size: 60px; margin-bottom: 15px;">🎤</div>
+                <h3 style="margin: 0; color: #333;">Voice Assistant Active</h3>
+            </div>
+            
+            <div id="voiceStatus" style="
+                background: #f0f8ff; border: 2px solid #2196F3; border-radius: 15px;
+                padding: 20px; margin: 20px 0; min-height: 60px; display: flex;
+                align-items: center; justify-content: center;
+            ">
+                <p id="voiceMessage" style="margin: 0; font-size: 16px; color: #333;">Starting voice assistant...</p>
+            </div>
+            
+            <div id="listeningIndicator" style="display: none; margin: 15px 0;">
+                <div style="display: flex; justify-content: center; align-items: center; gap: 5px;">
+                    <div class="pulse-dot" style="width: 8px; height: 8px; background: #FF5252; border-radius: 50%; animation: pulse 1.5s infinite;"></div>
+                    <div class="pulse-dot" style="width: 8px; height: 8px; background: #FF5252; border-radius: 50%; animation: pulse 1.5s infinite 0.2s;"></div>
+                    <div class="pulse-dot" style="width: 8px; height: 8px; background: #FF5252; border-radius: 50%; animation: pulse 1.5s infinite 0.4s;"></div>
+                    <span style="margin-left: 10px; color: #FF5252; font-weight: bold;">Listening...</span>
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
+                <button onclick="toggleListening()" id="listenButton" style="
+                    background: #4CAF50; color: white; border: none; padding: 12px 20px;
+                    border-radius: 10px; cursor: pointer; font-size: 14px;
+                ">🎤 Start Listening</button>
+                
+                <button onclick="skipToFormFill()" style="
+                    background: #FF9800; color: white; border: none; padding: 12px 20px;
+                    border-radius: 10px; cursor: pointer; font-size: 14px;
+                ">📝 Skip to Auto-Fill</button>
+                
+                <button onclick="closeAllAIInterfaces()" style="
+                    background: #f44336; color: white; border: none; padding: 12px 20px;
+                    border-radius: 10px; cursor: pointer; font-size: 14px;
+                ">✕ Close</button>
+            </div>
         </div>
+        
         <style>
-            .quick-option {
-                background: #e3f2fd; border: 1px solid #2196f3; border-radius: 15px;
-                padding: 8px 12px; margin: 3px; font-size: 12px; cursor: pointer;
-                color: #1976d2; transition: all 0.3s;
-            }
-            .quick-option:hover {
-                background: #2196f3; color: white;
+            @keyframes pulse {
+                0%, 100% { transform: scale(1); opacity: 1; }
+                50% { transform: scale(1.2); opacity: 0.7; }
             }
         </style>
+        
+        <div id="aiBackdrop" style="
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); z-index: 9999;
+        "></div>
     `;
-    document.getElementById('chatMessages').insertAdjacentHTML('beforeend', options);
-    scrollToBottom();
+    
+    document.body.insertAdjacentHTML('beforeend', voiceHTML);
 }
 
-// Handle User Messages
-function sendUserMessage() {
+// Voice Functions
+function speakToUser(text, callback) {
+    const msg = new SpeechSynthesisUtterance(text);
+    
+    // Get available voices
+    const voices = speechSynthesis.getVoices();
+    const femaleVoice = voices.find(voice => 
+        voice.name.includes('Female') || 
+        voice.name.includes('Samantha') || 
+        voice.name.includes('Victoria') ||
+        voice.name.includes('Karen')
+    );
+    
+    if (femaleVoice) msg.voice = femaleVoice;
+    msg.rate = mortgageKnowledge.voicePersonality.rate;
+    msg.pitch = mortgageKnowledge.voicePersonality.pitch;
+    msg.volume = mortgageKnowledge.voicePersonality.volume;
+    
+    // Update UI
+    const voiceMessage = document.getElementById('voiceMessage');
+    if (voiceMessage) {
+        voiceMessage.textContent = text;
+    }
+    
+    msg.onend = function() {
+        if (callback) callback();
+    };
+    
+    speechSynthesis.speak(msg);
+}
+
+// Ask Form Questions with Voice
+function askNextFormQuestion() {
+    if (currentFormStep >= mortgageKnowledge.formQuestions.length) {
+        completedVoiceForm();
+        return;
+    }
+    
+    const question = mortgageKnowledge.formQuestions[currentFormStep];
+    speakToUser(question.question, () => {
+        setTimeout(startListening, 1000);
+    });
+}
+
+// Handle Voice Input
+function handleVoiceInput(transcript) {
+    const question = mortgageKnowledge.formQuestions[currentFormStep];
+    
+    // Store the response
+    userFormData[question.field] = transcript;
+    
+    // Fill the actual form field
+    fillFormField(question.field, transcript);
+    
+    // Confirm and move to next question
+    speakToUser(`Got it! ${transcript}. Let me get that entered for you.`, () => {
+        currentFormStep++;
+        setTimeout(askNextFormQuestion, 1500);
+    });
+}
+
+// Fill Form Field
+function fillFormField(fieldName, value) {
+    let selector = '';
+    switch(fieldName) {
+        case 'name':
+            selector = 'input[name="name"], input[placeholder*="Name"]:not([placeholder*="Business"])';
+            break;
+        case 'business':
+            selector = 'input[name="business"], input[name="businessName"], input[placeholder*="Business"]';
+            break;
+        case 'phone':
+            selector = 'input[name="phone"], input[type="tel"], input[placeholder*="Phone"]';
+            break;
+        case 'bestTime':
+            selector = 'input[name="bestTime"], input[placeholder*="Time"]';
+            break;
+        case 'preferredDate':
+            selector = 'input[type="date"], input[name="preferredDate"]';
+            if (fieldName === 'preferredDate') {
+                value = formatDateFromSpeech(value);
+            }
+            break;
+    }
+    
+    const field = document.querySelector(selector);
+    if (field) {
+        field.focus();
+        field.value = '';
+        
+        // Type with animation
+        let i = 0;
+        const typeTimer = setInterval(() => {
+            field.value += value[i];
+            i++;
+            if (i >= value.length) {
+                clearInterval(typeTimer);
+                field.blur();
+            }
+        }, 50);
+    }
+}
+
+// Format Date from Speech
+function formatDateFromSpeech(spokenDate) {
+    // Simple date formatting - you can enhance this
+    const today = new Date();
+    const nextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
+    return nextWeek.toISOString().split('T')[0];
+}
+
+// Voice Form Completion
+function completedVoiceForm() {
+    speakToUser("Perfect! I've completed your mortgage application form. You can review it and submit when you're ready. Thank you for using our AI assistant!");
+    
+    setTimeout(() => {
+        closeAllAIInterfaces();
+    }, 4000);
+}
+
+// Listening Controls
+function toggleListening() {
+    if (isListening) {
+        stopListening();
+    } else {
+        startListening();
+    }
+}
+
+function startListening() {
+    if (!recognition) {
+        speakToUser("Sorry, voice recognition is not supported in your browser.");
+        return;
+    }
+    
+    isListening = true;
+    const indicator = document.getElementById('listeningIndicator');
+    const button = document.getElementById('listenButton');
+    
+    if (indicator) indicator.style.display = 'block';
+    if (button) {
+        button.textContent = '🔴 Stop Listening';
+        button.style.background = '#f44336';
+    }
+    
+    recognition.start();
+}
+
+function stopListening() {
+    isListening = false;
+    if (recognition) recognition.stop();
+    
+    const indicator = document.getElementById('listeningIndicator');
+    const button = document.getElementById('listenButton');
+    
+    if (indicator) indicator.style.display = 'none';
+    if (button) {
+        button.textContent = '🎤 Start Listening';
+        button.style.background = '#4CAF50';
+    }
+}
+
+// OPTION 2: Guided Form (Your existing function)
+function startGuidedForm() {
+    closeAllAIInterfaces();
+    simulateAIFormFilling(); // Your existing form demo
+}
+
+// OPTION 3: Chat Questions (Your existing chat system)
+function startChatQuestions() {
+    closeAllAIInterfaces();
+    createAIChatInterface(); // Your existing chat
+    
+    setTimeout(() => {
+        addAIMessage("Hi! I'm here to answer your mortgage questions. What would you like to know?");
+        showQuickChatOptions();
+    }, 500);
+}
+
+// Quick Chat Options
+function showQuickChatOptions() {
+    const options = `
+        <div style="margin: 10px 0;">
+            <button onclick="handleQuickQuestion('mortgage basics')" class="quick-option">🏠 Mortgage Basics</button>
+            <button onclick="handleQuickQuestion('loan types')" class="quick-option">📋 Loan Types</button>
+            <button onclick="handleQuickQuestion('qualification')" class="quick-option">💰 Qualification</button>
+            <button onclick="handleQuickQuestion('down payment')" class="quick-option">💵 Down Payment</button>
+        </div>
+    `;
+    document.getElementById('chatMessages').insertAdjacentHTML('beforeend', options);
+}
+
+// Chat Interface (Simplified version of your existing one)
+function createAIChatInterface() {
+    const chatHTML = `
+        <div id="aiChatInterface" style="
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 90%; max-width: 500px; height: 600px; background: white; 
+            border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 10000; display: flex; flex-direction: column;
+        ">
+            <div style="background: linear-gradient(135deg, #2196F3, #1976D2); color: white; 
+                        padding: 15px; border-radius: 15px 15px 0 0; text-align: center;">
+                <h3 style="margin: 0;">💬 Mortgage Q&A</h3>
+                <button onclick="closeAllAIInterfaces()" style="position: absolute; top: 10px; right: 15px; 
+                        background: none; border: none; color: white; font-size: 20px; cursor: pointer;">×</button>
+            </div>
+            
+            <div id="chatMessages" style="flex: 1; padding: 15px; overflow-y: auto; background: #f8f9fa;"></div>
+            
+            <div style="padding: 15px; border-top: 1px solid #eee;">
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="userInput" placeholder="Ask about mortgages..." 
+                           style="flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 20px;"
+                           onkeypress="if(event.key==='Enter') sendChatMessage()">
+                    <button onclick="sendChatMessage()" style="background: #2196F3; color: white; border: none; 
+                            border-radius: 50%; width: 40px; height: 40px; cursor: pointer;">→</button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', chatHTML);
+}
+
+// Chat Functions
+function sendChatMessage() {
     const input = document.getElementById('userInput');
     const message = input.value.trim();
     if (!message) return;
     
-    addUserMessage(message);
+    addChatMessage(message, 'user');
     input.value = '';
     
-    // Process AI response
     setTimeout(() => {
-        const response = getAIResponse(message);
-        addAIMessage(response);
+        const response = getChatResponse(message);
+        addChatMessage(response, 'ai');
     }, 800);
 }
 
-// Get AI Response
-function getAIResponse(userMessage) {
-    const message = userMessage.toLowerCase();
-    
-    // Check for specific topics
-    for (const [key, value] of Object.entries(mortgageKnowledge.basicQuestions)) {
-        if (message.includes(key.replace(/\s+/g, '')) || message.includes(key)) {
-            return value;
-        }
-    }
-    
-    for (const [key, value] of Object.entries(mortgageKnowledge.qualificationHelp)) {
-        if (message.includes(key.replace(/\s+/g, '')) || message.includes(key)) {
-            return value;
-        }
-    }
-    
-    for (const [key, value] of Object.entries(mortgageKnowledge.expertAdvice)) {
-        if (message.includes(key.replace(/\s+/g, '')) || message.includes(key)) {
-            return value;
-        }
-    }
-    
-    // Default helpful response
-    return "That's a great question! I have expert knowledge about mortgages, loan types, qualification requirements, and the home buying process. Could you be more specific? For example, ask me about 'FHA loans' or 'how much down payment do I need?'";
-}
-
-// Quick Question Handler
-function handleQuickQuestion(topic) {
-    addUserMessage(topic.charAt(0).toUpperCase() + topic.slice(1) + "?");
-    setTimeout(() => {
-        const response = mortgageKnowledge.basicQuestions[topic] || mortgageKnowledge.qualificationHelp[topic];
-        addAIMessage(response);
-    }, 500);
-}
-
-// Form Demo Integration
-function startFormDemo() {
-    addAIMessage("Perfect! Let me fill out your form with sample data to show you how this works. Watch this! ⚡");
-    closeAIChat();
-    setTimeout(() => {
-        simulateAIFormFilling(); // Your existing form filling function
-    }, 1000);
-}
-
-// Message Functions
-function addAIMessage(message) {
+function addChatMessage(message, sender) {
     const chatMessages = document.getElementById('chatMessages');
+    const isAI = sender === 'ai';
+    
     chatMessages.insertAdjacentHTML('beforeend', `
-        <div style="margin-bottom: 15px;">
-            <div style="display: flex; align-items: flex-start; gap: 10px;">
-                <div style="
-                    background: #4CAF50; color: white; border-radius: 50%; 
-                    width: 30px; height: 30px; display: flex; align-items: center; 
-                    justify-content: center; font-size: 14px; flex-shrink: 0;
-                ">🤖</div>
-                <div style="
-                    background: #e8f5e8; padding: 10px 15px; border-radius: 15px 15px 15px 5px;
-                    max-width: 80%; font-size: 14px; line-height: 1.4;
-                ">${message}</div>
+        <div style="margin-bottom: 15px; text-align: ${isAI ? 'left' : 'right'};">
+            <div style="display: inline-block; max-width: 80%; padding: 10px 15px; border-radius: 15px;
+                        background: ${isAI ? '#e3f2fd' : '#2196f3'}; color: ${isAI ? '#333' : 'white'};">
+                ${isAI ? '🤖 ' : ''}${message}
             </div>
         </div>
     `);
-    scrollToBottom();
-}
-
-function addUserMessage(message) {
-    const chatMessages = document.getElementById('chatMessages');
-    chatMessages.insertAdjacentHTML('beforeend', `
-        <div style="margin-bottom: 15px; text-align: right;">
-            <div style="display: flex; align-items: flex-start; gap: 10px; justify-content: flex-end;">
-                <div style="
-                    background: #2196f3; color: white; padding: 10px 15px; 
-                    border-radius: 15px 15px 5px 15px; max-width: 80%; 
-                    font-size: 14px; line-height: 1.4;
-                ">${message}</div>
-                <div style="
-                    background: #2196f3; color: white; border-radius: 50%; 
-                    width: 30px; height: 30px; display: flex; align-items: center; 
-                    justify-content: center; font-size: 14px; flex-shrink: 0;
-                ">👤</div>
-            </div>
-        </div>
-    `);
-    scrollToBottom();
-}
-
-// Utility Functions
-function getRandomGreeting() {
-    return mortgageKnowledge.greetings[Math.floor(Math.random() * mortgageKnowledge.greetings.length)];
-}
-
-function scrollToBottom() {
-    const chatMessages = document.getElementById('chatMessages');
+    
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-function closeAIChat() {
-    const chatInterface = document.getElementById('aiChatInterface');
-    const backdrop = document.getElementById('chatBackdrop');
-    if (chatInterface) chatInterface.remove();
-    if (backdrop) backdrop.remove();
+function getChatResponse(message) {
+    const msg = message.toLowerCase();
+    for (const [key, value] of Object.entries(mortgageKnowledge.expertResponses)) {
+        if (msg.includes(key) || msg.includes(key.replace(' ', ''))) {
+            return value;
+        }
+    }
+    return "Great question! I can help with mortgage basics, loan types, qualification requirements, and down payments. What specifically would you like to know?";
 }
+
+function handleQuickQuestion(topic) {
+    addChatMessage(topic.charAt(0).toUpperCase() + topic.slice(1) + "?", 'user');
+    setTimeout(() => {
+        addChatMessage(mortgageKnowledge.expertResponses[topic], 'ai');
+    }, 500);
+}
+
+// Skip to Auto-Fill Demo
+function skipToFormFill() {
+    closeAllAIInterfaces();
+    simulateAIFormFilling(); // Your existing form demo
+}
+
+// Utility Functions
+function closeAllAIInterfaces() {
+    const interfaces = ['aiOptionsMenu', 'voiceInterface', 'aiChatInterface', 'aiBackdrop'];
+    interfaces.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) element.remove();
+    });
+    
+    if (recognition && isListening) {
+        recognition.stop();
+    }
+    speechSynthesis.cancel();
+    isListening = false;
+}
+
+// Quick option styling
+const quickOptionStyles = `
+    <style>
+        .quick-option {
+            background: #e3f2fd; border: 1px solid #2196f3; border-radius: 15px;
+            padding: 8px 12px; margin: 3px; font-size: 12px; cursor: pointer;
+            color: #1976d2; transition: all 0.3s;
+        }
+        .quick-option:hover {
+            background: #2196f3; color: white;
+        }
+    </style>
+`;
+document.head.insertAdjacentHTML('beforeend', quickOptionStyles);
+
+// Initialize voices when available
+speechSynthesis.onvoiceschanged = function() {
+    console.log('Voices loaded:', speechSynthesis.getVoices().length);
+};
 </script>
 
 </body>
