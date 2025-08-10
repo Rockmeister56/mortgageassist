@@ -299,48 +299,40 @@
     <script src="js/main.js"></script>
     <!-- Removed the chatbot.js script since we're using the Chatbase iframe -->
 <script>
-// Enhanced AI Avatar System with Voice Capabilities
+// Enhanced AI Avatar System - FIXED VERSION
 const mortgageKnowledge = {
-    greetings: [
-        "Hi! I'm your AI mortgage assistant with expert knowledge from top mortgage guides.",
-        "Hello! I'm here to guide you through the mortgage process step by step.",
-        "Welcome! I can speak with you, fill your form, or answer any mortgage questions."
-    ],
-    
-    voicePersonality: {
-        rate: 0.85,
-        pitch: 1.0,
-        volume: 0.9,
-        voicePreference: 'female' // or 'male'
+    expertResponses: {
+        "mortgage": "A mortgage is a loan to buy your home. You pay it back monthly over 15-30 years. Your payment includes principal, interest, taxes, and insurance.",
+        "loan types": "Main types are: **Conventional** (3% down, 620+ credit), **FHA** (3.5% down, 580+ credit), **VA** (0% down for veterans), and **USDA** (0% down, rural areas).",
+        "qualification": "You need good credit, stable income, acceptable debt-to-income ratio, and down payment. Most programs require 580+ credit score and 3-43% DTI.",
+        "down payment": "Down payments range from 0-20%. FHA needs just 3.5%, conventional starts at 3%, VA and USDA can be 0%. The more you put down, the lower your monthly payment!",
+        "credit score": "Credit requirements: Conventional (620+), FHA (580+), VA (no minimum), USDA (640+). Higher scores get better rates!",
+        "interest rates": "Current mortgage rates are competitive! Rates depend on your credit score, down payment, and loan type. I can help you understand what affects your rate.",
+        "closing costs": "Closing costs typically range from 1-5% of home price. This includes appraisal, title insurance, attorney fees, and lender charges.",
+        "pmi": "Private Mortgage Insurance (PMI) is required if you put less than 20% down on conventional loans. It protects the lender and typically costs 0.5-1% annually.",
+        "preapproval": "Pre-approval is stronger than pre-qualification! It means the lender verified your finances. Get pre-approved before house hunting for negotiating power."
     },
     
     formQuestions: [
-        {field: 'name', question: "Let's start with your full name. What should I call you?", placeholder: "Your Name"},
-        {field: 'business', question: "Great! Now, what's your business or company name?", placeholder: "Business Name"},
-        {field: 'phone', question: "Perfect! What's the best phone number to reach you?", placeholder: "Phone Number"},
-        {field: 'bestTime', question: "When's the best time to contact you?", placeholder: "Best Time to Contact"},
-        {field: 'preferredDate', question: "And what date would you prefer for us to contact you?", placeholder: "Preferred Date"}
-    ],
-    
-    expertResponses: {
-        "mortgage basics": "A mortgage is a loan to buy your home. You pay it back monthly over 15-30 years. Your payment includes principal, interest, taxes, and insurance.",
-        "loan types": "Main types are: Conventional (3% down, 620+ credit), FHA (3.5% down, 580+ credit), VA (0% down for veterans), and USDA (0% down, rural areas).",
-        "qualification": "You need good credit, stable income, acceptable debt-to-income ratio, and down payment. I can help assess your situation!",
-        "down payment": "Down payments range from 0-20%. FHA needs just 3.5%, conventional starts at 3%, VA and USDA can be 0%."
-    }
+        {field: 'name', question: "Let's start with your full name. What should I call you?"},
+        {field: 'business', question: "Great! Now, what's your business or company name?"},
+        {field: 'phone', question: "Perfect! What's the best phone number to reach you?"},
+        {field: 'bestTime', question: "When's the best time to contact you?"},
+        {field: 'preferredDate', question: "And what date would you prefer for us to contact you?"}
+    ]
 };
 
-// Voice System Setup
+// Voice System Variables
 let speechSynthesis = window.speechSynthesis;
 let recognition = null;
-let currentFormStep = 0;
+let isVoiceChatMode = false;
 let isListening = false;
-let userFormData = {};
+let currentFormStep = 0;
 
 // Initialize Speech Recognition
 function initializeSpeechRecognition() {
-    if ('webkitSpeechRecognition' in window) {
-        recognition = new webkitSpeechRecognition();
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+        recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
         recognition.continuous = false;
         recognition.interimResults = false;
         recognition.lang = 'en-US';
@@ -348,75 +340,75 @@ function initializeSpeechRecognition() {
         recognition.onresult = function(event) {
             const transcript = event.results[0][0].transcript.trim();
             console.log('User said:', transcript);
-            handleVoiceInput(transcript);
+            
+            if (isVoiceChatMode) {
+                handleVoiceChatInput(transcript);
+            }
         };
         
         recognition.onerror = function(event) {
             console.log('Speech recognition error:', event.error);
-            speakToUser("I didn't catch that. Could you please repeat?");
-            setTimeout(startListening, 1000);
+            stopListening();
         };
         
         recognition.onend = function() {
             isListening = false;
+            updateListenButton();
         };
     }
 }
 
-// Main Avatar Activation - 3 OPTIONS
+// Main Avatar Activation Function
 function activateAIAssistant() {
     initializeSpeechRecognition();
-    showAIOptionsMenu();
+    showSimplifiedAIMenu();
 }
 
-// Create 3-Option Menu
-function showAIOptionsMenu() {
-    // Remove existing interfaces
+// FIXED: Simplified 3-Button Menu
+function showSimplifiedAIMenu() {
     closeAllAIInterfaces();
     
-    const optionsHTML = `
+    const menuHTML = `
         <div id="aiOptionsMenu" style="
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 90%; max-width: 450px; background: white; border-radius: 20px;
+            width: 90%; max-width: 400px; background: white; border-radius: 20px;
             box-shadow: 0 15px 40px rgba(0,0,0,0.3); z-index: 10000; padding: 30px;
             text-align: center;
         ">
             <div style="margin-bottom: 25px;">
-                <div style="font-size: 40px; margin-bottom: 10px;">🤖</div>
+                <div style="font-size: 50px; margin-bottom: 10px;">🤖</div>
                 <h2 style="margin: 0; color: #333; font-size: 24px;">AI Mortgage Assistant</h2>
-                <p style="color: #666; margin: 10px 0 0 0;">How would you like me to help you today?</p>
+                <p style="color: #666; margin: 10px 0 0 0;">How can I help you today?</p>
             </div>
             
             <div style="display: flex; flex-direction: column; gap: 15px;">
-                <button onclick="startVoiceAssistant()" style="
-                    background: linear-gradient(135deg, #FF6B6B, #FF5252); color: white; border: none;
-                    padding: 18px 25px; border-radius: 15px; font-size: 16px; cursor: pointer;
-                    transition: all 0.3s; box-shadow: 0 4px 15px rgba(255,107,107,0.3);
-                " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-                    🎤 Talk With Me (Voice Guided)
-                </button>
-                
-                <button onclick="startGuidedForm()" style="
+                <!-- GREEN BUTTON: Help Fill Form -->
+                <button onclick="startFormAssistant()" style="
                     background: linear-gradient(135deg, #4CAF50, #45a049); color: white; border: none;
-                    padding: 18px 25px; border-radius: 15px; font-size: 16px; cursor: pointer;
-                    transition: all 0.3s; box-shadow: 0 4px 15px rgba(76,175,80,0.3);
+                    padding: 20px 25px; border-radius: 15px; font-size: 18px; font-weight: bold;
+                    cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 15px rgba(76,175,80,0.3);
                 " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
                     📝 Help Me Fill The Form
                 </button>
                 
-                <button onclick="startChatQuestions()" style="
+                <!-- BLUE BUTTON: Questions -->
+                <button onclick="startQuestionChat()" style="
                     background: linear-gradient(135deg, #2196F3, #1976D2); color: white; border: none;
                     padding: 18px 25px; border-radius: 15px; font-size: 16px; cursor: pointer;
                     transition: all 0.3s; box-shadow: 0 4px 15px rgba(33,150,243,0.3);
                 " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
                     💬 I Have Questions
                 </button>
+                
+                <!-- RED BUTTON: Close -->
+                <button onclick="closeAllAIInterfaces()" style="
+                    background: linear-gradient(135deg, #f44336, #d32f2f); color: white; border: none;
+                    padding: 15px 25px; border-radius: 15px; font-size: 16px; cursor: pointer;
+                    transition: all 0.3s; box-shadow: 0 4px 15px rgba(244,67,54,0.3);
+                " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                    ❌ Close AI Assist
+                </button>
             </div>
-            
-            <button onclick="closeAllAIInterfaces()" style="
-                position: absolute; top: 15px; right: 20px; background: none; border: none;
-                color: #999; font-size: 24px; cursor: pointer;
-            ">×</button>
         </div>
         
         <div id="aiBackdrop" onclick="closeAllAIInterfaces()" style="
@@ -425,284 +417,29 @@ function showAIOptionsMenu() {
         "></div>
     `;
     
-    document.body.insertAdjacentHTML('beforeend', optionsHTML);
+    document.body.insertAdjacentHTML('beforeend', menuHTML);
 }
 
-// OPTION 1: Voice Assistant
-function startVoiceAssistant() {
+// GREEN BUTTON: Form Assistant (Your existing form demo)
+function startFormAssistant() {
     closeAllAIInterfaces();
-    createVoiceInterface();
+    simulateAIFormFilling(); // Your existing function
+}
+
+// BLUE BUTTON: Question Chat with Voice Option
+function startQuestionChat() {
+    closeAllAIInterfaces();
+    createEnhancedChatInterface();
     
     setTimeout(() => {
-        speakToUser("Hi there! I'm your AI mortgage assistant. I'll help you complete your application by talking with you. Let's get started!");
-        
-        setTimeout(() => {
-            currentFormStep = 0;
-            userFormData = {};
-            askNextFormQuestion();
-        }, 3000);
+        addAIMessage("Hi! I'm your mortgage expert. You can type questions or click the microphone to speak with me! 🎤");
+        addAIMessage("I can help with: Loan types, qualification, down payments, interest rates, and more!");
+        showMortgageQuickOptions();
     }, 500);
 }
 
-// Create Voice Interface
-function createVoiceInterface() {
-    const voiceHTML = `
-        <div id="voiceInterface" style="
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 90%; max-width: 500px; background: white; border-radius: 20px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.3); z-index: 10000; padding: 30px;
-            text-align: center;
-        ">
-            <div style="margin-bottom: 20px;">
-                <div id="voiceAvatar" style="font-size: 60px; margin-bottom: 15px;">🎤</div>
-                <h3 style="margin: 0; color: #333;">Voice Assistant Active</h3>
-            </div>
-            
-            <div id="voiceStatus" style="
-                background: #f0f8ff; border: 2px solid #2196F3; border-radius: 15px;
-                padding: 20px; margin: 20px 0; min-height: 60px; display: flex;
-                align-items: center; justify-content: center;
-            ">
-                <p id="voiceMessage" style="margin: 0; font-size: 16px; color: #333;">Starting voice assistant...</p>
-            </div>
-            
-            <div id="listeningIndicator" style="display: none; margin: 15px 0;">
-                <div style="display: flex; justify-content: center; align-items: center; gap: 5px;">
-                    <div class="pulse-dot" style="width: 8px; height: 8px; background: #FF5252; border-radius: 50%; animation: pulse 1.5s infinite;"></div>
-                    <div class="pulse-dot" style="width: 8px; height: 8px; background: #FF5252; border-radius: 50%; animation: pulse 1.5s infinite 0.2s;"></div>
-                    <div class="pulse-dot" style="width: 8px; height: 8px; background: #FF5252; border-radius: 50%; animation: pulse 1.5s infinite 0.4s;"></div>
-                    <span style="margin-left: 10px; color: #FF5252; font-weight: bold;">Listening...</span>
-                </div>
-            </div>
-            
-            <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
-                <button onclick="toggleListening()" id="listenButton" style="
-                    background: #4CAF50; color: white; border: none; padding: 12px 20px;
-                    border-radius: 10px; cursor: pointer; font-size: 14px;
-                ">🎤 Start Listening</button>
-                
-                <button onclick="skipToFormFill()" style="
-                    background: #FF9800; color: white; border: none; padding: 12px 20px;
-                    border-radius: 10px; cursor: pointer; font-size: 14px;
-                ">📝 Skip to Auto-Fill</button>
-                
-                <button onclick="closeAllAIInterfaces()" style="
-                    background: #f44336; color: white; border: none; padding: 12px 20px;
-                    border-radius: 10px; cursor: pointer; font-size: 14px;
-                ">✕ Close</button>
-            </div>
-        </div>
-        
-        <style>
-            @keyframes pulse {
-                0%, 100% { transform: scale(1); opacity: 1; }
-                50% { transform: scale(1.2); opacity: 0.7; }
-            }
-        </style>
-        
-        <div id="aiBackdrop" style="
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6); z-index: 9999;
-        "></div>
-    `;
-    
-    document.body.insertAdjacentHTML('beforeend', voiceHTML);
-}
-
-// Voice Functions
-function speakToUser(text, callback) {
-    const msg = new SpeechSynthesisUtterance(text);
-    
-    // Get available voices
-    const voices = speechSynthesis.getVoices();
-    const femaleVoice = voices.find(voice => 
-        voice.name.includes('Female') || 
-        voice.name.includes('Samantha') || 
-        voice.name.includes('Victoria') ||
-        voice.name.includes('Karen')
-    );
-    
-    if (femaleVoice) msg.voice = femaleVoice;
-    msg.rate = mortgageKnowledge.voicePersonality.rate;
-    msg.pitch = mortgageKnowledge.voicePersonality.pitch;
-    msg.volume = mortgageKnowledge.voicePersonality.volume;
-    
-    // Update UI
-    const voiceMessage = document.getElementById('voiceMessage');
-    if (voiceMessage) {
-        voiceMessage.textContent = text;
-    }
-    
-    msg.onend = function() {
-        if (callback) callback();
-    };
-    
-    speechSynthesis.speak(msg);
-}
-
-// Ask Form Questions with Voice
-function askNextFormQuestion() {
-    if (currentFormStep >= mortgageKnowledge.formQuestions.length) {
-        completedVoiceForm();
-        return;
-    }
-    
-    const question = mortgageKnowledge.formQuestions[currentFormStep];
-    speakToUser(question.question, () => {
-        setTimeout(startListening, 1000);
-    });
-}
-
-// Handle Voice Input
-function handleVoiceInput(transcript) {
-    const question = mortgageKnowledge.formQuestions[currentFormStep];
-    
-    // Store the response
-    userFormData[question.field] = transcript;
-    
-    // Fill the actual form field
-    fillFormField(question.field, transcript);
-    
-    // Confirm and move to next question
-    speakToUser(`Got it! ${transcript}. Let me get that entered for you.`, () => {
-        currentFormStep++;
-        setTimeout(askNextFormQuestion, 1500);
-    });
-}
-
-// Fill Form Field
-function fillFormField(fieldName, value) {
-    let selector = '';
-    switch(fieldName) {
-        case 'name':
-            selector = 'input[name="name"], input[placeholder*="Name"]:not([placeholder*="Business"])';
-            break;
-        case 'business':
-            selector = 'input[name="business"], input[name="businessName"], input[placeholder*="Business"]';
-            break;
-        case 'phone':
-            selector = 'input[name="phone"], input[type="tel"], input[placeholder*="Phone"]';
-            break;
-        case 'bestTime':
-            selector = 'input[name="bestTime"], input[placeholder*="Time"]';
-            break;
-        case 'preferredDate':
-            selector = 'input[type="date"], input[name="preferredDate"]';
-            if (fieldName === 'preferredDate') {
-                value = formatDateFromSpeech(value);
-            }
-            break;
-    }
-    
-    const field = document.querySelector(selector);
-    if (field) {
-        field.focus();
-        field.value = '';
-        
-        // Type with animation
-        let i = 0;
-        const typeTimer = setInterval(() => {
-            field.value += value[i];
-            i++;
-            if (i >= value.length) {
-                clearInterval(typeTimer);
-                field.blur();
-            }
-        }, 50);
-    }
-}
-
-// Format Date from Speech
-function formatDateFromSpeech(spokenDate) {
-    // Simple date formatting - you can enhance this
-    const today = new Date();
-    const nextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
-    return nextWeek.toISOString().split('T')[0];
-}
-
-// Voice Form Completion
-function completedVoiceForm() {
-    speakToUser("Perfect! I've completed your mortgage application form. You can review it and submit when you're ready. Thank you for using our AI assistant!");
-    
-    setTimeout(() => {
-        closeAllAIInterfaces();
-    }, 4000);
-}
-
-// Listening Controls
-function toggleListening() {
-    if (isListening) {
-        stopListening();
-    } else {
-        startListening();
-    }
-}
-
-function startListening() {
-    if (!recognition) {
-        speakToUser("Sorry, voice recognition is not supported in your browser.");
-        return;
-    }
-    
-    isListening = true;
-    const indicator = document.getElementById('listeningIndicator');
-    const button = document.getElementById('listenButton');
-    
-    if (indicator) indicator.style.display = 'block';
-    if (button) {
-        button.textContent = '🔴 Stop Listening';
-        button.style.background = '#f44336';
-    }
-    
-    recognition.start();
-}
-
-function stopListening() {
-    isListening = false;
-    if (recognition) recognition.stop();
-    
-    const indicator = document.getElementById('listeningIndicator');
-    const button = document.getElementById('listenButton');
-    
-    if (indicator) indicator.style.display = 'none';
-    if (button) {
-        button.textContent = '🎤 Start Listening';
-        button.style.background = '#4CAF50';
-    }
-}
-
-// OPTION 2: Guided Form (Your existing function)
-function startGuidedForm() {
-    closeAllAIInterfaces();
-    simulateAIFormFilling(); // Your existing form demo
-}
-
-// OPTION 3: Chat Questions (Your existing chat system)
-function startChatQuestions() {
-    closeAllAIInterfaces();
-    createAIChatInterface(); // Your existing chat
-    
-    setTimeout(() => {
-        addAIMessage("Hi! I'm here to answer your mortgage questions. What would you like to know?");
-        showQuickChatOptions();
-    }, 500);
-}
-
-// Quick Chat Options
-function showQuickChatOptions() {
-    const options = `
-        <div style="margin: 10px 0;">
-            <button onclick="handleQuickQuestion('mortgage basics')" class="quick-option">🏠 Mortgage Basics</button>
-            <button onclick="handleQuickQuestion('loan types')" class="quick-option">📋 Loan Types</button>
-            <button onclick="handleQuickQuestion('qualification')" class="quick-option">💰 Qualification</button>
-            <button onclick="handleQuickQuestion('down payment')" class="quick-option">💵 Down Payment</button>
-        </div>
-    `;
-    document.getElementById('chatMessages').insertAdjacentHTML('beforeend', options);
-}
-
-// Chat Interface (Simplified version of your existing one)
-function createAIChatInterface() {
+// FIXED: Enhanced Chat Interface with Voice
+function createEnhancedChatInterface() {
     const chatHTML = `
         <div id="aiChatInterface" style="
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
@@ -710,118 +447,331 @@ function createAIChatInterface() {
             border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             z-index: 10000; display: flex; flex-direction: column;
         ">
-            <div style="background: linear-gradient(135deg, #2196F3, #1976D2); color: white; 
-                        padding: 15px; border-radius: 15px 15px 0 0; text-align: center;">
-                <h3 style="margin: 0;">💬 Mortgage Q&A</h3>
-                <button onclick="closeAllAIInterfaces()" style="position: absolute; top: 10px; right: 15px; 
-                        background: none; border: none; color: white; font-size: 20px; cursor: pointer;">×</button>
+            <!-- Header -->
+            <div style="
+                background: linear-gradient(135deg, #2196F3, #1976D2); color: white; 
+                padding: 15px; border-radius: 15px 15px 0 0; text-align: center; position: relative;
+            ">
+                <h3 style="margin: 0; font-size: 18px;">💬 Mortgage Expert Chat</h3>
+                <button onclick="closeAllAIInterfaces()" style="
+                    position: absolute; top: 10px; right: 15px; background: none; 
+                    border: none; color: white; font-size: 24px; cursor: pointer;
+                ">×</button>
             </div>
             
-            <div id="chatMessages" style="flex: 1; padding: 15px; overflow-y: auto; background: #f8f9fa;"></div>
+            <!-- Chat Messages -->
+            <div id="chatMessages" style="
+                flex: 1; padding: 15px; overflow-y: auto; background: #f8f9fa;
+            "></div>
             
-            <div style="padding: 15px; border-top: 1px solid #eee;">
-                <div style="display: flex; gap: 10px;">
-                    <input type="text" id="userInput" placeholder="Ask about mortgages..." 
-                           style="flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 20px;"
+            <!-- Voice Indicator -->
+            <div id="voiceIndicator" style="
+                display: none; padding: 10px; background: #e8f5e8; border-top: 1px solid #ddd;
+                text-align: center; color: #4CAF50; font-weight: bold;
+            ">
+                🎤 Listening... (speak now)
+            </div>
+            
+            <!-- Input Area -->
+            <div style="padding: 15px; border-top: 1px solid #eee; background: white;">
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <input type="text" id="userChatInput" placeholder="Ask about mortgages or click mic to speak..." 
+                           style="flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 20px; font-size: 14px;"
                            onkeypress="if(event.key==='Enter') sendChatMessage()">
-                    <button onclick="sendChatMessage()" style="background: #2196F3; color: white; border: none; 
-                            border-radius: 50%; width: 40px; height: 40px; cursor: pointer;">→</button>
+                    <button id="voiceChatButton" onclick="toggleVoiceChat()" style="
+                        background: #4CAF50; color: white; border: none; border-radius: 50%;
+                        width: 45px; height: 45px; cursor: pointer; font-size: 18px; transition: all 0.3s;
+                    " title="Click to speak">🎤</button>
+                    <button onclick="sendChatMessage()" style="
+                        background: #2196F3; color: white; border: none; border-radius: 50%;
+                        width: 45px; height: 45px; cursor: pointer; font-size: 16px;
+                    ">→</button>
+                </div>
+                <div style="margin-top: 8px; font-size: 12px; color: #666; text-align: center;">
+                    💡 Tip: Click the microphone and speak your question!
                 </div>
             </div>
         </div>
+        
+        <div id="aiBackdrop" onclick="closeAllAIInterfaces()" style="
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); z-index: 9999;
+        "></div>
     `;
     
     document.body.insertAdjacentHTML('beforeend', chatHTML);
+    isVoiceChatMode = true;
+    document.getElementById('userChatInput').focus();
 }
 
-// Chat Functions
+// Voice Chat Functions
+function toggleVoiceChat() {
+    if (isListening) {
+        stopVoiceChatListening();
+    } else {
+        startVoiceChatListening();
+    }
+}
+
+function startVoiceChatListening() {
+    if (!recognition) {
+        addAIMessage("Sorry, voice recognition isn't supported in your browser. Please type your question instead.");
+        return;
+    }
+    
+    isListening = true;
+    const indicator = document.getElementById('voiceIndicator');
+    const button = document.getElementById('voiceChatButton');
+    
+    if (indicator) indicator.style.display = 'block';
+    if (button) {
+        button.innerHTML = '🔴';
+        button.style.background = '#f44336';
+        button.title = 'Click to stop listening';
+    }
+    
+    try {
+        recognition.start();
+    } catch (error) {
+        console.log('Recognition start error:', error);
+        stopVoiceChatListening();
+    }
+}
+
+function stopVoiceChatListening() {
+    isListening = false;
+    if (recognition) {
+        try {
+            recognition.stop();
+        } catch (error) {
+            console.log('Recognition stop error:', error);
+        }
+    }
+    updateListenButton();
+}
+
+function updateListenButton() {
+    const indicator = document.getElementById('voiceIndicator');
+    const button = document.getElementById('voiceChatButton');
+    
+    if (indicator) indicator.style.display = 'none';
+    if (button) {
+        button.innerHTML = '🎤';
+        button.style.background = '#4CAF50';
+        button.title = 'Click to speak';
+    }
+}
+
+function handleVoiceChatInput(transcript) {
+    // Show user message
+    addUserMessage(transcript);
+    
+    // Get AI response
+    setTimeout(() => {
+        const response = getSmartAIResponse(transcript);
+        addAIMessage(response);
+        
+        // Speak the response
+        speakResponse(response);
+    }, 800);
+    
+    stopVoiceChatListening();
+}
+
+// FIXED: Chat Message Functions
 function sendChatMessage() {
-    const input = document.getElementById('userInput');
+    const input = document.getElementById('userChatInput');
+    if (!input) return;
+    
     const message = input.value.trim();
     if (!message) return;
     
-    addChatMessage(message, 'user');
+    addUserMessage(message);
     input.value = '';
     
     setTimeout(() => {
-        const response = getChatResponse(message);
-        addChatMessage(response, 'ai');
+        const response = getSmartAIResponse(message);
+        addAIMessage(response);
     }, 800);
 }
 
-function addChatMessage(message, sender) {
+function addAIMessage(message) {
     const chatMessages = document.getElementById('chatMessages');
-    const isAI = sender === 'ai';
+    if (!chatMessages) return;
     
     chatMessages.insertAdjacentHTML('beforeend', `
-        <div style="margin-bottom: 15px; text-align: ${isAI ? 'left' : 'right'};">
-            <div style="display: inline-block; max-width: 80%; padding: 10px 15px; border-radius: 15px;
-                        background: ${isAI ? '#e3f2fd' : '#2196f3'}; color: ${isAI ? '#333' : 'white'};">
-                ${isAI ? '🤖 ' : ''}${message}
+        <div style="margin-bottom: 15px;">
+            <div style="display: flex; align-items: flex-start; gap: 10px;">
+                <div style="
+                    background: #4CAF50; color: white; border-radius: 50%; 
+                    width: 30px; height: 30px; display: flex; align-items: center; 
+                    justify-content: center; font-size: 14px; flex-shrink: 0;
+                ">🤖</div>
+                <div style="
+                    background: #e8f5e8; padding: 12px 16px; border-radius: 15px 15px 15px 5px;
+                    max-width: 75%; font-size: 14px; line-height: 1.4; word-wrap: break-word;
+                ">${message}</div>
             </div>
         </div>
     `);
-    
-    chatMessages.scrollTop = chatMessages.scrollHeight;
+    scrollChatToBottom();
 }
 
-function getChatResponse(message) {
+function addUserMessage(message) {
+    const chatMessages = document.getElementById('chatMessages');
+    if (!chatMessages) return;
+    
+    chatMessages.insertAdjacentHTML('beforeend', `
+        <div style="margin-bottom: 15px; text-align: right;">
+            <div style="display: flex; align-items: flex-start; gap: 10px; justify-content: flex-end;">
+                <div style="
+                    background: #2196f3; color: white; padding: 12px 16px; 
+                    border-radius: 15px 15px 5px 15px; max-width: 75%; 
+                    font-size: 14px; line-height: 1.4; word-wrap: break-word;
+                ">${message}</div>
+                <div style="
+                    background: #2196f3; color: white; border-radius: 50%; 
+                    width: 30px; height: 30px; display: flex; align-items: center; 
+                    justify-content: center; font-size: 14px; flex-shrink: 0;
+                ">👤</div>
+            </div>
+        </div>
+    `);
+    scrollChatToBottom();
+}
+
+// Enhanced AI Response System
+function getSmartAIResponse(message) {
     const msg = message.toLowerCase();
+    
+    // Check for specific mortgage topics
     for (const [key, value] of Object.entries(mortgageKnowledge.expertResponses)) {
-        if (msg.includes(key) || msg.includes(key.replace(' ', ''))) {
+        if (msg.includes(key) || msg.includes(key.replace(/\s+/g, ''))) {
             return value;
         }
     }
-    return "Great question! I can help with mortgage basics, loan types, qualification requirements, and down payments. What specifically would you like to know?";
+    
+    // Context-aware responses
+    if (msg.includes('rate') || msg.includes('interest')) {
+        return mortgageKnowledge.expertResponses['interest rates'];
+    }
+    if (msg.includes('qualify') || msg.includes('eligible')) {
+        return mortgageKnowledge.expertResponses['qualification'];
+    }
+    if (msg.includes('fha') || msg.includes('va') || msg.includes('usda')) {
+        return mortgageKnowledge.expertResponses['loan types'];
+    }
+    
+    return "Great question! I'm here to help with mortgages, loan types, qualification, rates, and home buying. Could you be more specific? For example, ask me 'What credit score do I need?' or 'What are current rates?'";
 }
 
-function handleQuickQuestion(topic) {
-    addChatMessage(topic.charAt(0).toUpperCase() + topic.slice(1) + "?", 'user');
+// Quick Options for Chat
+function showMortgageQuickOptions() {
+    const options = `
+        <div style="margin: 15px 0;">
+            <p style="font-size: 12px; color: #666; margin-bottom: 8px;">Quick topics:</p>
+            <button onclick="askQuickQuestion('What credit score do I need?')" class="chat-quick-btn">📊 Credit Score</button>
+            <button onclick="askQuickQuestion('What loan types are available?')" class="chat-quick-btn">📋 Loan Types</button>
+            <button onclick="askQuickQuestion('How much down payment?')" class="chat-quick-btn">💰 Down Payment</button>
+            <button onclick="askQuickQuestion('What are current rates?')" class="chat-quick-btn">📈 Interest Rates</button>
+        </div>
+        
+        <style>
+            .chat-quick-btn {
+                background: #e3f2fd; border: 1px solid #2196f3; border-radius: 20px;
+                padding: 6px 12px; margin: 2px; font-size: 11px; cursor: pointer;
+                color: #1976d2; transition: all 0.3s;
+            }
+            .chat-quick-btn:hover {
+                background: #2196f3; color: white; transform: scale(1.05);
+            }
+        </style>
+    `;
+    
+    const chatMessages = document.getElementById('chatMessages');
+    if (chatMessages) {
+        chatMessages.insertAdjacentHTML('beforeend', options);
+        scrollChatToBottom();
+    }
+}
+
+function askQuickQuestion(question) {
+    addUserMessage(question);
     setTimeout(() => {
-        addChatMessage(mortgageKnowledge.expertResponses[topic], 'ai');
+        const response = getSmartAIResponse(question);
+        addAIMessage(response);
+        speakResponse(response);
     }, 500);
 }
 
-// Skip to Auto-Fill Demo
-function skipToFormFill() {
-    closeAllAIInterfaces();
-    simulateAIFormFilling(); // Your existing form demo
+// Voice Response
+function speakResponse(text) {
+    if (!speechSynthesis) return;
+    
+    // Clean text for speech (remove markdown and emojis)
+    const cleanText = text.replace(/\*\*(.*?)\*\*/g, '$1').replace(/[🏠📋💰📊📈💬🤖👤]/g, '');
+    
+    const utterance = new SpeechSynthesisUtterance(cleanText);
+    
+    // Try to get a female voice
+    const voices = speechSynthesis.getVoices();
+    const femaleVoice = voices.find(voice => 
+        voice.name.includes('Female') || 
+        voice.name.includes('Samantha') || 
+        voice.name.includes('Karen') ||
+        voice.name.includes('Victoria')
+    );
+    
+    if (femaleVoice) utterance.voice = femaleVoice;
+    utterance.rate = 0.9;
+    utterance.pitch = 1.0;
+    utterance.volume = 0.8;
+    
+    speechSynthesis.speak(utterance);
 }
 
 // Utility Functions
+function scrollChatToBottom() {
+    const chatMessages = document.getElementById('chatMessages');
+    if (chatMessages) {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+}
+
 function closeAllAIInterfaces() {
-    const interfaces = ['aiOptionsMenu', 'voiceInterface', 'aiChatInterface', 'aiBackdrop'];
+    const interfaces = ['aiOptionsMenu', 'aiChatInterface', 'aiBackdrop'];
     interfaces.forEach(id => {
         const element = document.getElementById(id);
         if (element) element.remove();
     });
     
+    // Stop voice systems
     if (recognition && isListening) {
-        recognition.stop();
+        try {
+            recognition.stop();
+        } catch (error) {
+            console.log('Error stopping recognition:', error);
+        }
     }
-    speechSynthesis.cancel();
+    
+    if (speechSynthesis) {
+        speechSynthesis.cancel();
+    }
+    
+    // Reset states
     isListening = false;
+    isVoiceChatMode = false;
 }
 
-// Quick option styling
-const quickOptionStyles = `
-    <style>
-        .quick-option {
-            background: #e3f2fd; border: 1px solid #2196f3; border-radius: 15px;
-            padding: 8px 12px; margin: 3px; font-size: 12px; cursor: pointer;
-            color: #1976d2; transition: all 0.3s;
-        }
-        .quick-option:hover {
-            background: #2196f3; color: white;
-        }
-    </style>
-`;
-document.head.insertAdjacentHTML('beforeend', quickOptionStyles);
-
-// Initialize voices when available
+// Initialize when voices are loaded
 speechSynthesis.onvoiceschanged = function() {
-    console.log('Voices loaded:', speechSynthesis.getVoices().length);
+    console.log('Available voices:', speechSynthesis.getVoices().length);
 };
+
+// Initialize speech recognition on load
+document.addEventListener('DOMContentLoaded', function() {
+    initializeSpeechRecognition();
+});
 </script>
 
 </body>
