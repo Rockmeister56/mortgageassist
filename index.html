@@ -299,7 +299,7 @@
     <script src="js/main.js"></script>
     <!-- Removed the chatbot.js script since we're using the Chatbase iframe -->
 <script>
-// Enhanced AI Avatar System with VAPI Integration
+// Enhanced AI Avatar System with VAPI Integration - FIXED VERSION
 const mortgageKnowledge = {
     expertResponses: {
         "mortgage": "A mortgage is a loan to buy your home. You pay it back monthly over 15-30 years. Your payment includes principal, interest, taxes, and insurance.",
@@ -311,11 +311,11 @@ const mortgageKnowledge = {
     }
 };
 
-// VAPI Configuration
+// VAPI Configuration with Make.com Webhook
 const VAPI_CONFIG = {
     assistantId: '78b68206-657e-421b-8f90-d2256bd1b10e',
     phoneNumber: '949-332-3567',
-    apiUrl: 'https://api.vapi.ai/call/phone' // VAPI endpoint for phone calls
+    webhookUrl: 'https://hook.us2.make.com/xuog6w6jv3ftcxrfscjk6wompv5kupr0' // Your Make.com webhook
 };
 
 // Voice System Variables
@@ -357,7 +357,7 @@ function activateAIAssistant() {
     showEnhancedAIMenu();
 }
 
-// Enhanced 4-Button Menu with Avatar
+// Enhanced 4-Button Menu with NEW AVATAR
 function showEnhancedAIMenu() {
     closeAllAIInterfaces();
     
@@ -368,9 +368,9 @@ function showEnhancedAIMenu() {
             box-shadow: 0 15px 40px rgba(0,0,0,0.3); z-index: 10000; padding: 30px;
             text-align: center;
         ">
-            <!-- Avatar Head -->
+            <!-- NEW AVATAR HEAD -->
             <div style="margin-bottom: 20px;">
-                <img src="https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/avatars/avatar_1754803501976_AI%20assist%20head.png" 
+                <img src="https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/avatars/avatar_1754810337622_AI%20assist%20head%20left.png" 
                      style="width: 80px; height: 80px; border-radius: 50%; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
                 <h2 style="margin: 0; color: #333; font-size: 24px;">AI Mortgage Assistant</h2>
                 <p style="color: #666; margin: 10px 0 0 0;">How can I help you today?</p>
@@ -395,16 +395,14 @@ function showEnhancedAIMenu() {
                     💬 I Have Questions
                 </button>
                 
-                <!-- TEAL BUTTON: Request Callback -->
+                <!-- PURPLE BUTTON: Request Callback -->
                 <button onclick="showCallbackForm()" style="
-                    background: linear-gradient(135deg, #26C6DA, #00ACC1); color: white; border: none;
+                    background: linear-gradient(135deg, #6f42c1, #5a2d91); color: white; border: none;
                     padding: 16px 25px; border-radius: 15px; font-size: 16px; cursor: pointer;
-                    transition: all 0.3s; box-shadow: 0 4px 15px rgba(38,198,218,0.3);
+                    transition: all 0.3s; box-shadow: 0 4px 15px rgba(111,66,193,0.3);
                     display: flex; align-items: center; justify-content: center; gap: 10px;
                 " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-                    <img src="https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/form-assets/logos/logo_5f42f026-051a-42c7-833d-375fcac74252_1754805770102_request%20a%20call%20back.png" 
-                         style="width: 24px; height: 24px;">
-                    Request a Callback
+                    📞 Request a Call
                 </button>
                 
                 <!-- RED BUTTON: Close -->
@@ -427,7 +425,7 @@ function showEnhancedAIMenu() {
     document.body.insertAdjacentHTML('beforeend', menuHTML);
 }
 
-// Enhanced Chat Interface with Avatar and Callback Button
+// Enhanced Chat Interface with NEW CALLBACK BUTTON
 function createEnhancedChatInterface() {
     const chatHTML = `
         <div id="aiChatInterface" style="
@@ -436,28 +434,30 @@ function createEnhancedChatInterface() {
             border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             z-index: 10000; display: flex; flex-direction: column;
         ">
-            <!-- Enhanced Header with Avatar and Callback -->
+            <!-- Enhanced Header with Avatar and NEW CALLBACK BUTTON -->
             <div style="
                 background: linear-gradient(135deg, #2196F3, #1976D2); color: white; 
                 padding: 15px; border-radius: 15px 15px 0 0; position: relative;
                 display: flex; align-items: center; justify-content: space-between;
             ">
                 <div style="display: flex; align-items: center; gap: 12px;">
-                    <img src="https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/avatars/avatar_1754803501976_AI%20assist%20head.png" 
+                    <img src="https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/avatars/avatar_1754810337622_AI%20assist%20head%20left.png" 
                          style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid white;">
                     <h3 style="margin: 0; font-size: 18px;">💬 Mortgage Expert Chat</h3>
                 </div>
                 
-                <div style="display: flex; gap: 8px;">
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <!-- NEW CALLBACK BUTTON WITH YOUR IMAGE -->
                     <button onclick="showCallbackFormFromChat()" style="
-                        background: #26C6DA; color: white; border: none; padding: 8px 12px;
-                        border-radius: 8px; font-size: 12px; cursor: pointer; transition: all 0.3s;
-                    " title="Request a callback">
-                        📞 Callback
+                        background: none; border: none; cursor: pointer; padding: 4px;
+                        transition: all 0.3s; border-radius: 8px;
+                    " title="Request a callback" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='none'">
+                        <img src="https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/form-assets/logos/logo_5f42f026-051a-42c7-833d-375fcac74252_1754810066459_Callback-button2.png" 
+                             style="width: 32px; height: 32px;">
                     </button>
                     <button onclick="closeAllAIInterfaces()" style="
                         background: none; border: none; color: white; font-size: 20px; cursor: pointer;
-                    ">×</button>
+                    ">❌</button>
                 </div>
             </div>
             
@@ -493,7 +493,7 @@ function createEnhancedChatInterface() {
                     <button onclick="sendChatMessage()" style="
                         background: #2196F3; color: white; border: none; border-radius: 50%;
                         width: 45px; height: 45px; cursor: pointer; font-size: 16px;
-                    ">→</button>
+                    ">➤</button>
                 </div>
                 <div style="margin-top: 8px; font-size: 12px; color: #666; text-align: center;">
                     💡 Tip: Click the microphone and speak your question!
@@ -512,7 +512,149 @@ function createEnhancedChatInterface() {
     document.getElementById('userChatInput').focus();
 }
 
-// VAPI Callback Form
+// FIXED: Form Assistant Function
+function startFormAssistant() {
+    closeAllAIInterfaces();
+    
+    // Try to find the form inputs
+    const nameInput = document.querySelector('input[placeholder*="Name"], input[name*="name"], input[id*="name"]');
+    const businessInput = document.querySelector('input[placeholder*="Business"], input[name*="business"], input[id*="business"]');
+    const phoneInput = document.querySelector('input[placeholder*="Phone"], input[name*="phone"], input[id*="phone"], input[type="tel"]');
+    
+    if (!nameInput && !phoneInput) {
+        // If no form found, show helpful message
+        showFormAssistantMessage();
+        return;
+    }
+    
+    // Show AI assistance
+    createFormAssistantInterface(nameInput, businessInput, phoneInput);
+}
+
+function showFormAssistantMessage() {
+    const messageHTML = `
+        <div id="formAssistantMessage" style="
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 90%; max-width: 450px; background: white; border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3); z-index: 10000; padding: 30px;
+            text-align: center;
+        ">
+            <img src="https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/avatars/avatar_1754810337622_AI%20assist%20head%20left.png" 
+                 style="width: 80px; height: 80px; border-radius: 50%; margin-bottom: 15px;">
+            <h2 style="color: #4CAF50; margin-bottom: 15px;">🤖 Form Assistant Ready!</h2>
+            <p style="color: #666; margin-bottom: 20px;">I can help you fill out forms on this page. Please make sure a form is visible, then click the AI avatar again to get personalized assistance with each field!</p>
+            <div style="background: #e8f5e9; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+                <p style="color: #2e7d32; margin: 0; font-weight: bold;">💡 How it works:</p>
+                <p style="color: #2e7d32; margin: 5px 0 0 0; font-size: 14px;">1. Make sure the form is visible<br>2. Click the AI avatar<br>3. Choose "Help Me Fill The Form"<br>4. I'll guide you through each field!</p>
+            </div>
+            <button onclick="closeAllAIInterfaces()" style="
+                background: #4CAF50; color: white; border: none; padding: 12px 25px;
+                border-radius: 10px; cursor: pointer; font-weight: bold;
+            ">Got it! 👍</button>
+        </div>
+        
+        <div id="aiBackdrop" onclick="closeAllAIInterfaces()" style="
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); z-index: 9999;
+        "></div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', messageHTML);
+}
+
+function createFormAssistantInterface(nameInput, businessInput, phoneInput) {
+    // Highlight the first available field
+    const firstField = nameInput || phoneInput || businessInput;
+    if (firstField) {
+        firstField.style.border = '3px solid #4CAF50';
+        firstField.style.boxShadow = '0 0 10px rgba(76,175,80,0.5)';
+        firstField.focus();
+    }
+    
+    const assistantHTML = `
+        <div id="formAssistant" style="
+            position: fixed; top: 20px; right: 20px; background: #4CAF50; color: white;
+            padding: 20px; border-radius: 15px; z-index: 9999; max-width: 300px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        ">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+                <img src="https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/avatars/avatar_1754810337622_AI%20assist%20head%20left.png" 
+                     style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid white;">
+                <h4 style="margin: 0;">🤖 Form Assistant</h4>
+            </div>
+            
+            <p style="margin: 0 0 15px 0; font-size: 14px;">I'm helping you fill the form! The highlighted field is ready for your input.</p>
+            
+            <div style="background: rgba(255,255,255,0.2); padding: 10px; border-radius: 8px; margin-bottom: 15px;">
+                <p style="margin: 0; font-size: 12px; font-weight: bold;">🎯 Current Field:</p>
+                <p style="margin: 5px 0 0 0; font-size: 14px;" id="currentFieldHelper">
+                    ${nameInput ? 'Enter your full name' : phoneInput ? 'Enter your phone number' : 'Fill in this field'}
+                </p>
+            </div>
+            
+            <div style="display: flex; gap: 10px;">
+                <button onclick="nextFormField()" style="
+                    background: white; color: #4CAF50; border: none; padding: 8px 12px;
+                    border-radius: 5px; cursor: pointer; font-size: 12px; flex: 1;
+                ">Next Field ➤</button>
+                <button onclick="closeFormHelper()" style="
+                    background: rgba(255,255,255,0.2); color: white; border: none; padding: 8px 12px;
+                    border-radius: 5px; cursor: pointer; font-size: 12px;
+                ">Done ✓</button>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', assistantHTML);
+}
+
+let currentFieldIndex = 0;
+const formFields = [];
+
+function nextFormField() {
+    // Get all form fields
+    const allFields = document.querySelectorAll('input[type="text"], input[type="tel"], input[type="email"], select');
+    
+    if (allFields.length === 0) return;
+    
+    // Clear previous highlighting
+    allFields.forEach(field => {
+        field.style.border = '';
+        field.style.boxShadow = '';
+    });
+    
+    // Move to next field
+    currentFieldIndex = (currentFieldIndex + 1) % allFields.length;
+    const nextField = allFields[currentFieldIndex];
+    
+    // Highlight next field
+    nextField.style.border = '3px solid #4CAF50';
+    nextField.style.boxShadow = '0 0 10px rgba(76,175,80,0.5)';
+    nextField.focus();
+    
+    // Update helper text
+    const helper = document.getElementById('currentFieldHelper');
+    if (helper) {
+        const fieldName = nextField.placeholder || nextField.name || 'this field';
+        helper.textContent = `Enter your ${fieldName.toLowerCase()}`;
+    }
+}
+
+function closeFormHelper() {
+    const helper = document.getElementById('formAssistant');
+    if (helper) helper.remove();
+    
+    // Remove green borders
+    const inputs = document.querySelectorAll('input, select');
+    inputs.forEach(input => {
+        input.style.border = '';
+        input.style.boxShadow = '';
+    });
+    
+    currentFieldIndex = 0;
+}
+
+// VAPI Callback Form with Make.com Webhook
 function showCallbackForm() {
     closeAllAIInterfaces();
     createCallbackInterface();
@@ -532,7 +674,7 @@ function createCallbackInterface() {
         ">
             <!-- Header with Avatar -->
             <div style="text-align: center; margin-bottom: 25px;">
-                <img src="https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/avatars/avatar_1754803501976_AI%20assist%20head.png" 
+                <img src="https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/avatars/avatar_1754810337622_AI%20assist%20head%20left.png" 
                      style="width: 70px; height: 70px; border-radius: 50%; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
                 <h2 style="margin: 0; color: #333; font-size: 24px;">📞 Request a Callback</h2>
                 <p style="color: #666; margin: 10px 0 0 0;">I'll call you back within minutes!</p>
@@ -582,7 +724,7 @@ function createCallbackInterface() {
                     <button type="button" onclick="closeAllAIInterfaces()" style="
                         background: #f44336; color: white; border: none; padding: 15px 20px;
                         border-radius: 10px; cursor: pointer; transition: all 0.3s;
-                    ">✕</button>
+                    ">❌</button>
                 </div>
             </form>
             
@@ -606,7 +748,7 @@ function createCallbackInterface() {
     document.getElementById('callbackName').focus();
 }
 
-// VAPI Callback Integration
+// Make.com Webhook Integration
 async function handleCallbackRequest(event) {
     event.preventDefault();
     
@@ -619,43 +761,37 @@ async function handleCallbackRequest(event) {
         return;
     }
     
-    // Show loading status
     showCallbackStatus('Requesting callback... Please wait!', 'loading');
     
     try {
-        // VAPI API Call
-        const response = await fetch('https://api.vapi.ai/call/phone', {
+        // Make.com Webhook Integration
+        const webhookResponse = await fetch(VAPI_CONFIG.webhookUrl, {
             method: 'POST',
             headers: {
-                'Authorization': 'Bearer YOUR_VAPI_API_KEY', // You'll need to add your actual API key
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
+                name: name,
+                phone: phone,
+                preferredTime: time,
+                source: 'MortgageAssist Demo',
                 assistantId: VAPI_CONFIG.assistantId,
-                phoneNumberId: VAPI_CONFIG.phoneNumber,
-                customer: {
-                    number: phone,
-                    name: name
-                },
-                assistantOverrides: {
-                    firstMessage: `Hi ${name}! This is your AI mortgage assistant. You requested a callback about mortgage assistance. How can I help you today?`
-                }
+                customMessage: `Hi ${name}! This is your AI mortgage assistant. You requested a callback about mortgage assistance. How can I help you today?`
             })
         });
         
-        if (response.ok) {
-            const result = await response.json();
+        if (webhookResponse.ok) {
             showCallbackStatus(`Success! I'm calling ${phone} now. Please answer your phone!`, 'success');
             
             setTimeout(() => {
                 closeAllAIInterfaces();
             }, 3000);
         } else {
-            throw new Error('Callback request failed');
+            throw new Error('Webhook request failed');
         }
         
     } catch (error) {
-        console.error('VAPI Error:', error);
+        console.error('Make.com Webhook Error:', error);
         showCallbackStatus('Sorry, there was an issue with the callback request. Please try again or call us directly at (949) 332-3567.', 'error');
     }
 }
@@ -753,12 +889,6 @@ function handleVoiceChatInput(transcript) {
     stopVoiceChatListening();
 }
 
-// Form Assistant Function
-function startFormAssistant() {
-    closeAllAIInterfaces();
-    simulateAIFormFilling(); // Your existing form demo
-}
-
 // Question Chat Function  
 function startQuestionChat() {
     closeAllAIInterfaces();
@@ -795,7 +925,7 @@ function addAIMessage(message) {
     chatMessages.insertAdjacentHTML('beforeend', `
         <div style="margin-bottom: 15px;">
             <div style="display: flex; align-items: flex-start; gap: 10px;">
-                <img src="https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/avatars/avatar_1754803501976_AI%20assist%20head.png" 
+                <img src="https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/avatars/avatar_1754810337622_AI%20assist%20head%20left.png" 
                      style="width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;">
                 <div style="
                     background: #e8f5e8; padding: 12px 16px; border-radius: 15px 15px 15px 5px;
@@ -859,7 +989,7 @@ function showMortgageQuickOptions() {
         <div style="margin: 15px 0;">
             <p style="font-size: 12px; color: #666; margin-bottom: 8px;">Quick topics:</p>
             <button onclick="askQuickQuestion('What credit score do I need?')" class="chat-quick-btn">📊 Credit Score</button>
-            <button onclick="askQuickQuestion('What loan types are available?')" class="chat-quick-btn">📋 Loan Types</button>
+            <button onclick="askQuickQuestion('What loan types are available?')" class="chat-quick-btn">🏠 Loan Types</button>
             <button onclick="askQuickQuestion('How much down payment?')" class="chat-quick-btn">💰 Down Payment</button>
             <button onclick="askQuickQuestion('What are current rates?')" class="chat-quick-btn">📈 Interest Rates</button>
         </div>
@@ -896,7 +1026,7 @@ function askQuickQuestion(question) {
 function speakResponse(text) {
     if (!speechSynthesis) return;
     
-    const cleanText = text.replace(/\*\*(.*?)\*\*/g, '$1').replace(/[🏠📋💰📊📈💬🤖👤]/g, '');
+    const cleanText = text.replace(/\*\*(.*?)\*\*/g, '$1').replace(/[📊🏠💰📈]/g, '');
     const utterance = new SpeechSynthesisUtterance(cleanText);
     
     const voices = speechSynthesis.getVoices();
@@ -924,10 +1054,17 @@ function scrollChatToBottom() {
 }
 
 function closeAllAIInterfaces() {
-    const interfaces = ['aiOptionsMenu', 'aiChatInterface', 'callbackInterface', 'aiBackdrop'];
+    const interfaces = ['aiOptionsMenu', 'aiChatInterface', 'callbackInterface', 'aiBackdrop', 'formAssistant', 'formAssistantMessage'];
     interfaces.forEach(id => {
         const element = document.getElementById(id);
         if (element) element.remove();
+    });
+    
+    // Clean up form highlighting
+    const inputs = document.querySelectorAll('input, select');
+    inputs.forEach(input => {
+        input.style.border = '';
+        input.style.boxShadow = '';
     });
     
     if (recognition && isListening) {
@@ -944,6 +1081,7 @@ function closeAllAIInterfaces() {
     
     isListening = false;
     isVoiceChatMode = false;
+    currentFieldIndex = 0;
 }
 
 // Initialize
