@@ -751,25 +751,6 @@ function completeFormAssistant() {
     }, 12000); // Give time for the full message and offer display
 }
 
-// Add this FIRST - before any other voice functions
-async function requestMicrophonePermission() {
-    console.log('🎤 Requesting microphone permission...');
-    
-    try {
-        // Request permission explicitly
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        
-        // Stop the stream immediately - we just needed permission
-        stream.getTracks().forEach(track => track.stop());
-        
-        console.log('✅ Microphone permission granted!');
-        return true;
-    } catch (error) {
-        console.log('❌ Microphone permission denied:', error);
-        return false;
-    }
-}
-
 function stopFormAssistant() {
     isFormAssistantActive = false;
     currentFormFieldIndex = 0;
