@@ -207,23 +207,23 @@
     <div id="contactModal" class="modal">
         <div class="modal-content">
             <span class="close-btn">&times;</span>
-            <!-- Enhanced Header with Your Logo + Avatar + Repositioned Title -->
-<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding: 10px 0;">
+            !-- Enhanced Header - Clean Version -->
+<div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 20px; padding: 10px 0;">
     
-    <!-- LEFT SIDE: Your Business Logo + Get a Quote -->
+    <!-- LEFT SIDE: Bigger Business Logo + Left-Aligned Get a Quote -->
     <div style="flex: 1;">
-        <!-- Your Business Logo -->
+        <!-- Bigger Business Logo -->
         <img src="https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/form-assets/logos/logo_5f42f026-051a-42c7-833d-375fcac74252_1754796297597_logo3.png" 
-             style="height: 50px; margin-bottom: 8px; display: block;">
-        <!-- Repositioned Get a Quote -->
-        <h2 style="margin: 0; font-size: 24px; color: #333;">Get a Quote</h2>
+             style="height: 80px; margin-bottom: 15px; display: block;">
+        <!-- Left-Aligned Get a Quote (aligned with form fields) -->
+        <h2 style="margin: 0; font-size: 24px; color: #333; text-align: left;">Get a Quote</h2>
     </div>
     
-    <!-- RIGHT SIDE: Interactive AI Avatar -->
+    <!-- RIGHT SIDE: Clean Avatar (NO shadow) -->
     <div style="flex: 0 0 auto; text-align: center;">
         <img src="https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/avatars/avatar_1754795551491_AI%20assist%20with%20button.png" 
              onclick="activateAIAssistant()" 
-             style="width: 120px; cursor: pointer; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: transform 0.3s;"
+             style="width: 120px; cursor: pointer; border-radius: 10px; transition: transform 0.3s;"
              onmouseover="this.style.transform='scale(1.05)'"
              onmouseout="this.style.transform='scale(1.0)'">
         <p style="margin: 5px 0 0 0; font-size: 12px; color: #666;">👋 Click to activate AI!</p>
@@ -256,24 +256,6 @@
                     <input type="date" id="preferredDate" name="preferredDate" required>
                 </div>
                 <button type="submit" class="btn-primary btn-full">Submit</button>
-               <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee;">
-    <h3 style="color: #0066ff; margin-bottom: 10px;">🤖 Watch AI in Action</h3>
-    <button type="button" id="aiDemoButton" onclick="startAIDemo()" 
-            style="background: linear-gradient(135deg, #4CAF50, #45a049); 
-                   color: white; 
-                   padding: 12px 24px; 
-                   border: none; 
-                   border-radius: 8px; 
-                   width: 100%;
-                   font-size: 16px;
-                   cursor: pointer;
-                   margin-bottom: 10px;">
-        ⚡ Watch AI Assistant Fill This Form
-    </button>
-    <p style="font-size: 12px; color: #666; text-align: center;">
-        See how our AI can help your clients complete forms instantly
-                    </p>
-                </div>
             </form>
         </div>
     </div>
@@ -289,60 +271,6 @@
 
     <script src="js/main.js"></script>
     <!-- Removed the chatbot.js script since we're using the Chatbase iframe -->
-     <script>
-function startAIDemo() {
-    // Change button to show it's working
-    const button = document.getElementById('aiDemoButton');
-    button.innerHTML = '🤖 AI Working... Please Wait';
-    button.disabled = true;
-    button.style.background = '#666';
-    
-    // Start the AI form filling sequence
-    simulateAIFormFilling();
-}
-
-function simulateAIFormFilling() {
-    // Get form fields
-    const fields = [
-        {element: document.querySelector('input[placeholder="Your Name"], input[name="name"]'), value: "John Smith", delay: 1000},
-        {element: document.querySelector('input[placeholder="Business Name"], input[name="business"]'), value: "Tech Solutions LLC", delay: 2000},
-        {element: document.querySelector('input[placeholder="Phone Number"], input[name="phone"]'), value: "(555) 123-4567", delay: 3000},
-        {element: document.querySelector('input[name="bestTime"]'), value: "Morning 9-11 AM", delay: 4000},
-        {element: document.querySelector('input[type="date"]'), value: "2024-12-20", delay: 5000}
-    ];
-    
-    // Fill each field with typing animation
-    fields.forEach(field => {
-        if (field.element) {
-            setTimeout(() => {
-                typeText(field.element, field.value);
-            }, field.delay);
-        }
-    });
-    
-    // Reset button after demo
-    setTimeout(() => {
-        const button = document.getElementById('aiDemoButton');
-        button.innerHTML = '✅ Demo Complete! Try Again?';
-        button.disabled = false;
-        button.style.background = 'linear-gradient(135deg, #4CAF50, #45a049)';
-    }, 6000);
-}
-
-function typeText(element, text) {
-    element.focus();
-    element.value = '';
-    let i = 0;
-    const timer = setInterval(() => {
-        element.value += text[i];
-        i++;
-        if (i >= text.length) {
-            clearInterval(timer);
-            element.blur(); // Remove focus after typing
-        }
-    }, 100); // Typing speed
-}
-</script>
 </body>
 </html>
 
