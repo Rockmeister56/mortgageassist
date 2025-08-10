@@ -439,21 +439,21 @@ function showEnhancedAIMenu() {
 function startFormAssistant() {
     closeAllAIInterfaces();
     
-    // Find the actual form fields on the page
+    // IMPROVED: Find fields by exact IDs from your HTML
     const formFields = [
-        document.querySelector('input[placeholder*="Name"], input[name*="name"], input[id*="name"]'),
-        document.querySelector('input[placeholder*="Business"], input[name*="business"], input[id*="business"]'),
-        document.querySelector('input[placeholder*="Phone"], input[name*="phone"], input[id*="phone"], input[type="tel"]'),
-        document.querySelector('input[placeholder*="Time"], select, input[type="time"]'),
-        document.querySelector('input[placeholder*="Date"], input[type="date"]')
-    ].filter(field => field !== null); // Remove null entries
+        document.getElementById('name'),           // Your Name
+        document.getElementById('businessName'),   // Business Name  
+        document.getElementById('phone'),          // Phone Number
+        document.getElementById('bestTime'),       // Best Time to Contact
+        document.getElementById('preferredDate')   // Preferred Date
+    ].filter(field => field !== null && field.offsetParent !== null); // Only visible fields
     
     if (formFields.length === 0) {
         speakMessage("I don't see any form fields on this page. Please make sure the form is visible and try again.");
         return;
     }
     
-    // Start the voice-guided form filling process
+    console.log('Found fields:', formFields.map(f => f.id)); // Debug log
     startVoiceFormProcess(formFields);
 }
 
@@ -525,87 +525,131 @@ function askForNextFormField() {
 }
 
 function getQuestionForField(field) {
-    const placeholder = field.placeholder?.toLowerCase() || '';
-    const name = field.name?.toLowerCase() || '';
-    const id = field.id?.toLowerCase() || '';
+    const fieldId = field.id?.toLowerCase() || '';
+    const fieldName = field.name?.toLowerCase() || '';
     
-    if (placeholder.includes('name') || name.includes('name') || id.includes('name')) {
-        if (placeholder.includes('business') || name.includes('business') || id.includes('business')) {
-            return "What's your business name?";
-        }
+    // Match your exact field IDs
+    if (fieldId === 'name' || fieldName === 'name') {
         return "May I get your name please?";
     }
     
-    if (placeholder.includes('phone') || name.includes('phone') || id.includes('phone') || field.type === 'tel') {
+    if (fieldId === 'businessname' || fieldName === 'businessName') {
+        return "What's your business name?";
+    }
+    
+    if (fieldId === 'phone' || fieldName === 'phone') {
         return "What's your phone number?";
     }
     
-    if (placeholder.includes('email') || name.includes('email') || id.includes('email') || field.type === 'email') {
-        return "What's your email address?";
-    }
-    
-    if (placeholder.includes('time') || name.includes('time') || field.type === 'time') {
+    if (fieldId === 'besttime' || fieldName === 'bestTime') {
         return "What's the best time to contact you?";
     }
     
-    if (placeholder.includes('date') || name.includes('date') || field.type === 'date') {
-        return "What date would you prefer?";
+    if (fieldId === 'preferreddate' || fieldName === 'preferredDate') {
+        return "What date would you prefer? Please say it like January 15th, 2025.";
     }
     
     // Generic fallback
-    return `Please tell me your ${placeholder || name || 'information'}.`;
-}
-
-function highlightCurrentField(field) {
-    // Remove previous highlights
-    document.querySelectorAll('input, select').forEach(f => {
-        f.style.border = '';
-        f.style.boxShadow = '';
-    });
-    
-    // Highlight current field
-    field.style.border = '3px solid #4CAF50';
-    field.style.boxShadow = '0 0 15px rgba(76,175,80,0.6)';
-    field.scrollIntoView({ behavior: 'smooth', block: 'center' });
-}
-
-function startFormFieldListening() {
-    if (!recognition) {
-        speakMessage("Sorry, voice recognition isn't available. Please type your response in the highlighted field.");
-        return;
-    }
-    
-    try {
-        recognition.start();
-        isListening = true;
-    } catch (error) {
-        speakMessage("Please speak your response now, or type it in the highlighted field.");
-    }
+    return `Please tell me your ${fieldId || fieldName || 'information'}.`;
 }
 
 function handleFormFieldResponse(response) {
     const currentField = formFieldsArray[currentFormFieldIndex];
     if (!currentField) return;
     
-    // Fill the field with the response
-    currentField.value = response;
+    console.log('Filling field:', currentField.id, 'with:', response); // Debug log
+    
+    // Clean up the response
+    const cleanResponse = response.trim();
+    
+    // Special handling for date fields
+    if (currentField.type === 'date') {
+        // Try to convert spoken date to YYYY-MM-DD format
+        const dateValue = convertSpokenDateToFormat(cleanResponse);
+        currentField.value = dateValue;
+    } else {
+        currentField.value = cleanResponse;
+    }
+    
+    // Force the form to recognize the change
+    currentField.focus();
     currentField.dispatchEvent(new Event('input', { bubbles: true }));
     currentField.dispatchEvent(new Event('change', { bubbles: true }));
+    currentField.dispatchEvent(new Event('blur', { bubbles: true }));
     
-    // Confirm the entry
-    speakMessage(`Got it! ${response}`);
-    
-    // Move to next field
-    currentFormFieldIndex++;
+    // Visual confirmation
+    currentField.style.backgroundColor = '#e8f5e9'; // Light green background
     
     setTimeout(() => {
-        askForNextFormField();
+        currentField.style.backgroundColor = ''; // Reset background
+    }, 2000);
+    
+    // Confirm the entry
+    speakMessage(`Perfect! I've recorded: ${cleanResponse}`);
+    
+    // Move to next field after a delay
+    setTimeout(() => {
+        currentFormFieldIndex++;
+        setTimeout(() => {
+            askForNextFormField();
+        }, 1000);
     }, 1500);
 }
 
+// Helper function for date conversion
+function convertSpokenDateToFormat(spokenDate) {
+    // Simple date conversion - you can make this more sophisticated
+    const today = new Date();
+    
+    if (spokenDate.toLowerCase().includes('today')) {
+        return today.toISOString().split('T')[0];
+    }
+    
+    if (spokenDate.toLowerCase().includes('tomorrow')) {
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        return tomorrow.toISOString().split('T')[0];
+    }
+    
+    // For now, return today's date - you can improve this
+    return today.toISOString().split('T')[0];
+}
+
 function completeFormAssistant() {
-    speakMessage("Perfect! I've helped you fill out the form. You can review the information and submit when ready.");
-    stopFormAssistant();
+    speakMessage("Thank you for allowing me to fill in the form. And for a special, we'd like to offer for you a five hundred dollar discount certificate off your closing costs that you'll receive once you submit your quote request. Have a wonderful day!");
+    
+    // Optional: Add a visual message too
+    setTimeout(() => {
+        const specialOfferHTML = `
+            <div id="specialOffer" style="
+                position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+                background: linear-gradient(135deg, #4CAF50, #45a049); color: white;
+                padding: 25px; border-radius: 15px; z-index: 10000; text-align: center;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3); max-width: 400px;
+            ">
+                <h3 style="margin: 0 0 15px 0; font-size: 22px;">🎉 Special Offer!</h3>
+                <p style="margin: 0 0 15px 0; font-size: 16px;">$500 Discount Certificate</p>
+                <p style="margin: 0 0 20px 0; font-size: 14px;">Off your closing costs when you submit your quote!</p>
+                <button onclick="document.getElementById('specialOffer').remove()" style="
+                    background: white; color: #4CAF50; border: none; padding: 10px 20px;
+                    border-radius: 8px; font-weight: bold; cursor: pointer;
+                ">Awesome! 🎯</button>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', specialOfferHTML);
+        
+        // Auto-remove after 8 seconds
+        setTimeout(() => {
+            const offer = document.getElementById('specialOffer');
+            if (offer) offer.remove();
+        }, 8000);
+        
+    }, 3000); // Show visual after speaking
+    
+    // Clean up form assistant after message
+    setTimeout(() => {
+        stopFormAssistant();
+    }, 12000); // Give time for the full message and offer display
 }
 
 function stopFormAssistant() {
