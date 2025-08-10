@@ -299,7 +299,7 @@
     <script src="js/main.js"></script>
     <!-- Removed the chatbot.js script since we're using the Chatbase iframe -->
 <script>
-// Enhanced AI Avatar System with VAPI Integration - FIXED VERSION
+// Enhanced AI Avatar System with VAPI Integration - COMPLETE FIXED VERSION
 const mortgageKnowledge = {
     expertResponses: {
         "mortgage": "A mortgage is a loan to buy your home. You pay it back monthly over 15-30 years. Your payment includes principal, interest, taxes, and insurance.",
@@ -315,7 +315,7 @@ const mortgageKnowledge = {
 const VAPI_CONFIG = {
     assistantId: '78b68206-657e-421b-8f90-d2256bd1b10e',
     phoneNumber: '949-332-3567',
-    webhookUrl: 'https://hook.us2.make.com/xuog6w6jv3ftcxrfscjk6wompv5kupr0' // Your Make.com webhook
+    webhookUrl: 'https://hook.us2.make.com/xuog6w6jv3ftcxrfscjk6wompv5kupr0'
 };
 
 // Voice System Variables
@@ -323,6 +323,11 @@ let speechSynthesis = window.speechSynthesis;
 let recognition = null;
 let isVoiceChatMode = false;
 let isListening = false;
+
+// Form Assistant Variables
+let currentFormFieldIndex = 0;
+let formFieldsArray = [];
+let isFormAssistantActive = false;
 
 // Initialize Speech Recognition
 function initializeSpeechRecognition() {
@@ -334,7 +339,9 @@ function initializeSpeechRecognition() {
         
         recognition.onresult = function(event) {
             const transcript = event.results[0][0].transcript.trim();
-            if (isVoiceChatMode) {
+            if (isFormAssistantActive) {
+                handleFormFieldResponse(transcript);
+            } else if (isVoiceChatMode) {
                 handleVoiceChatInput(transcript);
             }
         };
@@ -425,7 +432,234 @@ function showEnhancedAIMenu() {
     document.body.insertAdjacentHTML('beforeend', menuHTML);
 }
 
-// Enhanced Chat Interface with NEW CALLBACK BUTTON
+// ============================================================================
+// FIX 1: PROPER VOICE-GUIDED FORM ASSISTANT
+// ============================================================================
+
+function startFormAssistant() {
+    closeAllAIInterfaces();
+    
+    // Find the actual form fields on the page
+    const formFields = [
+        document.querySelector('input[placeholder*="Name"], input[name*="name"], input[id*="name"]'),
+        document.querySelector('input[placeholder*="Business"], input[name*="business"], input[id*="business"]'),
+        document.querySelector('input[placeholder*="Phone"], input[name*="phone"], input[id*="phone"], input[type="tel"]'),
+        document.querySelector('input[placeholder*="Time"], select, input[type="time"]'),
+        document.querySelector('input[placeholder*="Date"], input[type="date"]')
+    ].filter(field => field !== null); // Remove null entries
+    
+    if (formFields.length === 0) {
+        speakMessage("I don't see any form fields on this page. Please make sure the form is visible and try again.");
+        return;
+    }
+    
+    // Start the voice-guided form filling process
+    startVoiceFormProcess(formFields);
+}
+
+function startVoiceFormProcess(fields) {
+    formFieldsArray = fields;
+    currentFormFieldIndex = 0;
+    isFormAssistantActive = true;
+    
+    // Initialize speech recognition for form filling
+    if (!recognition) {
+        initializeSpeechRecognition();
+    }
+    
+    // Create a small indicator that we're in form assist mode
+    createFormAssistIndicator();
+    
+    // Start with greeting and first question
+    speakMessage("Hi! Let me help you fill out this form. I'll ask you for each piece of information.");
+    
+    setTimeout(() => {
+        askForNextFormField();
+    }, 3000);
+}
+
+function createFormAssistIndicator() {
+    const indicatorHTML = `
+        <div id="formAssistIndicator" style="
+            position: fixed; bottom: 20px; right: 20px; background: #4CAF50; color: white;
+            padding: 15px 20px; border-radius: 25px; z-index: 9999;
+            box-shadow: 0 4px 15px rgba(76,175,80,0.4); display: flex; align-items: center; gap: 10px;
+        ">
+            <img src="https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/avatars/avatar_1754810337622_AI%20assist%20head%20left.png" 
+                 style="width: 30px; height: 30px; border-radius: 50%;">
+            <span style="font-weight: bold;">🗣️ Form Assistant Active</span>
+            <button onclick="stopFormAssistant()" style="
+                background: rgba(255,255,255,0.3); border: none; color: white; 
+                border-radius: 50%; width: 25px; height: 25px; cursor: pointer;
+            ">✕</button>
+        </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', indicatorHTML);
+}
+
+function askForNextFormField() {
+    if (currentFormFieldIndex >= formFieldsArray.length) {
+        // We're done!
+        completeFormAssistant();
+        return;
+    }
+    
+    const currentField = formFieldsArray[currentFormFieldIndex];
+    if (!currentField) {
+        currentFormFieldIndex++;
+        askForNextFormField();
+        return;
+    }
+    
+    // Highlight the current field
+    highlightCurrentField(currentField);
+    
+    // Ask for the appropriate information based on field type
+    const question = getQuestionForField(currentField);
+    speakMessage(question);
+    
+    // Start listening for the response
+    setTimeout(() => {
+        startFormFieldListening();
+    }, 2000);
+}
+
+function getQuestionForField(field) {
+    const placeholder = field.placeholder?.toLowerCase() || '';
+    const name = field.name?.toLowerCase() || '';
+    const id = field.id?.toLowerCase() || '';
+    
+    if (placeholder.includes('name') || name.includes('name') || id.includes('name')) {
+        if (placeholder.includes('business') || name.includes('business') || id.includes('business')) {
+            return "What's your business name?";
+        }
+        return "May I get your name please?";
+    }
+    
+    if (placeholder.includes('phone') || name.includes('phone') || id.includes('phone') || field.type === 'tel') {
+        return "What's your phone number?";
+    }
+    
+    if (placeholder.includes('email') || name.includes('email') || id.includes('email') || field.type === 'email') {
+        return "What's your email address?";
+    }
+    
+    if (placeholder.includes('time') || name.includes('time') || field.type === 'time') {
+        return "What's the best time to contact you?";
+    }
+    
+    if (placeholder.includes('date') || name.includes('date') || field.type === 'date') {
+        return "What date would you prefer?";
+    }
+    
+    // Generic fallback
+    return `Please tell me your ${placeholder || name || 'information'}.`;
+}
+
+function highlightCurrentField(field) {
+    // Remove previous highlights
+    document.querySelectorAll('input, select').forEach(f => {
+        f.style.border = '';
+        f.style.boxShadow = '';
+    });
+    
+    // Highlight current field
+    field.style.border = '3px solid #4CAF50';
+    field.style.boxShadow = '0 0 15px rgba(76,175,80,0.6)';
+    field.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function startFormFieldListening() {
+    if (!recognition) {
+        speakMessage("Sorry, voice recognition isn't available. Please type your response in the highlighted field.");
+        return;
+    }
+    
+    try {
+        recognition.start();
+        isListening = true;
+    } catch (error) {
+        speakMessage("Please speak your response now, or type it in the highlighted field.");
+    }
+}
+
+function handleFormFieldResponse(response) {
+    const currentField = formFieldsArray[currentFormFieldIndex];
+    if (!currentField) return;
+    
+    // Fill the field with the response
+    currentField.value = response;
+    currentField.dispatchEvent(new Event('input', { bubbles: true }));
+    currentField.dispatchEvent(new Event('change', { bubbles: true }));
+    
+    // Confirm the entry
+    speakMessage(`Got it! ${response}`);
+    
+    // Move to next field
+    currentFormFieldIndex++;
+    
+    setTimeout(() => {
+        askForNextFormField();
+    }, 1500);
+}
+
+function completeFormAssistant() {
+    speakMessage("Perfect! I've helped you fill out the form. You can review the information and submit when ready.");
+    stopFormAssistant();
+}
+
+function stopFormAssistant() {
+    isFormAssistantActive = false;
+    currentFormFieldIndex = 0;
+    formFieldsArray = [];
+    
+    // Remove indicator
+    const indicator = document.getElementById('formAssistIndicator');
+    if (indicator) indicator.remove();
+    
+    // Remove field highlighting
+    document.querySelectorAll('input, select').forEach(field => {
+        field.style.border = '';
+        field.style.boxShadow = '';
+    });
+    
+    // Stop speech recognition
+    if (recognition) {
+        try {
+            recognition.stop();
+        } catch (error) {
+            console.log('Recognition stop error:', error);
+        }
+    }
+    
+    isListening = false;
+}
+
+function speakMessage(message) {
+    if (!speechSynthesis) return;
+    
+    const utterance = new SpeechSynthesisUtterance(message);
+    
+    const voices = speechSynthesis.getVoices();
+    const femaleVoice = voices.find(voice => 
+        voice.name.includes('Female') || 
+        voice.name.includes('Samantha') || 
+        voice.name.includes('Karen') ||
+        voice.name.includes('Victoria')
+    );
+    
+    if (femaleVoice) utterance.voice = femaleVoice;
+    utterance.rate = 0.9;
+    utterance.pitch = 1.0;
+    utterance.volume = 0.8;
+    
+    speechSynthesis.speak(utterance);
+}
+
+// ============================================================================
+// FIX 2: CHAT INTERFACE WITH SIMPLE PHONE EMOJI BUTTON
+// ============================================================================
+
 function createEnhancedChatInterface() {
     const chatHTML = `
         <div id="aiChatInterface" style="
@@ -434,7 +668,7 @@ function createEnhancedChatInterface() {
             border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             z-index: 10000; display: flex; flex-direction: column;
         ">
-            <!-- Enhanced Header with Avatar and NEW CALLBACK BUTTON -->
+            <!-- Enhanced Header with Avatar and SIMPLE PHONE BUTTON -->
             <div style="
                 background: linear-gradient(135deg, #2196F3, #1976D2); color: white; 
                 padding: 15px; border-radius: 15px 15px 0 0; position: relative;
@@ -447,13 +681,13 @@ function createEnhancedChatInterface() {
                 </div>
                 
                 <div style="display: flex; gap: 8px; align-items: center;">
-                    <!-- NEW CALLBACK BUTTON WITH YOUR IMAGE -->
+                    <!-- SIMPLE PHONE EMOJI BUTTON -->
                     <button onclick="showCallbackFormFromChat()" style="
-                        background: none; border: none; cursor: pointer; padding: 4px;
-                        transition: all 0.3s; border-radius: 8px;
-                    " title="Request a callback" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='none'">
-                        <img src="https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/form-assets/logos/logo_5f42f026-051a-42c7-833d-375fcac74252_1754810066459_Callback-button2.png" 
-                             style="width: 32px; height: 32px;">
+                        background: rgba(255,255,255,0.2); color: white; border: none; 
+                        padding: 8px 12px; border-radius: 8px; font-size: 16px; cursor: pointer; 
+                        transition: all 0.3s; font-weight: bold;
+                    " title="Request a callback" onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">
+                        📞 Callback
                     </button>
                     <button onclick="closeAllAIInterfaces()" style="
                         background: none; border: none; color: white; font-size: 20px; cursor: pointer;
@@ -512,149 +746,10 @@ function createEnhancedChatInterface() {
     document.getElementById('userChatInput').focus();
 }
 
-// FIXED: Form Assistant Function
-function startFormAssistant() {
-    closeAllAIInterfaces();
-    
-    // Try to find the form inputs
-    const nameInput = document.querySelector('input[placeholder*="Name"], input[name*="name"], input[id*="name"]');
-    const businessInput = document.querySelector('input[placeholder*="Business"], input[name*="business"], input[id*="business"]');
-    const phoneInput = document.querySelector('input[placeholder*="Phone"], input[name*="phone"], input[id*="phone"], input[type="tel"]');
-    
-    if (!nameInput && !phoneInput) {
-        // If no form found, show helpful message
-        showFormAssistantMessage();
-        return;
-    }
-    
-    // Show AI assistance
-    createFormAssistantInterface(nameInput, businessInput, phoneInput);
-}
+// ============================================================================
+// VAPI CALLBACK SYSTEM (Unchanged - Working)
+// ============================================================================
 
-function showFormAssistantMessage() {
-    const messageHTML = `
-        <div id="formAssistantMessage" style="
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 90%; max-width: 450px; background: white; border-radius: 20px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.3); z-index: 10000; padding: 30px;
-            text-align: center;
-        ">
-            <img src="https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/avatars/avatar_1754810337622_AI%20assist%20head%20left.png" 
-                 style="width: 80px; height: 80px; border-radius: 50%; margin-bottom: 15px;">
-            <h2 style="color: #4CAF50; margin-bottom: 15px;">🤖 Form Assistant Ready!</h2>
-            <p style="color: #666; margin-bottom: 20px;">I can help you fill out forms on this page. Please make sure a form is visible, then click the AI avatar again to get personalized assistance with each field!</p>
-            <div style="background: #e8f5e9; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
-                <p style="color: #2e7d32; margin: 0; font-weight: bold;">💡 How it works:</p>
-                <p style="color: #2e7d32; margin: 5px 0 0 0; font-size: 14px;">1. Make sure the form is visible<br>2. Click the AI avatar<br>3. Choose "Help Me Fill The Form"<br>4. I'll guide you through each field!</p>
-            </div>
-            <button onclick="closeAllAIInterfaces()" style="
-                background: #4CAF50; color: white; border: none; padding: 12px 25px;
-                border-radius: 10px; cursor: pointer; font-weight: bold;
-            ">Got it! 👍</button>
-        </div>
-        
-        <div id="aiBackdrop" onclick="closeAllAIInterfaces()" style="
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6); z-index: 9999;
-        "></div>
-    `;
-    
-    document.body.insertAdjacentHTML('beforeend', messageHTML);
-}
-
-function createFormAssistantInterface(nameInput, businessInput, phoneInput) {
-    // Highlight the first available field
-    const firstField = nameInput || phoneInput || businessInput;
-    if (firstField) {
-        firstField.style.border = '3px solid #4CAF50';
-        firstField.style.boxShadow = '0 0 10px rgba(76,175,80,0.5)';
-        firstField.focus();
-    }
-    
-    const assistantHTML = `
-        <div id="formAssistant" style="
-            position: fixed; top: 20px; right: 20px; background: #4CAF50; color: white;
-            padding: 20px; border-radius: 15px; z-index: 9999; max-width: 300px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        ">
-            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
-                <img src="https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/avatars/avatar_1754810337622_AI%20assist%20head%20left.png" 
-                     style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid white;">
-                <h4 style="margin: 0;">🤖 Form Assistant</h4>
-            </div>
-            
-            <p style="margin: 0 0 15px 0; font-size: 14px;">I'm helping you fill the form! The highlighted field is ready for your input.</p>
-            
-            <div style="background: rgba(255,255,255,0.2); padding: 10px; border-radius: 8px; margin-bottom: 15px;">
-                <p style="margin: 0; font-size: 12px; font-weight: bold;">🎯 Current Field:</p>
-                <p style="margin: 5px 0 0 0; font-size: 14px;" id="currentFieldHelper">
-                    ${nameInput ? 'Enter your full name' : phoneInput ? 'Enter your phone number' : 'Fill in this field'}
-                </p>
-            </div>
-            
-            <div style="display: flex; gap: 10px;">
-                <button onclick="nextFormField()" style="
-                    background: white; color: #4CAF50; border: none; padding: 8px 12px;
-                    border-radius: 5px; cursor: pointer; font-size: 12px; flex: 1;
-                ">Next Field ➤</button>
-                <button onclick="closeFormHelper()" style="
-                    background: rgba(255,255,255,0.2); color: white; border: none; padding: 8px 12px;
-                    border-radius: 5px; cursor: pointer; font-size: 12px;
-                ">Done ✓</button>
-            </div>
-        </div>
-    `;
-    
-    document.body.insertAdjacentHTML('beforeend', assistantHTML);
-}
-
-let currentFieldIndex = 0;
-const formFields = [];
-
-function nextFormField() {
-    // Get all form fields
-    const allFields = document.querySelectorAll('input[type="text"], input[type="tel"], input[type="email"], select');
-    
-    if (allFields.length === 0) return;
-    
-    // Clear previous highlighting
-    allFields.forEach(field => {
-        field.style.border = '';
-        field.style.boxShadow = '';
-    });
-    
-    // Move to next field
-    currentFieldIndex = (currentFieldIndex + 1) % allFields.length;
-    const nextField = allFields[currentFieldIndex];
-    
-    // Highlight next field
-    nextField.style.border = '3px solid #4CAF50';
-    nextField.style.boxShadow = '0 0 10px rgba(76,175,80,0.5)';
-    nextField.focus();
-    
-    // Update helper text
-    const helper = document.getElementById('currentFieldHelper');
-    if (helper) {
-        const fieldName = nextField.placeholder || nextField.name || 'this field';
-        helper.textContent = `Enter your ${fieldName.toLowerCase()}`;
-    }
-}
-
-function closeFormHelper() {
-    const helper = document.getElementById('formAssistant');
-    if (helper) helper.remove();
-    
-    // Remove green borders
-    const inputs = document.querySelectorAll('input, select');
-    inputs.forEach(input => {
-        input.style.border = '';
-        input.style.boxShadow = '';
-    });
-    
-    currentFieldIndex = 0;
-}
-
-// VAPI Callback Form with Make.com Webhook
 function showCallbackForm() {
     closeAllAIInterfaces();
     createCallbackInterface();
@@ -823,18 +918,25 @@ function showCallbackStatus(message, type) {
     }
 }
 
-// Enhanced Voice Chat Functions
+// ============================================================================
+// VOICE CHAT SYSTEM (Unchanged - Working)
+// ============================================================================
+
 function toggleVoiceChat() {
-    if (isListening) {
+    if (isListening && isVoiceChatMode) {
         stopVoiceChatListening();
-    } else {
+    } else if (isVoiceChatMode) {
         startVoiceChatListening();
     }
 }
 
 function startVoiceChatListening() {
-    if (!recognition) {
-        addAIMessage("Sorry, voice recognition isn't supported in your browser. Please type your question instead.");
+    if (!recognition || isFormAssistantActive) {
+        if (isFormAssistantActive) {
+            addAIMessage("Form assistant is active. Please complete the form filling first.");
+        } else {
+            addAIMessage("Sorry, voice recognition isn't supported in your browser. Please type your question instead.");
+        }
         return;
     }
     
@@ -901,7 +1003,7 @@ function startQuestionChat() {
     }, 500);
 }
 
-// Chat Functions (keeping your existing ones)
+// Chat Functions
 function sendChatMessage() {
     const input = document.getElementById('userChatInput');
     if (!input) return;
@@ -960,7 +1062,7 @@ function addUserMessage(message) {
     scrollChatToBottom();
 }
 
-// Enhanced AI Response System (keeping your existing one)
+// Enhanced AI Response System
 function getSmartAIResponse(message) {
     const msg = message.toLowerCase();
     
@@ -983,7 +1085,7 @@ function getSmartAIResponse(message) {
     return "Great question! I'm here to help with mortgages, loan types, qualification, rates, and home buying. Could you be more specific? For example, ask me 'What credit score do I need?' or 'What are current rates?'";
 }
 
-// Quick Options (keeping your existing function)
+// Quick Options
 function showMortgageQuickOptions() {
     const options = `
         <div style="margin: 15px 0;">
@@ -1022,7 +1124,7 @@ function askQuickQuestion(question) {
     }, 500);
 }
 
-// Voice Response (keeping your existing function)
+// Voice Response
 function speakResponse(text) {
     if (!speechSynthesis) return;
     
@@ -1054,7 +1156,7 @@ function scrollChatToBottom() {
 }
 
 function closeAllAIInterfaces() {
-    const interfaces = ['aiOptionsMenu', 'aiChatInterface', 'callbackInterface', 'aiBackdrop', 'formAssistant', 'formAssistantMessage'];
+    const interfaces = ['aiOptionsMenu', 'aiChatInterface', 'callbackInterface', 'aiBackdrop', 'formAssistIndicator'];
     interfaces.forEach(id => {
         const element = document.getElementById(id);
         if (element) element.remove();
@@ -1079,9 +1181,12 @@ function closeAllAIInterfaces() {
         speechSynthesis.cancel();
     }
     
+    // Reset all states
     isListening = false;
     isVoiceChatMode = false;
-    currentFieldIndex = 0;
+    isFormAssistantActive = false;
+    currentFormFieldIndex = 0;
+    formFieldsArray = [];
 }
 
 // Initialize
