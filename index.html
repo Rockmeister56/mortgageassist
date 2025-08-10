@@ -207,26 +207,53 @@
     <div id="contactModal" class="modal">
         <div class="modal-content">
             <span class="close-btn">&times;</span>
-
+            <!-- Fine-Tunable Header with CSS Variables -->
 <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 20px; padding: 10px 0;">
     
-    <!-- LEFT SIDE: Bigger Business Logo + Left-Aligned Get a Quote -->
+    <!-- LEFT SIDE: Business Logo + Get a Quote -->
     <div style="flex: 1;">
-        <!-- Bigger Business Logo -->
+        <!-- BUSINESS LOGO - Adjustable -->
         <img src="https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/form-assets/logos/logo_5f42f026-051a-42c7-833d-375fcac74252_1754796297597_logo3.png" 
-             style="height: 150px; margin-bottom: 15px; display: block;">
-        <!-- Left-Aligned Get a Quote (aligned with form fields) -->
-        <h2 style="margin: 0; font-size: 24px; color: #333; text-align: left;">Get a Quote</h2>
+             style="
+                height: 70px;                    /* ADJUST: Logo size (try 60px, 80px, 90px) */
+                margin-bottom: 12px;             /* ADJUST: Space below logo (try 8px, 15px, 20px) */
+                margin-left: 0px;                /* ADJUST: Logo left position (try 5px, 10px, -5px) */
+                display: block;
+             ">
+        
+        <!-- GET A QUOTE TEXT - Adjustable -->
+        <h2 style="
+            margin: 0; 
+            font-size: 24px;                    /* ADJUST: Text size (try 20px, 26px, 28px) */
+            color: #333; 
+            text-align: left;
+            margin-left: 0px;                   /* ADJUST: Text left position (try 5px, 10px, -5px) */
+            margin-top: 5px;                    /* ADJUST: Space above text (try 0px, 10px, 15px) */
+        ">Get a Quote</h2>
     </div>
     
-    <!-- RIGHT SIDE: Clean Avatar (NO shadow) -->
-    <div style="flex: 0 0 auto; text-align: center;">
+    <!-- RIGHT SIDE: Avatar - Adjustable -->
+    <div style="
+        flex: 0 0 auto; 
+        text-align: center;
+        margin-right: 10px;                     /* ADJUST: Avatar right position (try 0px, 15px, 20px) */
+        margin-top: -5px;                       /* ADJUST: Avatar vertical position (try 0px, -10px, 5px) */
+    ">
         <img src="https://odetjszursuaxpapfwcy.supabase.co/storage/v1/object/public/avatars/avatar_1754795551491_AI%20assist%20with%20button.png" 
              onclick="activateAIAssistant()" 
-             style="width: 120px; cursor: pointer; border-radius: 10px; transition: transform 0.3s;"
+             style="
+                width: 110px;                   /* ADJUST: Avatar size (try 100px, 120px, 130px) */
+                cursor: pointer; 
+                border-radius: 10px; 
+                transition: transform 0.3s;
+             "
              onmouseover="this.style.transform='scale(1.05)'"
              onmouseout="this.style.transform='scale(1.0)'">
-        <p style="margin: 5px 0 0 0; font-size: 12px; color: #666;">👋 Click to activate AI!</p>
+        <p style="
+            margin: 3px 0 0 0; 
+            font-size: 11px;                    /* ADJUST: Caption size (try 10px, 12px, 13px) */
+            color: #666;
+        ">👋 Click to activate AI!</p>
     </div>
     
 </div>
