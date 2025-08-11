@@ -681,12 +681,8 @@ function getQuestionForField(field) {
     // Generic fallback
     return `Please tell me your ${fieldId || fieldName || 'information'}.`;
 }
-    // Line 684-686: Add safety check
-if (currentField) {
-    highlightCurrentField(currentField);
-} else {
-    console.log('[DEBUG] currentField is undefined, skipping highlight');
-}
+    // Highlight the current field
+    currentField && highlightCurrentField(currentField);
     
     // Ask for the appropriate information based on field type
     const question = getQuestionForField(currentField);
