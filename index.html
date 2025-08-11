@@ -1095,6 +1095,8 @@ function showCallbackStatus(message, type) {
 // VOICE CHAT SYSTEM (Unchanged - Working)
 // ============================================================================
 
+let micPermissionGranted = false; // Add this globally
+
 function toggleVoiceChat() {
     if (isListening && isVoiceChatMode) {
         stopVoiceChatListening();
@@ -1113,20 +1115,25 @@ function startVoiceChatListening() {
         return;
     }
     
+    // Skip if already listening with permission granted
+    if (isListening && micPermissionGranted) {
+        console.log('Already listening with permission, skipping...');
+        return;
+    }
+    
     isListening = true;
     const indicator = document.getElementById('voiceIndicator');
     const micIcon = document.getElementById('micIcon');
     
     if (indicator) indicator.style.display = 'block';
     if (micIcon) {
-        micIcon.style.filter = 'brightness(0.7) sepia(1) hue-rotate(340deg) saturate(2)'; // Red tint
+        micIcon.style.filter = 'brightness(0.7) sepia(1) hue-rotate(340deg) saturate(2)';
     }
     
     try {
-        // Prevent multiple start calls that cause permission popups
-        if (!isListening) {
-            recognition.start();
-        }
+        recognition.start();
+        micPermissionGranted = true; // Flag permission as granted
+        console.log('✅ Speech recognition started with permission cached');
     } catch (error) {
         console.log('Recognition start error:', error);
         stopVoiceChatListening();
