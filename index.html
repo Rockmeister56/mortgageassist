@@ -682,7 +682,7 @@ function getQuestionForField(field) {
     return `Please tell me your ${fieldId || fieldName || 'information'}.`;
 }
     // Line 684-686: Add safety check
-if (currentField && typeof currentField !== 'undefined') {
+if (currentField) {
     highlightCurrentField(currentField);
 } else {
     console.log('[DEBUG] currentField is undefined, skipping highlight');
