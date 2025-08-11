@@ -1374,14 +1374,18 @@ function closeAllAIInterfaces() {
         input.style.boxShadow = '';
     });
     
-   if (recognition && isListening && !isFormAssistantActive) {
+   // In closeAllAIInterfaces() around line 1377-1379
+// COMMENT OUT OR REMOVE THIS ENTIRE BLOCK:
+/*
+if (recognition && isListening && !isFormAssistantActive) {
     try {
-        recognition.stop();
+        recognition.stop(); // ← DELETE THIS!
         console.log('[DEBUG] Recognition stopped - interfaces closed');
     } catch (error) {
         console.log('Error stopping recognition:', error);
     }
 }
+*/
     
     if (speechSynthesis) {
         speechSynthesis.cancel();
