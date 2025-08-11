@@ -388,8 +388,44 @@ function initializeMicrophonePermission() {
 }
 
 // Main Avatar Activation Function
-function activateAIAssistant() {
-    showEnhancedAIMenu();
+function initializeSpeechRecognition() {
+    // Prevent multiple initializations
+    if (recognition) {
+        console.log('Speech recognition already initialized');
+        return;
+    }
+    
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+        recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.lang = 'en-US';
+        
+        recognition.onresult = function(event) {
+            const transcript = event.results[0][0].transcript.trim();
+            console.log('Voice input received:', transcript);
+            
+            if (isFormAssistantActive) {
+                handleVoiceFormFieldResponse(transcript);
+            } else if (isVoiceChatMode) {
+                handleVoiceChatInput(transcript);
+            }
+        };
+        
+        recognition.onerror = function(event) {
+            console.log('Speech recognition error:', event.error);
+            stopListening();
+        };
+        
+        recognition.onend = function() {
+            isListening = false;
+            if (isVoiceChatMode) {
+                updateListenButton();
+            }
+        };
+        
+        console.log('✅ Speech recognition initialized once');
+    }
 }
 
 // Enhanced 4-Button Menu with NEW AVATAR
@@ -508,6 +544,7 @@ function startVoiceFormProcess(fields) {
     // Initialize speech recognition for form filling
     if (!recognition) {
         console.log('8. Initializing speech recognition...');
+        initializeSpeechRecognition();
     } else {
         console.log('8. Recognition already exists');
     }
@@ -532,6 +569,7 @@ function startVoiceFormProcess(fields) {
     
     // Initialize speech recognition for form filling
     if (!recognition) {
+        initializeSpeechRecognition();
     }
     
     // Create a small indicator that we're in form assist mode
@@ -1361,45 +1399,9 @@ function closeAllAIInterfaces() {
 
 
 // Initialize
-function initializeSpeechRecognition() {
-    // Prevent multiple initializations
-    if (recognition) {
-        console.log('Speech recognition already initialized');
-        return;
-    }
-    
-    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-        recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-        recognition.continuous = false;
-        recognition.interimResults = false;
-        recognition.lang = 'en-US';
-        
-        recognition.onresult = function(event) {
-            const transcript = event.results[0][0].transcript.trim();
-            console.log('Voice input received:', transcript);
-            
-            if (isFormAssistantActive) {
-                handleVoiceFormFieldResponse(transcript);
-            } else if (isVoiceChatMode) {
-                handleVoiceChatInput(transcript);
-            }
-        };
-        
-        recognition.onerror = function(event) {
-            console.log('Speech recognition error:', event.error);
-            stopListening();
-        };
-        
-        recognition.onend = function() {
-            isListening = false;
-            if (isVoiceChatMode) {
-                updateListenButton();
-            }
-        };
-        
-        console.log('✅ Speech recognition initialized once');
-    }
-}
+document.addEventListener('DOMContentLoaded', function() {
+    initializeSpeechRecognition();
+});
 
 speechSynthesis.onvoiceschanged = function() {
     console.log('Available voices:', speechSynthesis.getVoices().length);
