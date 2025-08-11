@@ -365,20 +365,26 @@ function initializeSpeechRecognition() {
 };
         
        recognition.onend = function() {
-    // Don't stop listening if form assistant is active
     if (isFormAssistantActive) {
+        // Don't stop listening if form assistant is active - restart after delay
         console.log('[DEBUG] Recognition ended but form assistant active - restarting...');
-        if (!isListening) {
-            isListening = true;
-            try {
-                window.speechRecognition.start();
-                console.log('[DEBUG] Recognition restarted for form assistant');
-            } catch (error) {
-                console.log('Error restarting recognition:', error);
+        isListening = false;
+        updateListenButton();
+        
+        // Add delay to prevent infinite loop, then restart
+        setTimeout(() => {
+            if (isFormAssistantActive && !isListening) {
+                try {
+                    recognition.start();
+                    isListening = true;
+                    console.log('[DEBUG] Recognition restarted for next form field');
+                } catch (error) {
+                    console.log('Recognition restart error:', error);
+                }
             }
-        }
+        }, 1500);
     } else {
-        // Normal chat mode - stop listening
+        // Normal chat mode - stop listening  
         isListening = false;
         updateListenButton();
     }
