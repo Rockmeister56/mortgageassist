@@ -333,6 +333,7 @@ let isFormAssistantActive = false;
 function initializeSpeechRecognition() {
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
         recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.continuous = true;
         recognition.continuous = false;
         recognition.interimResults = false;
         recognition.lang = 'en-US';
@@ -363,12 +364,18 @@ function initializeSpeechRecognition() {
     }
 };
         
-        recognition.onend = function() {
-            isListening = false;
-            updateListenButton();
-        };
+     recognition.onend = function() {
+    isListening = false;
+    updateListenButton();
+    
+    // 🎯 FALLBACK RECOVERY - Auto-restart for form assistant
+    if (isFormAssistantActive && !isListening) {
+        console.log("[DEBUG] Mic ended unexpectedly during form. Restarting...");
+        setTimeout(() => {
+            startFormFieldListening(); // Auto-recover
+        }, 500); // Small delay to prevent rapid restarts
     }
-}
+};
 
 function initializeMicrophonePermission() {
     // Only request permission on first user interaction
@@ -730,6 +737,7 @@ function handleFormFieldResponse(response) {
         currentFormFieldIndex++;
         setTimeout(() => {
             askForNextFormField();
+            startFormFieldListening();
         }, 1000);
     }, 1500);
 }
