@@ -371,7 +371,7 @@ function initializeSpeechRecognition() {
         if (!isListening) {
             isListening = true;
             try {
-                recognition.start();
+                window.speechRecognition.start();
                 console.log('[DEBUG] Recognition restarted for form assistant');
             } catch (error) {
                 console.log('Error restarting recognition:', error);
