@@ -681,9 +681,6 @@ function getQuestionForField(field) {
     // Generic fallback
     return `Please tell me your ${fieldId || fieldName || 'information'}.`;
 }
-    // Highlight the current field
-    currentField && highlightCurrentField(currentField);
-    
     // Ask for the appropriate information based on field type
     const question = getQuestionForField(currentField);
     speakMessage(question);
@@ -695,9 +692,11 @@ function getQuestionForField(field) {
 
 function handleFormFieldResponse(response) {
     const currentField = formFieldsArray[currentFormFieldIndex];
+    currentField && highlightCurrentField(currentField);
     if (!currentField) return;
     
     console.log('Filling field:', currentField.id, 'with:', response); // Debug log
+
     
     // Clean up the response
     const cleanResponse = response.trim();
