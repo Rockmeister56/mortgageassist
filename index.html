@@ -364,10 +364,25 @@ function initializeSpeechRecognition() {
     }
 };
         
-        recognition.onend = function() {
-            isListening = false;
-            updateListenButton();
-        };
+       recognition.onend = function() {
+    // Don't stop listening if form assistant is active
+    if (isFormAssistantActive) {
+        console.log('[DEBUG] Recognition ended but form assistant active - restarting...');
+        if (!isListening) {
+            isListening = true;
+            try {
+                recognition.start();
+                console.log('[DEBUG] Recognition restarted for form assistant');
+            } catch (error) {
+                console.log('Error restarting recognition:', error);
+            }
+        }
+    } else {
+        // Normal chat mode - stop listening
+        isListening = false;
+        updateListenButton();
+    }
+};
     }
 }
 
