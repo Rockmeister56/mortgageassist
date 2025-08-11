@@ -1141,10 +1141,20 @@ function startVoiceChatListening() {
 }
 
 function stopVoiceChatListening() {
+    // DON'T stop recognition if we're in form assistant mode
+    if (isFormAssistantActive) {
+        console.log('[DEBUG] Form assistant active - keeping mic alive');
+        isListening = false; // Update flag but keep recognition running
+        updateListenButton();
+        return;
+    }
+    
+    // Only stop recognition for chat mode
     isListening = false;
     if (recognition) {
         try {
             recognition.stop();
+            console.log('[DEBUG] Recognition stopped for chat mode');
         } catch (error) {
             console.log('Recognition stop error:', error);
         }
