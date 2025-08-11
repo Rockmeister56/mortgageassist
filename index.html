@@ -348,7 +348,7 @@ function initializeSpeechRecognition() {
         
         recognition.onerror = function(event) {
             console.log('Speech recognition error:', event.error);
-            stopVoiceChatListening();
+            stopListening();
         };
         
         recognition.onend = function() {
@@ -1113,12 +1113,6 @@ function startVoiceChatListening() {
         return;
     }
     
-    // Check if already listening to prevent popup
-    if (isListening) {
-        console.log('Already listening, skipping start...');
-        return;
-    }
-    
     isListening = true;
     const indicator = document.getElementById('voiceIndicator');
     const micIcon = document.getElementById('micIcon');
@@ -1129,7 +1123,10 @@ function startVoiceChatListening() {
     }
     
     try {
-        recognition.start();
+        // Prevent multiple start calls that cause permission popups
+        if (recognition.state !== 'listening') {
+            recognition.start();
+        }
     } catch (error) {
         console.log('Recognition start error:', error);
         stopVoiceChatListening();
