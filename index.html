@@ -365,29 +365,26 @@ function initializeSpeechRecognition() {
 };
         
        recognition.onend = function() {
+    // Don't stop listening if form assistant is active
     if (isFormAssistantActive) {
-        console.log('[DEBUG] Recognition ended - form assistant active');
-        isListening = false;
-        updateListenButton();
-        
-        // FIXED: Add delay to prevent infinite loop
-        setTimeout(() => {
-            console.log('[DEBUG] Manual restart after 1 second delay');
+        console.log('[DEBUG] Recognition ended but form assistant active - restarting...');
+        if (!isListening) {
+            isListening = true;
             try {
                 window.speechRecognition.start();
                 console.log('[DEBUG] Recognition restarted for form assistant');
             } catch (error) {
                 console.log('Error restarting recognition:', error);
             }
-        }, 1000);
-        
+        }
     } else {
-        // PRESERVE EXISTING CHAT FUNCTIONALITY
         // Normal chat mode - stop listening
         isListening = false;
         updateListenButton();
     }
 };
+    }
+}
 
 function initializeMicrophonePermission() {
     // Only request permission on first user interaction
