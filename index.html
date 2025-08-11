@@ -358,9 +358,37 @@ function initializeSpeechRecognition() {
     }
 }
 
+function initializeMicrophonePermission() {
+    // Only request permission on first user interaction
+    let permissionRequested = false;
+    
+    document.addEventListener('click', async function requestMicOnce(e) {
+        if (permissionRequested) return;
+        
+        // Check if clicked on any voice-related element
+        if (e.target.closest('#voiceChatButton') || 
+            e.target.closest('[onclick*="toggleVoice"]') ||
+            e.target.closest('[onclick*="startForm"]')) {
+            
+            permissionRequested = true;
+            console.log('🎤 Requesting microphone permission on first click...');
+            
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                stream.getTracks().forEach(track => track.stop()); // Stop immediately
+                console.log('✅ Microphone permission granted! No more popups.');
+            } catch (error) {
+                console.log('❌ Microphone permission denied:', error);
+            }
+            
+            // Remove this listener after first use
+            document.removeEventListener('click', requestMicOnce);
+        }
+    }, { once: false });
+}
+
 // Main Avatar Activation Function
 function activateAIAssistant() {
-    initializeSpeechRecognition();
     showEnhancedAIMenu();
 }
 
@@ -480,7 +508,6 @@ function startVoiceFormProcess(fields) {
     // Initialize speech recognition for form filling
     if (!recognition) {
         console.log('8. Initializing speech recognition...');
-        initializeSpeechRecognition();
     } else {
         console.log('8. Recognition already exists');
     }
@@ -505,7 +532,6 @@ function startVoiceFormProcess(fields) {
     
     // Initialize speech recognition for form filling
     if (!recognition) {
-        initializeSpeechRecognition();
     }
     
     // Create a small indicator that we're in form assist mode
@@ -1074,20 +1100,13 @@ function toggleVoiceChat() {
     }
 }
 
-async function startVoiceChatListening() {
-    if (!recognition) {
-        addAIMessage("Sorry, voice recognition isn't supported in your browser. Please type your question instead.");
-        return;
-    }
-    
-    // REQUEST MICROPHONE PERMISSION FIRST
-    try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        stream.getTracks().forEach(track => track.stop()); // Stop immediately, we just needed permission
-        console.log('✅ Microphone permission granted!');
-    } catch (error) {
-        console.log('❌ Microphone permission denied:', error);
-        addAIMessage("Microphone permission is required. Please allow microphone access and try again.");
+function startVoiceChatListening() {
+    if (!recognition || isFormAssistantActive) {
+        if (isFormAssistantActive) {
+            addAIMessage("Form assistant is active. Please complete the form filling first.");
+        } else {
+            addAIMessage("Sorry, voice recognition isn't supported in your browser. Please type your question instead.");
+        }
         return;
     }
     
@@ -1097,7 +1116,7 @@ async function startVoiceChatListening() {
     
     if (indicator) indicator.style.display = 'block';
     if (micIcon) {
-        micIcon.style.filter = 'brightness(0.7) sepia(1) hue-rotate(340deg) saturate(2)';
+        micIcon.style.filter = 'brightness(0.7) sepia(1) hue-rotate(340deg) saturate(2)'; // Red tint
     }
     
     try {
@@ -1342,9 +1361,45 @@ function closeAllAIInterfaces() {
 
 
 // Initialize
-document.addEventListener('DOMContentLoaded', function() {
-    initializeSpeechRecognition();
-});
+function initializeSpeechRecognition() {
+    // Prevent multiple initializations
+    if (recognition) {
+        console.log('Speech recognition already initialized');
+        return;
+    }
+    
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+        recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.lang = 'en-US';
+        
+        recognition.onresult = function(event) {
+            const transcript = event.results[0][0].transcript.trim();
+            console.log('Voice input received:', transcript);
+            
+            if (isFormAssistantActive) {
+                handleVoiceFormFieldResponse(transcript);
+            } else if (isVoiceChatMode) {
+                handleVoiceChatInput(transcript);
+            }
+        };
+        
+        recognition.onerror = function(event) {
+            console.log('Speech recognition error:', event.error);
+            stopListening();
+        };
+        
+        recognition.onend = function() {
+            isListening = false;
+            if (isVoiceChatMode) {
+                updateListenButton();
+            }
+        };
+        
+        console.log('✅ Speech recognition initialized once');
+    }
+}
 
 speechSynthesis.onvoiceschanged = function() {
     console.log('Available voices:', speechSynthesis.getVoices().length);
@@ -1353,6 +1408,3 @@ speechSynthesis.onvoiceschanged = function() {
 
 </body>
 </html>
-
-Hey guys! Looking good Richard ... you made it! 
-https://solutionsproviders.wixsite.com/femalevoxfuryYay hoo! https://solutionsproviders.wixsite.com/risingfury
