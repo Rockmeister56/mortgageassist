@@ -248,9 +248,13 @@
                 transition: transform 0.3s;
              "
              onmouseover="this.style.transform='scale(1.05)'"
-             onmouseout="this.style.transform='scale(1.0)'"
-             <p style="margin: 2px 0 0 0; font-size: 8px; color: #660;">🎯 Click to activate AI!</p>    
-</div>
+             onmouseout="this.style.transform='scale(1.0)'">
+        <p style="
+            margin: 3px 0 0 0; 
+            font-size: 11px;                    /* ADJUST: Caption size (try 10px, 12px, 13px) */
+            color: #666;
+        ">👋 Click to activate AI!</p>
+    </div>
     
 </div>
             <!-- Using Netlify Forms -->
@@ -634,6 +638,12 @@ function startFormFieldListening() {
         return;
     }
     
+    // ⚡ KEY FIX: Don't restart if already listening
+    if (isListening) {
+        console.log('22. Already listening, no need to restart');
+        return;
+    }
+    
     console.log('22. Starting speech recognition...');
     
     try {
@@ -678,6 +688,7 @@ function getQuestionForField(field) {
     return `Please tell me your ${fieldId || fieldName || 'information'}.`;
 }
 
+
 function handleFormFieldResponse(response) {
     const currentField = formFieldsArray[currentFormFieldIndex];
     currentField && highlightCurrentField(currentField);
@@ -716,9 +727,12 @@ function handleFormFieldResponse(response) {
     
     // Move to next field after a delay
     setTimeout(() => {
-    currentFormFieldIndex++;
-    // Don't call askForNextFormField() again - we're already in it!
-}, 1000);
+        currentFormFieldIndex++;
+        setTimeout(() => {
+            askForNextFormField();
+        }, 1000);
+    }, 1500);
+}
 
 // Helper function for date conversion
 function convertSpokenDateToFormat(spokenDate) {
@@ -1379,6 +1393,7 @@ function closeAllAIInterfaces() {
     formFieldsArray = [];
 }
 
+
 // Initialize
 document.addEventListener('DOMContentLoaded', function() {
     initializeSpeechRecognition();
@@ -1387,31 +1402,7 @@ document.addEventListener('DOMContentLoaded', function() {
 speechSynthesis.onvoiceschanged = function() {
     console.log('Available voices:', speechSynthesis.getVoices().length);
 };
-
-function activateAIAssistant() {
-    console.log('🎯 AI Assistant Activated!');
-    
-    // Initialize voice recognition
-    if (typeof initializeSpeechRecognition === 'function') {
-        initializeSpeechRecognition();
-    }
-    
-    // Start form assistant if available
-    if (typeof startFormAssistant === 'function') {
-        startFormAssistant();
-    }
-    
-    // Show visual feedback
-    const avatar = document.querySelector('img[onclick="activateAIAssistant()"]');
-    if (avatar) {
-        avatar.style.border = '3px solid #00ff00';
-        setTimeout(() => {
-            avatar.style.border = '1px solid #ccc';
-        }, 2000);
-    }
-}
-} 
 </script>
 
-    </body>
+</body>
 </html>
