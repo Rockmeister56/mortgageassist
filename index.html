@@ -346,10 +346,22 @@ function initializeSpeechRecognition() {
             }
         };
         
-        recognition.onerror = function(event) {
-            console.log('Speech recognition error:', event.error);
-            stopListening();
-        };
+       recognition.onerror = function(event) {
+    console.log('Speech recognition error:', event.error);
+    
+    // DON'T stop listening for these recoverable errors:
+    if (event.error === 'not-allowed' || 
+        event.error === 'audio-capture' || 
+        event.error === 'network') {
+        console.log('Recoverable error - keeping microphone alive');
+        return; // Don't call stopListening()
+    }
+    
+    // Only stop for fatal errors
+    if (event.error === 'aborted' || event.error === 'language-not-supported') {
+        stopListening();
+    }
+};
         
         recognition.onend = function() {
             isListening = false;
