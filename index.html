@@ -388,44 +388,9 @@ function initializeMicrophonePermission() {
 }
 
 // Main Avatar Activation Function
-function initializeSpeechRecognition() {
-    // Prevent multiple initializations
-    if (recognition) {
-        console.log('Speech recognition already initialized');
-        return;
-    }
-    
-    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-        recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-        recognition.continuous = false;
-        recognition.interimResults = false;
-        recognition.lang = 'en-US';
-        
-        recognition.onresult = function(event) {
-            const transcript = event.results[0][0].transcript.trim();
-            console.log('Voice input received:', transcript);
-            
-            if (isFormAssistantActive) {
-                handleVoiceFormFieldResponse(transcript);
-            } else if (isVoiceChatMode) {
-                handleVoiceChatInput(transcript);
-            }
-        };
-        
-        recognition.onerror = function(event) {
-            console.log('Speech recognition error:', event.error);
-            stopListening();
-        };
-        
-        recognition.onend = function() {
-            isListening = false;
-            if (isVoiceChatMode) {
-                updateListenButton();
-            }
-        };
-        
-        console.log('✅ Speech recognition initialized once');
-    }
+function activateAIAssistant() {
+    initializeSpeechRecognition();
+    showEnhancedAIMenu();
 }
 
 // Enhanced 4-Button Menu with NEW AVATAR
@@ -1158,7 +1123,10 @@ function startVoiceChatListening() {
     }
     
     try {
-        recognition.start();
+        // Prevent multiple start calls that cause permission popups
+        if (recognition.state !== 'listening') {
+            recognition.start();
+        }
     } catch (error) {
         console.log('Recognition start error:', error);
         stopVoiceChatListening();
