@@ -441,33 +441,27 @@ function showEnhancedAIMenu() {
             </div>
             
             <div style="display: flex; flex-direction: column; gap: 12px;">
-                <!-- GREEN BUTTON: Help Fill Form -->
-                <button onclick="startFormAssistant()" style="
-                    background: linear-gradient(135deg, #4CAF50, #45a049); color: white; border: none;
-                    padding: 18px 25px; border-radius: 15px; font-size: 16px; font-weight: bold;
-                    cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 15px rgba(76,175,80,0.3);
-                " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-                    📝 Help Me Fill The Form
-                </button>
-                
-                <!-- BLUE BUTTON: Questions -->
-                <button onclick="startQuestionChat()" style="
-                    background: linear-gradient(135deg, #2196F3, #1976D2); color: white; border: none;
-                    padding: 16px 25px; border-radius: 15px; font-size: 16px; cursor: pointer;
-                    transition: all 0.3s; box-shadow: 0 4px 15px rgba(33,150,243,0.3);
-                " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-                    💬 I Have Questions
-                </button>
-                
-                <!-- PURPLE BUTTON: Request Callback -->
-                <button onclick="showCallbackForm()" style="
-                    background: linear-gradient(135deg, #6f42c1, #5a2d91); color: white; border: none;
-                    padding: 16px 25px; border-radius: 15px; font-size: 16px; cursor: pointer;
-                    transition: all 0.3s; box-shadow: 0 4px 15px rgba(111,66,193,0.3);
-                    display: flex; align-items: center; justify-content: center; gap: 10px;
-                " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-                    📞 Request a Call
-                </button>
+    <!-- Button 1: FormAssist -->
+    <button onclick="startFormAssistant()" class="custom-btn">
+        FormAssist
+    </button>
+    
+    <!-- Button 2: AI V-Bot -->
+    <button onclick="startQuestionChat()" class="custom-btn">
+        AI V-Bot
+    </button>
+    
+    <!-- Button 3: Fast Call -->
+    <button onclick="showCallbackForm()" class="custom-btn">
+        Fast Call
+    </button>
+    
+    <!-- Close Button (smaller, different style) -->
+    <button onclick="closeAllAIInterfaces()" style="
+        background: #f44336; color: white; border: none;
+        padding: 10px 20px; border-radius: 15px; font-size: 14px; cursor: pointer;
+        transition: all 0.3s; margin-top: 10px;
+    ">
                 
                 <!-- RED BUTTON: Close -->
                 <button onclick="closeAllAIInterfaces()" style="
@@ -1325,6 +1319,25 @@ function showMortgageQuickOptions() {
             .chat-quick-btn:hover {
                 background: #2196f3; color: white; transform: scale(1.05);
             }
+
+            .custom-btn {
+  width: 150px;
+  height: 60px;
+  border: 3px solid #315cfd;
+  border-radius: 45px;
+  transition: all 0.3s;
+  cursor: pointer;
+  background: white;
+  font-size: 1.2em;
+  font-weight: 550;
+  margin: 0 auto; /* Center the buttons */
+}
+
+.custom-btn:hover {
+  background: #315cfd;
+  color: white;
+  font-size: 1.5em;
+}
         </style>
     `;
     
