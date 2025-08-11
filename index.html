@@ -798,7 +798,7 @@ function stopFormAssistant() {
     // Stop speech recognition
     if (recognition) {
         try {
-            recognition.stop();
+           // recognition.stop();
         } catch (error) {
             console.log('Recognition stop error:', error);
         }
@@ -1362,13 +1362,14 @@ function closeAllAIInterfaces() {
         input.style.boxShadow = '';
     });
     
-    if (recognition && isListening) {
-        try {
-            recognition.stop();
-        } catch (error) {
-            console.log('Error stopping recognition:', error);
-        }
+   if (recognition && isListening && !isFormAssistantActive) {
+    try {
+        recognition.stop();
+        console.log('[DEBUG] Recognition stopped - interfaces closed');
+    } catch (error) {
+        console.log('Error stopping recognition:', error);
     }
+}
     
     if (speechSynthesis) {
         speechSynthesis.cancel();
