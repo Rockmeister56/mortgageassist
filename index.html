@@ -681,14 +681,6 @@ function getQuestionForField(field) {
     // Generic fallback
     return `Please tell me your ${fieldId || fieldName || 'information'}.`;
 }
-    // Ask for the appropriate information based on field type
-    const question = getQuestionForField(currentField);
-    speakMessage(question);
-    
-    // Start listening for the response
-    setTimeout(() => {
-        startFormFieldListening();
-    }, 2000);
 
 function handleFormFieldResponse(response) {
     const currentField = formFieldsArray[currentFormFieldIndex];
@@ -728,12 +720,9 @@ function handleFormFieldResponse(response) {
     
     // Move to next field after a delay
     setTimeout(() => {
-        currentFormFieldIndex++;
-        setTimeout(() => {
-            askForNextFormField();
-        }, 1000);
-    }, 1500);
-}
+    currentFormFieldIndex++;
+    // Don't call askForNextFormField() again - we're already in it!
+}, 1000);
 
 // Helper function for date conversion
 function convertSpokenDateToFormat(spokenDate) {
