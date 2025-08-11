@@ -440,38 +440,45 @@ function showEnhancedAIMenu() {
                 <p style="color: #666; margin: 10px 0 0 0;">How can I help you today?</p>
             </div>
             
-            <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; flex-direction: column; gap: 15px; align-items: center;">
     <!-- Button 1: FormAssist -->
-    <button onclick="startFormAssistant()" class="custom-btn">
+    <button onclick="startFormAssistant()" style="
+        width: 150px; height: 60px; border: 3px solid #315cfd; border-radius: 45px;
+        transition: all 0.3s; cursor: pointer; background: white; font-size: 1.2em;
+        font-weight: 550;
+    " onmouseover="this.style.background='#315cfd'; this.style.color='white'; this.style.fontSize='1.5em';" 
+       onmouseout="this.style.background='white'; this.style.color='black'; this.style.fontSize='1.2em';">
         FormAssist
     </button>
     
     <!-- Button 2: AI V-Bot -->
-    <button onclick="startQuestionChat()" class="custom-btn">
+    <button onclick="startQuestionChat()" style="
+        width: 150px; height: 60px; border: 3px solid #315cfd; border-radius: 45px;
+        transition: all 0.3s; cursor: pointer; background: white; font-size: 1.2em;
+        font-weight: 550;
+    " onmouseover="this.style.background='#315cfd'; this.style.color='white'; this.style.fontSize='1.5em';" 
+       onmouseout="this.style.background='white'; this.style.color='black'; this.style.fontSize='1.2em';">
         AI V-Bot
     </button>
     
     <!-- Button 3: Fast Call -->
-    <button onclick="showCallbackForm()" class="custom-btn">
+    <button onclick="showCallbackForm()" style="
+        width: 150px; height: 60px; border: 3px solid #315cfd; border-radius: 45px;
+        transition: all 0.3s; cursor: pointer; background: white; font-size: 1.2em;
+        font-weight: 550;
+    " onmouseover="this.style.background='#315cfd'; this.style.color='white'; this.style.fontSize='1.5em';" 
+       onmouseout="this.style.background='white'; this.style.color='black'; this.style.fontSize='1.2em';">
         Fast Call
     </button>
     
-    <!-- Close Button (smaller, different style) -->
+    <!-- Close Button -->
     <button onclick="closeAllAIInterfaces()" style="
-        background: #f44336; color: white; border: none;
-        padding: 10px 20px; border-radius: 15px; font-size: 14px; cursor: pointer;
-        transition: all 0.3s; margin-top: 10px;
-    ">
-                
-                <!-- RED BUTTON: Close -->
-                <button onclick="closeAllAIInterfaces()" style="
-                    background: linear-gradient(135deg, #f44336, #d32f2f); color: white; border: none;
-                    padding: 14px 25px; border-radius: 15px; font-size: 14px; cursor: pointer;
-                    transition: all 0.3s; box-shadow: 0 4px 15px rgba(244,67,54,0.3);
-                " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-                    ❌ Close AI Assist
-                </button>
-            </div>
+        width: 120px; height: 45px; background: #f44336; color: white; border: none;
+        border-radius: 25px; font-size: 14px; cursor: pointer; transition: all 0.3s; margin-top: 10px;
+    " onmouseover="this.style.background='#d32f2f';" onmouseout="this.style.background='#f44336';">
+        ✕ Close AI Assist
+    </button>
+      </div>
         </div>
         
         <div id="aiBackdrop" onclick="closeAllAIInterfaces()" style="
@@ -1319,25 +1326,6 @@ function showMortgageQuickOptions() {
             .chat-quick-btn:hover {
                 background: #2196f3; color: white; transform: scale(1.05);
             }
-
-            .custom-btn {
-  width: 150px;
-  height: 60px;
-  border: 3px solid #315cfd;
-  border-radius: 45px;
-  transition: all 0.3s;
-  cursor: pointer;
-  background: white;
-  font-size: 1.2em;
-  font-weight: 550;
-  margin: 0 auto; /* Center the buttons */
-}
-
-.custom-btn:hover {
-  background: #315cfd;
-  color: white;
-  font-size: 1.5em;
-}
         </style>
     `;
     
