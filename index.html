@@ -1124,7 +1124,7 @@ function startVoiceChatListening() {
     
     try {
         // Prevent multiple start calls that cause permission popups
-        if (recognition.state !== 'listening') {
+        if (!isListening) {
             recognition.start();
         }
     } catch (error) {
