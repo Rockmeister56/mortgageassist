@@ -248,13 +248,9 @@
                 transition: transform 0.3s;
              "
              onmouseover="this.style.transform='scale(1.05)'"
-             onmouseout="this.style.transform='scale(1.0)'">
-        <p style="
-            margin: 3px 0 0 0; 
-            font-size: 11px;                    /* ADJUST: Caption size (try 10px, 12px, 13px) */
-            color: #666;
-        ">👋 Click to activate AI!</p>
-    </div>
+             onmouseout="this.style.transform='scale(1.0)'"
+             <p style="margin: 3px 0 0 0; font-size: 11px; color: #660;">🎯 Click to activate AI!</p>    
+</div>
     
 </div>
             <!-- Using Netlify Forms -->
@@ -1383,7 +1379,6 @@ function closeAllAIInterfaces() {
     formFieldsArray = [];
 }
 
-
 // Initialize
 document.addEventListener('DOMContentLoaded', function() {
     initializeSpeechRecognition();
@@ -1392,7 +1387,30 @@ document.addEventListener('DOMContentLoaded', function() {
 speechSynthesis.onvoiceschanged = function() {
     console.log('Available voices:', speechSynthesis.getVoices().length);
 };
+
+function activateAIAssistant() {
+    console.log('🎯 AI Assistant Activated!');
+    
+    // Initialize voice recognition
+    if (typeof initializeSpeechRecognition === 'function') {
+        initializeSpeechRecognition();
+    }
+    
+    // Start form assistant if available
+    if (typeof startFormAssistant === 'function') {
+        startFormAssistant();
+    }
+    
+    // Show visual feedback
+    const avatar = document.querySelector('img[onclick="activateAIAssistant()"]');
+    if (avatar) {
+        avatar.style.border = '3px solid #00ff00';
+        setTimeout(() => {
+            avatar.style.border = '1px solid #ccc';
+        }, 2000);
+    }
+}
 </script>
 
-</body>
+    </body>
 </html>
