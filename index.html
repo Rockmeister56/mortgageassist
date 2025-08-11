@@ -720,27 +720,6 @@ function handleFormFieldResponse(response) {
     if (currentField.type === 'date') {
         // Try to convert spoken date to YYYY-MM-DD format
         const dateValue = convertSpokenDateToFormat(cleanResponse);
-        if (cleanResponse && currentField) {
-    // Detect business name responses
-    if (currentField.name && currentField.name.toLowerCase().includes('business') ||
-        currentField.placeholder && currentField.placeholder.toLowerCase().includes('business') ||
-        currentField.id && currentField.id.toLowerCase().includes('business')) {
-        
-        console.log('[DEBUG] Detected business field, filling with:', cleanResponse);
-        currentField.value = cleanResponse;
-    } 
-    // Detect name fields
-    else if (currentField.name && currentField.name.toLowerCase().includes('name') ||
-             currentField.placeholder && currentField.placeholder.toLowerCase().includes('name')) {
-        
-        console.log('[DEBUG] Detected name field, filling with:', cleanResponse);
-        currentField.value = cleanResponse;
-    }
-    // Default behavior
-    else {
-        currentField.value = cleanResponse;
-    }
-}
         currentField.value = dateValue;
     } else {
         currentField.value = cleanResponse;
