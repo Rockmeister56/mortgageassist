@@ -724,12 +724,11 @@ function handleFormFieldResponse(response) {
     
     // Move to next field after a delay
     setTimeout(() => {
-        currentFormFieldIndex++;
-        setTimeout(() => {
-            askForNextFormField();
-            startFormFieldListening();
-        }, 1000);
-    }, 1500);
+    currentFormFieldIndex++;
+    setTimeout(() => {
+        askForNextFormField();          // This already calls startFormFieldListening() internally
+    }, 1000);
+}, 1500);
 }
 
 // Helper function for date conversion
