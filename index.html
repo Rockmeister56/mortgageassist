@@ -527,31 +527,22 @@ function startFormAssistant() {
 }
 
 function startVoiceFormProcess(fields) {
-    console.log('6. Inside startVoiceFormProcess with', fields.length, 'fields');
-    
     formFieldsArray = fields;
     currentFormFieldIndex = 0;
     isFormAssistantActive = true;
     
-    console.log('7. Variables set, checking recognition...');
-    
     // Initialize speech recognition for form filling
     if (!recognition) {
-        console.log('8. Initializing speech recognition...');
         initializeSpeechRecognition();
-    } else {
-        console.log('8. Recognition already exists');
     }
     
-    console.log('9. Creating form indicator...');
+    // Create a small indicator that we're in form assist mode
     createFormAssistIndicator();
     
-    console.log('10. About to speak greeting...');
+    // Start with greeting and first question
     speakMessage("Hi! Let me help you fill out this form. I'll ask you for each piece of information.");
     
-    console.log('11. Setting timeout for first question...');
     setTimeout(() => {
-        console.log('12. Timeout fired, calling askForNextFormField...');
         askForNextFormField();
     }, 3000);
 }
