@@ -260,7 +260,7 @@
             <!-- Using Netlify Forms -->
             <form id="contactForm" name="contact">
                 <!-- Netlify form name -->
-                 
+
                 <div class="form-group">
                     <label for="name">Your Name</label>
                     <input type="text" id="name" name="name" required>
@@ -1447,5 +1447,30 @@ document.addEventListener('DOMContentLoaded', function() {
 
 </script>
 <script src="js/main.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Script running!');
+    const form = document.getElementById('contactForm');
+    console.log('Form found:', form);
+    
+    if (form) {
+        // Remove ALL existing event listeners
+        const newForm = form.cloneNode(true);
+        form.parentNode.replaceChild(newForm, form);
+        
+        // Add our handler to the clean form
+        newForm.addEventListener('submit', function(e) {
+            console.log('Submit blocked!');
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            window.location.href = 'thanks.html';
+            return false;
+        });
+    }
+});
+</script>
+</body>
+</html>
 </body>
 </html>
