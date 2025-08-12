@@ -1448,24 +1448,18 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 </script>
-<script src="js/main.js"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Script running!');
     const form = document.getElementById('contactForm');
-    console.log('Form found:', form);
     
     if (form) {
-        // Remove ALL existing event listeners
-        const newForm = form.cloneNode(true);
-        form.parentNode.replaceChild(newForm, form);
-        
-        // Add our handler to the clean form
-        newForm.addEventListener('submit', function(e) {
-            console.log('Submit blocked!');
+        // Simple, clean event listener - NO CLONING!
+        form.addEventListener('submit', function(e) {
             e.preventDefault();
             e.stopImmediatePropagation();
+            
+            console.log('Form submitted successfully!');
             window.location.href = 'thanks.html';
             return false;
         });
