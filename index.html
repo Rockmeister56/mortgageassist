@@ -556,27 +556,6 @@ function startVoiceFormProcess(fields) {
     }, 3000);
 }
 
-function startVoiceFormProcess(fields) {
-    formFieldsArray = fields;
-    currentFormFieldIndex = 0;
-    isFormAssistantActive = true;
-    
-    // Initialize speech recognition for form filling
-    if (!recognition) {
-        initializeSpeechRecognition();
-    }
-    
-    // Create a small indicator that we're in form assist mode
-    createFormAssistIndicator();
-    
-    // Start with greeting and first question
-    speakMessage("Hi! Let me help you fill out this form. I'll ask you for each piece of information.");
-    
-    setTimeout(() => {
-        askForNextFormField();
-    }, 3000);
-}
-
 function createFormAssistIndicator() {
     const indicatorHTML = `
         <div id="formAssistIndicator" style="
