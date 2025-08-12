@@ -376,7 +376,6 @@ function initializeSpeechRecognition() {
     if (event.error === 'aborted' || event.error === 'language-not-supported') {
         stopListening();
     }
-};
         
        recognition.onend = function() {
     if (isFormAssistantActive) {
@@ -403,8 +402,7 @@ function initializeSpeechRecognition() {
         updateListenButton();
     }
 };
-    }
-}
+    
 
 function initializeMicrophonePermission() {
     // Only request permission on first user interaction
