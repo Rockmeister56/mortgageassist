@@ -842,72 +842,25 @@ function stopFormAssistant() {
     isListening = false;
 }
 
-// VOICE CONFLICT PREVENTION - ADD THIS FIRST
-function stopAllVoices() {
-    // Stop browser speech synthesis
-    if (window.speechSynthesis) {
-        window.speechSynthesis.cancel();
-        window.speechSynthesis.pause();
-    }
+function speakMessage(message) {
+    if (!speechSynthesis) return;
     
-    // Stop any playing audio elements
-    document.querySelectorAll('audio').forEach(audio => {
-        audio.pause();
-        audio.currentTime = 0;
-    });
-}
-
-// PREMIUM ELEVENLABS VOICE INTEGRATION (UPDATED)
-async function speakMessage(message) {
-    // FIRST: Stop any competing voices
-    stopAllVoices();
+    const utterance = new SpeechSynthesisUtterance(message);
     
-    const ELEVENLABS_API_KEY = 'sk_9e7fa2741be74e8cc4af95744fe078712c1e8201cdcada93';
-    const VOICE_ID = 'zGjIP4SZlMnY9m93k97r';
+    const voices = speechSynthesis.getVoices();
+    const femaleVoice = voices.find(voice => 
+        voice.name.includes('Female') || 
+        voice.name.includes('Samantha') || 
+        voice.name.includes('Karen') ||
+        voice.name.includes('Victoria')
+    );
     
-    try {
-        console.log('🎤 Generating premium voice for:', message);
-        
-        const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID}`, {
-            method: 'POST',
-            headers: {
-                'Accept': 'audio/mpeg',
-                'Content-Type': 'application/json',
-                'xi-api-key': ELEVENLABS_API_KEY
-            },
-            body: JSON.stringify({
-                text: message,
-                model_id: 'eleven_monolingual_v1',
-                voice_settings: {
-                    stability: 0.5,
-                    similarity_boost: 0.75,
-                    style: 0.0,
-                    use_speaker_boost: true
-                }
-            })
-        });
-        
-        if (!response.ok) {
-            throw new Error(`ElevenLabs API error: ${response.status}`);
-        }
-        
-        const audioBlob = await response.blob();
-        const audioUrl = URL.createObjectURL(audioBlob);
-        const audio = new Audio(audioUrl);
-        audio.volume = 0.9;
-        
-        audio.onended = () => {
-            URL.revokeObjectURL(audioUrl);
-            console.log('✅ Premium voice completed');
-        };
-        
-        await audio.play();
-        
-    } catch (error) {
-        console.log('ElevenLabs error:', error);
-        // Only use browser voice as absolute fallback
-        console.log('Using fallback voice...');
-    }
+    if (femaleVoice) utterance.voice = femaleVoice;
+    utterance.rate = 0.9;
+    utterance.pitch = 1.0;
+    utterance.volume = 0.8;
+    
+    speechSynthesis.speak(utterance);
 }
 
 // ============================================================================
