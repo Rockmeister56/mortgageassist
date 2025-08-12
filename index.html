@@ -258,7 +258,7 @@
     
 </div>
             <!-- Using Netlify Forms -->
-            <form id="contactForm" name="contact" method="post" action="#" onsubmit="event.preventDefault(); return false;">
+            <form id="contactForm" name="contact" method="post" onsubmit="event.preventDefault(); return false;">
                 <!-- Netlify form name -->
 
                 <div class="form-group">
@@ -285,26 +285,6 @@
         <button type="submit" class="btn-primary btn-full">Submit</button>
     </div>
 </form>
-
-<script>
-// Immediate form hijacking - runs as soon as form is created
-(function() {
-    const form = document.getElementById('contactForm');
-    if (form) {
-        // Remove any existing onsubmit
-        form.onsubmit = null;
-        
-        // Add immediate prevention
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            console.log('Form intercepted!');
-            window.location.href = 'thanks.html';
-            return false;
-        }, true); // Use capture phase
-    }
-})();
-</script>
         </div>
     </div>
 
