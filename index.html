@@ -1083,18 +1083,17 @@ async function handleCallbackRequest(event) {
         });
         
         if (webhookResponse.ok) {
-            showCallbackStatus(`Success! I'm calling ${phone} now. Please answer your phone!`, 'success');
-            
-            setTimeout(() => {
-                closeAllAIInterfaces();
-            }, 3000);
+            window.location.href = 'certificate-thank-you.html';
         } else {
-            throw new Error('Webhook request failed');
+            // Keep your existing error handling
+            const statusDiv = document.getElementById('status');
+            statusDiv.innerHTML = '<p style="color: red;">There was an error submitting your request. Please try again.</p>';
         }
         
     } catch (error) {
-        console.error('Make.com Webhook Error:', error);
-        showCallbackStatus('Sorry, there was an issue with the callback request. Please try again or call us directly at (949) 332-3567.', 'error');
+        console.error('Error:', error);
+        const statusDiv = document.getElementById('status');
+        statusDiv.innerHTML = '<p style="color: red;">Network error. Please check your connection and try again.</p>';
     }
 }
 
