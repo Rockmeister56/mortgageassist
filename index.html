@@ -633,16 +633,7 @@ function startFormFieldListening() {
     
     try {
         hasReceivedValidResponse = false; // Reset the flag
-        recognition.start();
-        try {
-    hasReceivedValidResponse = false;  // ← ADD THIS LINE
-    recognition.start();
-    isListening = true;
-    console.log('23. Recognition started successfully');
-} catch (error) {
-    console.log('24. Recognition start error:', error);
-    speakMessage("Please speak your response now, or type it in the highlighted field.");
-}
+        recognition.start();              // ← ONLY ONE START CALL
         isListening = true;
         console.log('23. Recognition started successfully');
     } catch (error) {
