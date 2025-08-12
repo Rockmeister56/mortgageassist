@@ -1430,33 +1430,23 @@ speechSynthesis.onvoiceschanged = function() {
     console.log('Available voices:', speechSynthesis.getVoices().length);
 };
 
-// Test if JavaScript is working
-console.log("🚀 JavaScript file loaded!");
-
-// Test when page loads
+// Clean production form handler
 document.addEventListener('DOMContentLoaded', function() {
-    console.log("🔍 Page loaded, looking for form...");
-    
     const form = document.getElementById('contactForm');
     if (form) {
-        console.log("✅ Found contactForm!");
-        
-        // FORCE override any existing handlers
         form.onsubmit = function(e) {
-            console.log("🎯 Form submit intercepted!");
             e.preventDefault();
             e.stopPropagation();
-            alert("JavaScript is working! Redirecting to thanks.html");
+            
+            // Optional: Add your webhook processing here if needed
+            // For now, just redirect to certificate page
             window.location.href = "thanks.html";
             return false;
         };
-        
-    } else {
-        console.log("❌ contactForm NOT FOUND!");
     }
 });
 
 </script>
-
+<script src="js/main.js"></script>
 </body>
 </html>
