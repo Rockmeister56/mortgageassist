@@ -282,14 +282,8 @@
                     <label for="preferredDate">Preferred Date to Contact</label>
                     <input type="date" id="preferredDate" name="preferredDate" required>
                 </div>
-                <form id="contactForm" name="contact" action="thanks.html" method="POST">
-    
-    <!-- Keep your existing fields -->
-    
-    <!-- Just the submit button - NO extra name field -->
-    <button type="submit" class="btn-primary btn-full">Submit</button>
-    
-</form>
+                <form id="contactForm" name="contact" onsubmit="return false;">
+           </form>
         </div>
     </div>
 
@@ -1052,42 +1046,56 @@ function createCallbackInterface() {
     document.body.insertAdjacentHTML('beforeend', callbackHTML);
     
     // Add form submission handler
-    document.getElementById('contactForm').addEventListener('submit', handleCallbackRequest);
+    document.getElementById('contactForm').addEventListener('submit', handleContactFormSubmission);
     document.getElementById('callbackName').focus();
 }
 
 
 // Make.com Webhook Integration
-async function handleCallbackRequest(event) {
+async function handleContactFormSubmission(event) {
     event.preventDefault();
     
-    const name = document.getElementById('callbackName').value.trim();
-    const phone = document.getElementById('callbackPhone').value.trim();
-    const time = document.getElementById('callbackTime').value;
+    // Get main form data
+    const name = document.getElementById('name').value.trim();
+    const businessName = document.getElementById('businessName').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const bestTime = document.getElementById('bestTime').value.trim();
+    const preferredDate = document.getElementById('preferredDate').value.trim();
     
     if (!name || !phone) {
-        showCallbackStatus('Please fill in all required fields.', 'error');
+        alert('Please fill in all required fields.');
         return;
     }
     
-    showCallbackStatus('Requesting callback... Please wait!', 'loading');
-    
     try {
-        // Make.com Webhook Integration
-        const webhookResponse = await fetch(VAPI_CONFIG.webhookUrl, {
+        // Your webhook processing here (if needed)
+        const webhookResponse = await fetch('YOUR_WEBHOOK_URL', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
                 name: name,
+                businessName: businessName,
                 phone: phone,
-                preferredTime: time,
-                source: 'MortgageAssist Demo',
-                assistantId: VAPI_CONFIG.assistantId,
-                customMessage: `Hi ${name}! This is your AI mortgage assistant. You requested a callback about mortgage assistance. How can I help you today?`
+                bestTime: bestTime,
+                preferredDate: preferredDate,
+                source: 'Main Contact Form'
             })
         });
+
+        if (webhookResponse.ok) {
+            // Redirect to certificate page
+            window.location.href = "thanks.html";
+        } else {
+            alert('There was an error submitting your request. Please try again.');
+        }
+        
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Network error. Please check your connection and try again.');
+    }
+}
         
         if (webhookResponse.ok) {
             window.location.href = 'certificate-thank-you.html';
