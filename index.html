@@ -533,27 +533,34 @@ function startFormAssistant() {
     startVoiceFormProcess(formFields);
 }
 
-async function startVoiceFormProcess(fields) {
+function startVoiceFormProcess(fields) {
+    console.log('6. Inside startVoiceFormProcess with', fields.length, 'fields');
+    
     formFieldsArray = fields;
     currentFormFieldIndex = 0;
     isFormAssistantActive = true;
     
+    console.log('7. Variables set, checking recognition...');
+    
+    // Initialize speech recognition for form filling
     if (!recognition) {
+        console.log('8. Initializing speech recognition...');
         initializeSpeechRecognition();
+    } else {
+        console.log('8. Recognition already exists');
     }
     
+    console.log('9. Creating form indicator...');
     createFormAssistIndicator();
     
-    console.log('Speaking introduction...');
+    console.log('10. About to speak greeting...');
+    speakMessage("Hi! Let me help you fill out this form. I'll ask you for each piece of information.");
     
-    // Speak introduction and WAIT for it to complete
-    await speakMessage("Hi! Let me help you fill out this form. I'll ask you for each piece of information.");
-    
-    // Add extra delay to ensure introduction is fully finished
+    console.log('11. Setting timeout for first question...');
     setTimeout(() => {
-        console.log('Introduction complete, asking for first field...');
+        console.log('12. Timeout fired, calling askForNextFormField...');
         askForNextFormField();
-    }, 2000); // Extra buffer time
+    }, 3000);
 }
 
 function startVoiceFormProcess(fields) {
@@ -852,59 +859,55 @@ function stopAllVoices() {
 
 // PREMIUM ELEVENLABS VOICE INTEGRATION (UPDATED)
 async function speakMessage(message) {
+    // FIRST: Stop any competing voices
     stopAllVoices();
     
     const ELEVENLABS_API_KEY = 'sk_9e7fa2741be74e8cc4af95744fe078712c1e8201cdcada93';
     const VOICE_ID = 'zGjIP4SZlMnY9m93k97r';
     
-    return new Promise(async (resolve, reject) => {
-        try {
-            const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID}`, {
-                method: 'POST',
-                headers: {
-                    'Accept': 'audio/mpeg',
-                    'Content-Type': 'application/json',
-                    'xi-api-key': ELEVENLABS_API_KEY
-                },
-                body: JSON.stringify({
-                    text: message,
-                    model_id: 'eleven_monolingual_v1',
-                    voice_settings: {
-                        stability: 0.5,
-                        similarity_boost: 0.75,
-                        style: 0.0,
-                        use_speaker_boost: true
-                    }
-                })
-            });
-            
-            if (!response.ok) {
-                throw new Error(`ElevenLabs API error: ${response.status}`);
-            }
-            
-            const audioBlob = await response.blob();
-            const audioUrl = URL.createObjectURL(audioBlob);
-            const audio = new Audio(audioUrl);
-            audio.volume = 0.9;
-            
-            audio.onended = () => {
-                URL.revokeObjectURL(audioUrl);
-                console.log('✅ Voice completed:', message);
-                resolve(); // Signal completion
-            };
-            
-            audio.onerror = (error) => {
-                console.log('Audio error:', error);
-                reject(error);
-            };
-            
-            await audio.play();
-            
-        } catch (error) {
-            console.log('ElevenLabs error:', error);
-            reject(error);
+    try {
+        console.log('🎤 Generating premium voice for:', message);
+        
+        const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID}`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'audio/mpeg',
+                'Content-Type': 'application/json',
+                'xi-api-key': ELEVENLABS_API_KEY
+            },
+            body: JSON.stringify({
+                text: message,
+                model_id: 'eleven_monolingual_v1',
+                voice_settings: {
+                    stability: 0.5,
+                    similarity_boost: 0.75,
+                    style: 0.0,
+                    use_speaker_boost: true
+                }
+            })
+        });
+        
+        if (!response.ok) {
+            throw new Error(`ElevenLabs API error: ${response.status}`);
         }
-    });
+        
+        const audioBlob = await response.blob();
+        const audioUrl = URL.createObjectURL(audioBlob);
+        const audio = new Audio(audioUrl);
+        audio.volume = 0.9;
+        
+        audio.onended = () => {
+            URL.revokeObjectURL(audioUrl);
+            console.log('✅ Premium voice completed');
+        };
+        
+        await audio.play();
+        
+    } catch (error) {
+        console.log('ElevenLabs error:', error);
+        // Only use browser voice as absolute fallback
+        console.log('Using fallback voice...');
+    }
 }
 
 // ============================================================================
