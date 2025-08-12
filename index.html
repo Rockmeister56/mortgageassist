@@ -258,7 +258,7 @@
     
 </div>
             <!-- Using Netlify Forms -->
-            <form id="contactForm" name="contact" method="POST" data-netlify="true">
+            <form id="callbackForm" name="contact">
                 <!-- Netlify form name -->
                 <input type="hidden" name="form-name" value="contact">
                 
@@ -1054,11 +1054,6 @@ function createCallbackInterface() {
 // Make.com Webhook Integration
 async function handleCallbackRequest(event) {
     event.preventDefault();
-    // Close any special offer popups before processing
-    const specialOffer = document.getElementById('specialOffer');
-    if (specialOffer) {
-        specialOffer.remove();
-    }
     
     const name = document.getElementById('callbackName').value.trim();
     const phone = document.getElementById('callbackPhone').value.trim();
