@@ -523,7 +523,6 @@ function startFormAssistant() {
     }
     
     console.log('5. Calling startVoiceFormProcess...');
-    startVoiceFormProcess(formFields);
 }
 
 function startVoiceFormProcess(fields) {
@@ -537,10 +536,12 @@ function startVoiceFormProcess(fields) {
     
     createFormAssistIndicator();
     
-    // Just go straight to asking for the first field:
+    // Restore the introduction:
+    speakMessage("Hi! I'm here to help you fill out this form. I'll ask you for each piece of information.");
+    
     setTimeout(() => {
         askForNextFormField();
-    }, 1000);  // Shorter timeout since no intro message
+    }, 5000);  // Longer delay to let intro finish
 }
 
 function createFormAssistIndicator() {
