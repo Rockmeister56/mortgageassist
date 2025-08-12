@@ -580,15 +580,17 @@ function highlightCurrentField(field) {
 }
 
 function askForNextFormField() {
+    hasReceivedValidResponse = false; // Reset for new field
+    
     console.log('13. Inside askForNextFormField, currentIndex:', currentFormFieldIndex);
     console.log('14. Total fields:', formFieldsArray.length);
-
+    
     if (currentFormFieldIndex >= formFieldsArray.length) {
         console.log('15. All fields completed!');
         completeFormAssistant();
         return;
     }
-
+    
     const currentField = formFieldsArray[currentFormFieldIndex];
     if (!currentField) {
         console.log('16. Current field is null, skipping...');
@@ -596,22 +598,22 @@ function askForNextFormField() {
         askForNextFormField();
         return;
     }
-
+    
     console.log('17. Processing field:', currentField.id);
-
+    
     // Highlight the current field
     highlightCurrentField(currentField);
-
+    
     // Ask for the appropriate information based on field type
     const question = getQuestionForField(currentField);
     console.log('18. Question:', question);
     speakMessage(question);
-
-    // 🔥 KEY FIX: Wait for speech to complete BEFORE starting to listen
+    
+    // Start listening for the response
     setTimeout(() => {
         console.log('19. Starting to listen for response...');
         startFormFieldListening();
-    }, 3000); // Increased timeout to ensure speech completes
+    }, 2000);
 }
 
 function startFormFieldListening() {
@@ -680,8 +682,18 @@ function handleFormFieldResponse(response) {
     currentField && highlightCurrentField(currentField);
     if (!currentField) return;
     
+    // 🔥 ADD THIS: Stop current recognition and reset flags
+    if (recognition && isListening) {
+        try {
+            recognition.stop();
+        } catch (error) {
+            console.log('Error stopping recognition:', error);
+        }
+    }
+    isListening = false;
+    hasReceivedValidResponse = true; // Mark that we got THIS response
+    
     console.log('Filling field:', currentField.id, 'with:', response); // Debug log
-
     
     // Clean up the response
     const cleanResponse = response.trim();
@@ -713,11 +725,11 @@ function handleFormFieldResponse(response) {
     
     // Move to next field after a delay
     setTimeout(() => {
-    currentFormFieldIndex++;
-    setTimeout(() => {
-        askForNextFormField();          // This already calls startFormFieldListening() internally
-    }, 1000);
-}, 1500);
+        currentFormFieldIndex++;
+        setTimeout(() => {
+            askForNextFormField(); // This already calls startFormFieldListening() internally
+        }, 1000);
+    }, 1500);
 }
 
 // Helper function for date conversion
