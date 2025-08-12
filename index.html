@@ -842,15 +842,32 @@ function stopFormAssistant() {
     isListening = false;
 }
 
-// PREMIUM ELEVENLABS VOICE INTEGRATION
+// VOICE CONFLICT PREVENTION - ADD THIS FIRST
+function stopAllVoices() {
+    // Stop browser speech synthesis
+    if (window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.pause();
+    }
+    
+    // Stop any playing audio elements
+    document.querySelectorAll('audio').forEach(audio => {
+        audio.pause();
+        audio.currentTime = 0;
+    });
+}
+
+// PREMIUM ELEVENLABS VOICE INTEGRATION (UPDATED)
 async function speakMessage(message) {
+    // FIRST: Stop any competing voices
+    stopAllVoices();
+    
     const ELEVENLABS_API_KEY = 'sk_9e7fa2741be74e8cc4af95744fe078712c1e8201cdcada93';
-    const VOICE_ID = 'zGjIP4SZlMnY9m93k97r'; // Hope voice
+    const VOICE_ID = 'zGjIP4SZlMnY9m93k97r';
     
     try {
         console.log('🎤 Generating premium voice for:', message);
         
-        // Call ElevenLabs API
         const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID}`, {
             method: 'POST',
             headers: {
@@ -874,54 +891,23 @@ async function speakMessage(message) {
             throw new Error(`ElevenLabs API error: ${response.status}`);
         }
         
-        // Convert response to audio blob
         const audioBlob = await response.blob();
         const audioUrl = URL.createObjectURL(audioBlob);
-        
-        // Play the premium audio
         const audio = new Audio(audioUrl);
         audio.volume = 0.9;
         
         audio.onended = () => {
-            URL.revokeObjectURL(audioUrl); // Clean up memory
+            URL.revokeObjectURL(audioUrl);
             console.log('✅ Premium voice completed');
-        };
-        
-        audio.onerror = (error) => {
-            console.log('Audio playback error:', error);
-            // Fallback to browser voice
-            fallbackSpeakMessage(message);
         };
         
         await audio.play();
         
     } catch (error) {
         console.log('ElevenLabs error:', error);
-        // Fallback to enhanced browser voice
-        fallbackSpeakMessage(message);
+        // Only use browser voice as absolute fallback
+        console.log('Using fallback voice...');
     }
-}
-
-// Fallback function (your enhanced browser voice)
-function fallbackSpeakMessage(message) {
-    if (!speechSynthesis) return;
-    
-    speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(message);
-    
-    const voices = speechSynthesis.getVoices();
-    const femaleVoice = voices.find(voice => 
-        voice.name.includes('Samantha') || 
-        voice.name.includes('Karen') ||
-        voice.name.includes('Female')
-    );
-    
-    if (femaleVoice) utterance.voice = femaleVoice;
-    utterance.rate = 0.85;
-    utterance.pitch = 1.1;
-    utterance.volume = 0.9;
-    
-    speechSynthesis.speak(utterance);
 }
 
 // ============================================================================
