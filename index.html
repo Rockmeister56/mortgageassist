@@ -842,23 +842,70 @@ function stopFormAssistant() {
     isListening = false;
 }
 
+// ENHANCED VOICE SYSTEM - STEP 1
 function speakMessage(message) {
     if (!speechSynthesis) return;
     
+    // Cancel any current speech
+    speechSynthesis.cancel();
+    
     const utterance = new SpeechSynthesisUtterance(message);
     
+    // ENHANCED VOICE SELECTION - Finds best female voice
     const voices = speechSynthesis.getVoices();
-    const femaleVoice = voices.find(voice => 
-        voice.name.includes('Female') || 
-        voice.name.includes('Samantha') || 
-        voice.name.includes('Karen') ||
-        voice.name.includes('Victoria')
-    );
+    console.log('Available voices:', voices.length);
     
-    if (femaleVoice) utterance.voice = femaleVoice;
-    utterance.rate = 0.9;
-    utterance.pitch = 1.0;
-    utterance.volume = 0.8;
+    // Priority order for best female voices
+    const preferredVoices = [
+        'Samantha',           // macOS best female
+        'Karen',              // Windows good female  
+        'Moira',              // macOS alternative
+        'Victoria',           // Windows alternative
+        'Google UK English Female', // Chrome
+        'Microsoft Zira',     // Windows 10
+        'Female',             // Generic female
+    ];
+    
+    let selectedVoice = null;
+    
+    // Find the best available voice
+    for (const preferred of preferredVoices) {
+        selectedVoice = voices.find(voice => 
+            voice.name.includes(preferred) && 
+            voice.lang.startsWith('en')
+        );
+        if (selectedVoice) {
+            console.log('Selected voice:', selectedVoice.name);
+            break;
+        }
+    }
+    
+    // Fallback to any female voice
+    if (!selectedVoice) {
+        selectedVoice = voices.find(voice => 
+            voice.name.toLowerCase().includes('female') ||
+            voice.name.toLowerCase().includes('woman')
+        );
+    }
+    
+    // Apply the selected voice
+    if (selectedVoice) {
+        utterance.voice = selectedVoice;
+    }
+    
+    // OPTIMIZED SPEECH SETTINGS
+    utterance.rate = 0.85;     // Slightly slower for clarity
+    utterance.pitch = 1.1;     // Slightly higher for friendliness
+    utterance.volume = 0.9;    // Near maximum volume
+    
+    // ENHANCED ERROR HANDLING
+    utterance.onerror = function(event) {
+        console.log('Speech error:', event.error);
+    };
+    
+    utterance.onend = function() {
+        console.log('Speech completed');
+    };
     
     speechSynthesis.speak(utterance);
 }
