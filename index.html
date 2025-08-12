@@ -1050,34 +1050,15 @@ function createCallbackInterface() {
     document.getElementById('callbackName').focus();
 }
 
-// Remove any existing submit handlers and ensure only ours runs
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('callbackForm');
-    const submitButton = document.querySelector('.btn-primary.btn-full');
-    
-    // Remove the form's default submit behavior
-    if (form) {
-        // Clone the form to remove all event listeners
-        const newForm = form.cloneNode(true);
-        form.parentNode.replaceChild(newForm, form);
-        
-        // Re-add ONLY our handler
-        newForm.addEventListener('submit', handleCallbackRequest);
-        
-        // Also ensure button click goes to our handler
-        const newSubmitButton = newForm.querySelector('.btn-primary.btn-full');
-        if (newSubmitButton) {
-            newSubmitButton.addEventListener('click', function(e) {
-                e.preventDefault();
-                handleCallbackRequest(e);
-            });
-        }
-    }
-});
 
 // Make.com Webhook Integration
 async function handleCallbackRequest(event) {
     event.preventDefault();
+    // Close any special offer popups before processing
+    const specialOffer = document.getElementById('specialOffer');
+    if (specialOffer) {
+        specialOffer.remove();
+    }
     
     const name = document.getElementById('callbackName').value.trim();
     const phone = document.getElementById('callbackPhone').value.trim();
