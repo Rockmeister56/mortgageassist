@@ -531,20 +531,16 @@ function startVoiceFormProcess(fields) {
     currentFormFieldIndex = 0;
     isFormAssistantActive = true;
     
-    // Initialize speech recognition for form filling
     if (!recognition) {
         initializeSpeechRecognition();
     }
     
-    // Create a small indicator that we're in form assist mode
     createFormAssistIndicator();
     
-    // Start with greeting and first question
-    speakMessage("Hi! Let me help you fill out this form. I'll ask you for each piece of information.");
-    
+    // Just go straight to asking for the first field:
     setTimeout(() => {
         askForNextFormField();
-    }, 3000);
+    }, 1000);  // Shorter timeout since no intro message
 }
 
 function createFormAssistIndicator() {
