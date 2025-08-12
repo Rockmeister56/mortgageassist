@@ -842,70 +842,84 @@ function stopFormAssistant() {
     isListening = false;
 }
 
-// ENHANCED VOICE SYSTEM - STEP 1
-function speakMessage(message) {
+// PREMIUM ELEVENLABS VOICE INTEGRATION
+async function speakMessage(message) {
+    const ELEVENLABS_API_KEY = 'sk_9e7fa2741be74e8cc4af95744fe078712c1e8201cdcada93';
+    const VOICE_ID = 'zGjIP4SZlMnY9m93k97r'; // Hope voice
+    
+    try {
+        console.log('🎤 Generating premium voice for:', message);
+        
+        // Call ElevenLabs API
+        const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID}`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'audio/mpeg',
+                'Content-Type': 'application/json',
+                'xi-api-key': ELEVENLABS_API_KEY
+            },
+            body: JSON.stringify({
+                text: message,
+                model_id: 'eleven_monolingual_v1',
+                voice_settings: {
+                    stability: 0.5,
+                    similarity_boost: 0.75,
+                    style: 0.0,
+                    use_speaker_boost: true
+                }
+            })
+        });
+        
+        if (!response.ok) {
+            throw new Error(`ElevenLabs API error: ${response.status}`);
+        }
+        
+        // Convert response to audio blob
+        const audioBlob = await response.blob();
+        const audioUrl = URL.createObjectURL(audioBlob);
+        
+        // Play the premium audio
+        const audio = new Audio(audioUrl);
+        audio.volume = 0.9;
+        
+        audio.onended = () => {
+            URL.revokeObjectURL(audioUrl); // Clean up memory
+            console.log('✅ Premium voice completed');
+        };
+        
+        audio.onerror = (error) => {
+            console.log('Audio playback error:', error);
+            // Fallback to browser voice
+            fallbackSpeakMessage(message);
+        };
+        
+        await audio.play();
+        
+    } catch (error) {
+        console.log('ElevenLabs error:', error);
+        // Fallback to enhanced browser voice
+        fallbackSpeakMessage(message);
+    }
+}
+
+// Fallback function (your enhanced browser voice)
+function fallbackSpeakMessage(message) {
     if (!speechSynthesis) return;
     
-    // Cancel any current speech
     speechSynthesis.cancel();
-    
     const utterance = new SpeechSynthesisUtterance(message);
     
-    // ENHANCED VOICE SELECTION - Finds best female voice
     const voices = speechSynthesis.getVoices();
-    console.log('Available voices:', voices.length);
+    const femaleVoice = voices.find(voice => 
+        voice.name.includes('Samantha') || 
+        voice.name.includes('Karen') ||
+        voice.name.includes('Female')
+    );
     
-    // Priority order for best female voices
-    const preferredVoices = [
-        'Samantha',           // macOS best female
-        'Karen',              // Windows good female  
-        'Moira',              // macOS alternative
-        'Victoria',           // Windows alternative
-        'Google UK English Female', // Chrome
-        'Microsoft Zira',     // Windows 10
-        'Female',             // Generic female
-    ];
-    
-    let selectedVoice = null;
-    
-    // Find the best available voice
-    for (const preferred of preferredVoices) {
-        selectedVoice = voices.find(voice => 
-            voice.name.includes(preferred) && 
-            voice.lang.startsWith('en')
-        );
-        if (selectedVoice) {
-            console.log('Selected voice:', selectedVoice.name);
-            break;
-        }
-    }
-    
-    // Fallback to any female voice
-    if (!selectedVoice) {
-        selectedVoice = voices.find(voice => 
-            voice.name.toLowerCase().includes('female') ||
-            voice.name.toLowerCase().includes('woman')
-        );
-    }
-    
-    // Apply the selected voice
-    if (selectedVoice) {
-        utterance.voice = selectedVoice;
-    }
-    
-    // OPTIMIZED SPEECH SETTINGS
-    utterance.rate = 0.85;     // Slightly slower for clarity
-    utterance.pitch = 1.1;     // Slightly higher for friendliness
-    utterance.volume = 0.9;    // Near maximum volume
-    
-    // ENHANCED ERROR HANDLING
-    utterance.onerror = function(event) {
-        console.log('Speech error:', event.error);
-    };
-    
-    utterance.onend = function() {
-        console.log('Speech completed');
-    };
+    if (femaleVoice) utterance.voice = femaleVoice;
+    utterance.rate = 0.85;
+    utterance.pitch = 1.1;
+    utterance.volume = 0.9;
     
     speechSynthesis.speak(utterance);
 }
