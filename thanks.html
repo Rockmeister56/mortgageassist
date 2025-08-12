@@ -3,37 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thank You - MortgageAssist</title>
-    <link rel="stylesheet" href="css/styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        .thank-you-container {
-            text-align: center;
-            padding: 100px 20px;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        .thank-you-icon {
-            font-size: 64px;
-            margin-bottom: 30px;
-            color: #4CAF50;
-        }
-    </style>
+    <title>Thank You - $500 Certificate | AI4Loans</title>
+    <link rel="stylesheet" href="css/certificate-styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <div class="container">
-            <div class="logo">
-                <a href="index.html"><span class="blue">MORTGAGE</span>ASSIST</a>
-            </div>
-        </div>
-    </header>
+    <div class="container">
+        <!-- Header Section -->
+        <header class="thank-you-header">
+            <div class="success-icon">✅</div>
+            <h1>Thank You!</h1>
+            <p class="subtitle">Your loan application has been successfully submitted</p>
+        </header>
 
-    <section class="thank-you-container">
-        <div class="thank-you-icon">✓</div>
-        <h1>Thank You!</h1>
-        <p>Your request has been submitted successfully. We'll be in touch with you shortly.</p>
-        <a href="index.html" class="btn-primary" style="margin-top: 30px;">Return to Home</a>
-    </section>
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="message-section">
+                <h2>🎉 Congratulations!</h2>
+                <p>We've received your information and our AI-powered system is already working on your loan options.</p>
+                
+                <div class="next-steps">
+                    <h3>What happens next?</h3>
+                    <ul>
+                        <li>Our team will review your application within 24 hours</li>
+                        <li>You'll receive a call from one of our loan specialists</li>
+                        <li>We'll present your personalized loan options</li>
+                        <li>Complete your application with your $500 savings!</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Certificate Section -->
+            <div class="certificate-section">
+                <div class="certificate-header">
+                    <h2>🏆 Your Exclusive $500 Certificate</h2>
+                    <p>As a thank you for choosing AI4Loans, here's your exclusive savings certificate:</p>
+                </div>
+                
+                <div class="certificate-container">
+                    <img src="https://page.gensparksite.com/file_format_converter/tooluse_RjkU2CB1QwG_q9g_9L4yxg/file-1.png" 
+                         alt="$500 Off Closing Costs Certificate" 
+                         class="certificate-image">
+                    
+                    <div class="certificate-overlay">
+                        <div class="certificate-badge">YOURS!</div>
+                    </div>
+                </div>
+
+                <div class="certificate-details">
+                    <h3>💰 Save $500 on Your Closing Costs!</h3>
+                    <p><strong>This certificate entitles you to $500 off your closing costs when you close your loan with AI4Loans.</strong></p>
+                    
+                    <div class="important-info">
+                        <h4>Important Details:</h4>
+                        <ul>
+                            <li>Valid for qualified borrowers only</li>
+                            <li>Cannot be combined with other offers</li>
+                            <li>Present this certificate during closing</li>
+                            <li>Subject to loan approval and terms</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-section">
+                <button onclick="window.print()" class="btn btn-primary">
+                    🖨️ Print Certificate
+                </button>
+                <button onclick="downloadCertificate()" class="btn btn-secondary">
+                    📄 Download PDF
+                </button>
+                <a href="index.html" class="btn btn-outline">
+                    🏠 Return Home
+                </a>
+            </div>
+
+            <!-- Contact Info -->
+            <div class="contact-section">
+                <h3>Questions? We're Here to Help!</h3>
+                <div class="contact-grid">
+                    <div class="contact-item">
+                        <span class="icon">📞</span>
+                        <div>
+                            <strong>Call Us</strong>
+                            <p>1-800-AI4-LOAN</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <span class="icon">✉️</span>
+                        <div>
+                            <strong>Email Us</strong>
+                            <p>support@ai4loans.com</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <span class="icon">⏰</span>
+                        <div>
+                            <strong>Hours</strong>
+                            <p>Mon-Fri: 8AM-8PM EST</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2025 AI4Loans. All rights reserved. | Equal Housing Lender</p>
+        </footer>
+    </div>
+
+    <script src="js/certificate-functions.js"></script>
 </body>
 </html>
