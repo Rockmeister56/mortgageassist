@@ -621,13 +621,13 @@ function highlightCurrentField(field) {
 function askForNextFormField() {
     console.log('13. Inside askForNextFormField, currentIndex:', currentFormFieldIndex);
     console.log('14. Total fields:', formFieldsArray.length);
-    
+
     if (currentFormFieldIndex >= formFieldsArray.length) {
         console.log('15. All fields completed!');
         completeFormAssistant();
         return;
     }
-    
+
     const currentField = formFieldsArray[currentFormFieldIndex];
     if (!currentField) {
         console.log('16. Current field is null, skipping...');
@@ -635,22 +635,22 @@ function askForNextFormField() {
         askForNextFormField();
         return;
     }
-    
+
     console.log('17. Processing field:', currentField.id);
-    
+
     // Highlight the current field
     highlightCurrentField(currentField);
-    
+
     // Ask for the appropriate information based on field type
     const question = getQuestionForField(currentField);
     console.log('18. Question:', question);
     speakMessage(question);
-    
-    // Start listening for the response
+
+    // 🔥 KEY FIX: Wait for speech to complete BEFORE starting to listen
     setTimeout(() => {
         console.log('19. Starting to listen for response...');
         startFormFieldListening();
-    }, 2000);
+    }, 3000); // Increased timeout to ensure speech completes
 }
 
 function startFormFieldListening() {
