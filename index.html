@@ -537,12 +537,12 @@ function startVoiceFormProcess(fields) {
     
     createFormAssistIndicator();
     
-    // Restore the introduction:
+    // Start with greeting and first question
     speakMessage("Hi! I'm here to help you fill out this form. I'll ask you for each piece of information.");
     
     setTimeout(() => {
         askForNextFormField();
-    }, 5000);  // Longer delay to let intro finish
+    }, 8000);  // ← CHANGE FROM 3000 TO 8000 (8 seconds)
 }
 
 function createFormAssistIndicator() {
