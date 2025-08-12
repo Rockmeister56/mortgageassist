@@ -258,7 +258,7 @@
     
 </div>
             <!-- Using Netlify Forms -->
-            <form id="contactForm" name="contact">
+            <form id="contactForm"<form id="contactForm" name="contact" onsubmit="return false;"></form> name="contact">
                 <!-- Netlify form name -->
 
                 <div class="form-group">
@@ -281,8 +281,10 @@
                     <label for="preferredDate">Preferred Date to Contact</label>
                     <input type="date" id="preferredDate" name="preferredDate" required>
                 </div>
-                <form id="contactForm" name="contact" onsubmit="return false;">
-           </form>
+                <div class="form-group">
+        <button type="submit" class="btn-primary btn-full">Submit</button>
+    </div>
+</form>
         </div>
     </div>
 
