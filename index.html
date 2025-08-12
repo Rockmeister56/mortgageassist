@@ -349,37 +349,32 @@ function initializeSpeechRecognition() {
         };
         
         recognition.onerror = function(event) {
-            console.log('❌ Speech recognition error:', event.error);
-            
-            // Don't move to next field on error!
-            if (event.error === 'no-speech') {
-                console.log('⚠️ No speech detected - asking user to try again');
-                speakMessage("I didn't hear you. Could you please repeat that?");
-                
-                // Try listening again after 2 seconds
-                setTimeout(() => {
-                    startFormFieldListening();
-                }, 3000);
-            }
-        };
+    console.log('❌ Speech recognition error:', event.error);
+    
+    // Don't move to next field on error!
+    if (event.error === 'no-speech') {
+        console.log('⚠️ No speech detected - asking user to try again');
+        speakMessage("I didn't hear you. Could you please repeat that?");
         
-        recognition.onend = function() {
-            console.log('🔚 Recognition ended');
-            isListening = false;
-            
-        };
- 
-    // Only stop for fatal errors
-if (event.error === 'aborted' || event.error === 'language-not-supported') {
-    stopListening();
-}
-        
-       recognition.onend = function() {
+        // Try listening again after 3 seconds
+        setTimeout(() => {
+            startFormFieldListening();
+        }, 3000);
+    }
+    
+    // Only stop for fatal errors (MOVED INSIDE WHERE IT BELONGS!)
+    if (event.error === 'aborted' || event.error === 'language-not-supported') {
+        stopListening();
+    }
+};
+
+recognition.onend = function() {
+    console.log('🔚 Recognition ended');
+    isListening = false;
+    
     if (isFormAssistantActive) {
         // Don't stop listening if form assistant is active - restart after delay
         console.log('[DEBUG] Recognition ended but form assistant active - restarting...');
-        isListening = false;
-        updateListenButton();
         
         // Add delay to prevent infinite loop, then restart
         setTimeout(() => {
