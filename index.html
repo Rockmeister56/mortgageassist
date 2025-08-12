@@ -334,47 +334,43 @@ let isFormAssistantActive = false;
 function initializeSpeechRecognition() {
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
         recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.continuous = true;
         recognition.continuous = false;
         recognition.interimResults = false;
         recognition.lang = 'en-US';
-        recognition.maxAlternatives = 1;
         
         recognition.onresult = function(event) {
             const transcript = event.results[0][0].transcript.trim();
-            console.log('🎤 USER SAID:', transcript);
-            
-            if (isFormAssistantActive && transcript.length > 0) {
+            if (isFormAssistantActive) {
                 handleFormFieldResponse(transcript);
+            } else if (isVoiceChatMode) {
+                handleVoiceChatInput(transcript);
             }
         };
         
-        recognition.onerror = function(event) {
-    console.log('❌ Speech recognition error:', event.error);
+       recognition.onerror = function(event) {
+    console.log('Speech recognition error:', event.error);
     
-    // Don't move to next field on error!
-    if (event.error === 'no-speech') {
-        console.log('⚠️ No speech detected - asking user to try again');
-        speakMessage("I didn't hear you. Could you please repeat that?");
-        
-        // Try listening again after 3 seconds
-        setTimeout(() => {
-            startFormFieldListening();
-        }, 3000);
+    // DON'T stop listening for these recoverable errors:
+    if (event.error === 'not-allowed' || 
+        event.error === 'audio-capture' || 
+        event.error === 'network') {
+        console.log('Recoverable error - keeping microphone alive');
+        return; // Don't call stopListening()
     }
     
-    // Only stop for fatal errors (MOVED INSIDE WHERE IT BELONGS!)
+    // Only stop for fatal errors
     if (event.error === 'aborted' || event.error === 'language-not-supported') {
         stopListening();
     }
 };
-
-recognition.onend = function() {
-    console.log('🔚 Recognition ended');
-    isListening = false;
-    
+        
+       recognition.onend = function() {
     if (isFormAssistantActive) {
         // Don't stop listening if form assistant is active - restart after delay
         console.log('[DEBUG] Recognition ended but form assistant active - restarting...');
+        isListening = false;
+        updateListenButton();
         
         // Add delay to prevent infinite loop, then restart
         setTimeout(() => {
@@ -394,7 +390,8 @@ recognition.onend = function() {
         updateListenButton();
     }
 };
-    
+    }
+}
 
 function initializeMicrophonePermission() {
     // Only request permission on first user interaction
@@ -629,47 +626,30 @@ function askForNextFormField() {
 }
 
 function startFormFieldListening() {
-    console.log('Starting to listen for USER response...');
+    console.log('20. Inside startFormFieldListening');
     
-    if (!recognition || isListening) {
+    if (!recognition) {
+        console.log('21. No recognition available');
+        speakMessage("Sorry, voice recognition isn't available. Please type your response in the highlighted field.");
         return;
     }
     
-    // CRITICAL FIX: Wait for Hope to finish speaking completely
-    setTimeout(() => {
-        console.log('🎤 NOW listening for USER voice...');
-        
-        try {
-            recognition.start();
-            isListening = true;
-            console.log('Recognition started for USER response');
-            
-            // Show visual indicator that we're listening for USER
-            showListeningIndicator();
-            
-        } catch (error) {
-            console.log('Recognition start error:', error);
-        }
-    }, 2000); // Extra delay to ensure Hope is completely done
-}
-
-// Add visual feedback so you know when to speak
-function showListeningIndicator() {
-    const indicator = document.createElement('div');
-    indicator.id = 'listeningNow';
-    indicator.innerHTML = '🎤 SPEAK NOW - I\'m listening for YOUR voice!';
-    indicator.style.cssText = `
-        position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
-        background: #4CAF50; color: white; padding: 15px 30px;
-        border-radius: 25px; z-index: 10001; font-weight: bold;
-        animation: pulse 1s infinite;
-    `;
-    document.body.appendChild(indicator);
+    // ⚡ KEY FIX: Don't restart if already listening
+    if (isListening) {
+        console.log('22. Already listening, no need to restart');
+        return;
+    }
     
-    // Remove after 5 seconds
-    setTimeout(() => {
-        if (indicator) indicator.remove();
-    }, 5000);
+    console.log('22. Starting speech recognition...');
+    
+    try {
+        recognition.start();
+        isListening = true;
+        console.log('23. Recognition started successfully');
+    } catch (error) {
+        console.log('24. Recognition start error:', error);
+        speakMessage("Please speak your response now, or type it in the highlighted field.");
+    }
 }
 
 
@@ -706,29 +686,24 @@ function getQuestionForField(field) {
 
 
 function handleFormFieldResponse(response) {
-    console.log('🎤 handleFormFieldResponse called with:', response);
-    console.log('🎯 Current field index:', currentFormFieldIndex);
-    console.log('📝 Form fields array length:', formFieldsArray.length);
-    
     const currentField = formFieldsArray[currentFormFieldIndex];
+    currentField && highlightCurrentField(currentField);
+    if (!currentField) return;
     
-    if (!currentField) {
-        console.log('❌ No current field found!');
-        return;
-    }
-    
-    console.log('✅ Found field:', currentField.id, currentField.name);
-    
-    // Highlight current field
-    highlightCurrentField(currentField);
+    console.log('Filling field:', currentField.id, 'with:', response); // Debug log
+
     
     // Clean up the response
     const cleanResponse = response.trim();
-    console.log('🧹 Cleaned response:', cleanResponse);
     
-    // Fill the field
-    currentField.value = cleanResponse;
-    console.log('📝 Field value set to:', currentField.value);
+    // Special handling for date fields
+    if (currentField.type === 'date') {
+        // Try to convert spoken date to YYYY-MM-DD format
+        const dateValue = convertSpokenDateToFormat(cleanResponse);
+        currentField.value = dateValue;
+    } else {
+        currentField.value = cleanResponse;
+    }
     
     // Force the form to recognize the change
     currentField.focus();
@@ -737,20 +712,23 @@ function handleFormFieldResponse(response) {
     currentField.dispatchEvent(new Event('blur', { bubbles: true }));
     
     // Visual confirmation
-    currentField.style.backgroundColor = '#e8f5e9';
+    currentField.style.backgroundColor = '#e8f5e9'; // Light green background
     
     setTimeout(() => {
-        currentField.style.backgroundColor = '';
+        currentField.style.backgroundColor = ''; // Reset background
     }, 2000);
     
     // Confirm the entry
     speakMessage(`Perfect! I've recorded: ${cleanResponse}`);
     
-    // Move to next field
+    // Move to next field after a delay
     setTimeout(() => {
         currentFormFieldIndex++;
-        askForNextFormField();
-    }, 3000);
+        setTimeout(() => {
+            askForNextFormField();
+            startFormFieldListening();
+        }, 1000);
+    }, 1500);
 }
 
 // Helper function for date conversion
@@ -851,61 +829,86 @@ function stopAllVoices() {
     });
 }
 
-// PREMIUM ELEVENLABS VOICE INTEGRATION (UPDATED)
+// PREMIUM ELEVENLABS VOICE INTEGRATION
 async function speakMessage(message) {
-    stopAllVoices();
-    
     const ELEVENLABS_API_KEY = 'sk_9e7fa2741be74e8cc4af95744fe078712c1e8201cdcada93';
-    const VOICE_ID = 'zGjIP4SZlMnY9m93k97r';
+    const VOICE_ID = 'zGjIP4SZlMnY9m93k97r'; // Hope voice
     
-    return new Promise(async (resolve, reject) => {
-        try {
-            const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID}`, {
-                method: 'POST',
-                headers: {
-                    'Accept': 'audio/mpeg',
-                    'Content-Type': 'application/json',
-                    'xi-api-key': ELEVENLABS_API_KEY
-                },
-                body: JSON.stringify({
-                    text: message,
-                    model_id: 'eleven_monolingual_v1',
-                    voice_settings: {
-                        stability: 0.5,
-                        similarity_boost: 0.75,
-                        style: 0.0,
-                        use_speaker_boost: true
-                    }
-                })
-            });
-            
-            if (!response.ok) {
-                throw new Error(`ElevenLabs API error: ${response.status}`);
-            }
-            
-            const audioBlob = await response.blob();
-            const audioUrl = URL.createObjectURL(audioBlob);
-            const audio = new Audio(audioUrl);
-            audio.volume = 0.9;
-            
-            audio.onended = () => {
-                URL.revokeObjectURL(audioUrl);
-                console.log('✅ Voice completed:', message);
-                resolve(); // Signal completion
-            };
-            
-            audio.onerror = (error) => {
-                console.log('Audio error:', error);
-                reject(error);
-            };
-            
-            await audio.play();
-            
-        } catch (error) {
-            console.log('ElevenLabs error:', error);
-            reject(error);
+    try {
+        console.log('🎤 Generating premium voice for:', message);
+        
+        // Call ElevenLabs API
+        const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID}`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'audio/mpeg',
+                'Content-Type': 'application/json',
+                'xi-api-key': ELEVENLABS_API_KEY
+            },
+            body: JSON.stringify({
+                text: message,
+                model_id: 'eleven_monolingual_v1',
+                voice_settings: {
+                    stability: 0.5,
+                    similarity_boost: 0.75,
+                    style: 0.0,
+                    use_speaker_boost: true
+                }
+            })
+        });
+        
+        if (!response.ok) {
+            throw new Error(`ElevenLabs API error: ${response.status}`);
         }
-    });
+        
+        // Convert response to audio blob
+        const audioBlob = await response.blob();
+        const audioUrl = URL.createObjectURL(audioBlob);
+        
+        // Play the premium audio
+        const audio = new Audio(audioUrl);
+        audio.volume = 0.9;
+        
+        audio.onended = () => {
+            URL.revokeObjectURL(audioUrl); // Clean up memory
+            console.log('✅ Premium voice completed');
+        };
+        
+        audio.onerror = (error) => {
+            console.log('Audio playback error:', error);
+            // Fallback to browser voice
+            fallbackSpeakMessage(message);
+        };
+        
+        await audio.play();
+        
+    } catch (error) {
+        console.log('ElevenLabs error:', error);
+        // Fallback to enhanced browser voice
+        fallbackSpeakMessage(message);
+    }
+}
+
+// Fallback function (your enhanced browser voice)
+function fallbackSpeakMessage(message) {
+    if (!speechSynthesis) return;
+    
+    speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(message);
+    
+    const voices = speechSynthesis.getVoices();
+    const femaleVoice = voices.find(voice => 
+        voice.name.includes('Samantha') || 
+        voice.name.includes('Karen') ||
+        voice.name.includes('Female')
+    );
+    
+    if (femaleVoice) utterance.voice = femaleVoice;
+    utterance.rate = 0.85;
+    utterance.pitch = 1.1;
+    utterance.volume = 0.9;
+    
+    speechSynthesis.speak(utterance);
 }
 
 // ============================================================================
