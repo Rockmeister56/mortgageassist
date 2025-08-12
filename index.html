@@ -334,30 +334,43 @@ let isFormAssistantActive = false;
 function initializeSpeechRecognition() {
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
         recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-        recognition.continuous = true;
         recognition.continuous = false;
         recognition.interimResults = false;
         recognition.lang = 'en-US';
+        recognition.maxAlternatives = 1;
         
         recognition.onresult = function(event) {
             const transcript = event.results[0][0].transcript.trim();
-            if (isFormAssistantActive) {
+            console.log('🎤 USER SAID:', transcript);
+            
+            if (isFormAssistantActive && transcript.length > 0) {
                 handleFormFieldResponse(transcript);
-            } else if (isVoiceChatMode) {
-                handleVoiceChatInput(transcript);
             }
         };
         
-       recognition.onerror = function(event) {
-    console.log('Speech recognition error:', event.error);
-    
-    // DON'T stop listening for these recoverable errors:
-    if (event.error === 'not-allowed' || 
-        event.error === 'audio-capture' || 
-        event.error === 'network') {
-        console.log('Recoverable error - keeping microphone alive');
-        return; // Don't call stopListening()
+        recognition.onerror = function(event) {
+            console.log('❌ Speech recognition error:', event.error);
+            
+            // Don't move to next field on error!
+            if (event.error === 'no-speech') {
+                console.log('⚠️ No speech detected - asking user to try again');
+                speakMessage("I didn't hear you. Could you please repeat that?");
+                
+                // Try listening again after 2 seconds
+                setTimeout(() => {
+                    startFormFieldListening();
+                }, 3000);
+            }
+        };
+        
+        recognition.onend = function() {
+            console.log('🔚 Recognition ended');
+            isListening = false;
+            
+            // DON'T automatically move to next field here!
+        };
     }
+}
     
     // Only stop for fatal errors
     if (event.error === 'aborted' || event.error === 'language-not-supported') {
@@ -626,30 +639,47 @@ function askForNextFormField() {
 }
 
 function startFormFieldListening() {
-    console.log('20. Inside startFormFieldListening');
+    console.log('Starting to listen for USER response...');
     
-    if (!recognition) {
-        console.log('21. No recognition available');
-        speakMessage("Sorry, voice recognition isn't available. Please type your response in the highlighted field.");
+    if (!recognition || isListening) {
         return;
     }
     
-    // ⚡ KEY FIX: Don't restart if already listening
-    if (isListening) {
-        console.log('22. Already listening, no need to restart');
-        return;
-    }
+    // CRITICAL FIX: Wait for Hope to finish speaking completely
+    setTimeout(() => {
+        console.log('🎤 NOW listening for USER voice...');
+        
+        try {
+            recognition.start();
+            isListening = true;
+            console.log('Recognition started for USER response');
+            
+            // Show visual indicator that we're listening for USER
+            showListeningIndicator();
+            
+        } catch (error) {
+            console.log('Recognition start error:', error);
+        }
+    }, 2000); // Extra delay to ensure Hope is completely done
+}
+
+// Add visual feedback so you know when to speak
+function showListeningIndicator() {
+    const indicator = document.createElement('div');
+    indicator.id = 'listeningNow';
+    indicator.innerHTML = '🎤 SPEAK NOW - I\'m listening for YOUR voice!';
+    indicator.style.cssText = `
+        position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+        background: #4CAF50; color: white; padding: 15px 30px;
+        border-radius: 25px; z-index: 10001; font-weight: bold;
+        animation: pulse 1s infinite;
+    `;
+    document.body.appendChild(indicator);
     
-    console.log('22. Starting speech recognition...');
-    
-    try {
-        recognition.start();
-        isListening = true;
-        console.log('23. Recognition started successfully');
-    } catch (error) {
-        console.log('24. Recognition start error:', error);
-        speakMessage("Please speak your response now, or type it in the highlighted field.");
-    }
+    // Remove after 5 seconds
+    setTimeout(() => {
+        if (indicator) indicator.remove();
+    }, 5000);
 }
 
 
