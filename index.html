@@ -842,7 +842,7 @@ function stopFormAssistant() {
     isListening = false;
 }
 
-// ENHANCED BROWSER VOICE SYSTEM - WORKING VERSION
+// ENHANCED VOICE SYSTEM - STEP 1
 function speakMessage(message) {
     if (!speechSynthesis) return;
     
@@ -880,6 +880,14 @@ function speakMessage(message) {
         }
     }
     
+    // Fallback to any female voice
+    if (!selectedVoice) {
+        selectedVoice = voices.find(voice => 
+            voice.name.toLowerCase().includes('female') ||
+            voice.name.toLowerCase().includes('woman')
+        );
+    }
+    
     // Apply the selected voice
     if (selectedVoice) {
         utterance.voice = selectedVoice;
@@ -890,9 +898,16 @@ function speakMessage(message) {
     utterance.pitch = 1.1;     // Slightly higher for friendliness
     utterance.volume = 0.9;    // Near maximum volume
     
-    speechSynthesis.speak(utterance);
+    // ENHANCED ERROR HANDLING
+    utterance.onerror = function(event) {
+        console.log('Speech error:', event.error);
+    };
     
-    console.log('✅ Browser voice completed');
+    utterance.onend = function() {
+        console.log('Speech completed');
+    };
+    
+    speechSynthesis.speak(utterance);
 }
 
 // ============================================================================
