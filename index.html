@@ -329,67 +329,60 @@ let isListening = false;
 let currentFormFieldIndex = 0;
 let formFieldsArray = [];
 let isFormAssistantActive = false;
+let hasReceivedValidResponse = false; 
 
 // Initialize Speech Recognition
 function initializeSpeechRecognition() {
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
         recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
         recognition.continuous = true;
-        recognition.continuous = false;
         recognition.interimResults = false;
         recognition.lang = 'en-US';
-        
+
         recognition.onresult = function(event) {
             const transcript = event.results[0][0].transcript.trim();
+            hasReceivedValidResponse = true; // Mark that we got a response
+            
             if (isFormAssistantActive) {
                 handleFormFieldResponse(transcript);
             } else if (isVoiceChatMode) {
                 handleVoiceChatInput(transcript);
             }
         };
-        
-       recognition.onerror = function(event) {
-    console.log('Speech recognition error:', event.error);
-    
-    // DON'T stop listening for these recoverable errors:
-    if (event.error === 'not-allowed' || 
-        event.error === 'audio-capture' || 
-        event.error === 'network') {
-        console.log('Recoverable error - keeping microphone alive');
-        return; // Don't call stopListening()
-    }
-    
-    // Only stop for fatal errors
-    if (event.error === 'aborted' || event.error === 'language-not-supported') {
-        stopListening();
-    }
-};
-        
-       recognition.onend = function() {
-    if (isFormAssistantActive) {
-        // Don't stop listening if form assistant is active - restart after delay
-        console.log('[DEBUG] Recognition ended but form assistant active - restarting...');
-        isListening = false;
-        updateListenButton();
-        
-        // Add delay to prevent infinite loop, then restart
-        setTimeout(() => {
-            if (isFormAssistantActive && !isListening) {
-                try {
-                    recognition.start();
-                    isListening = true;
-                    console.log('[DEBUG] Recognition restarted for next form field');
-                } catch (error) {
-                    console.log('Recognition restart error:', error);
-                }
+
+        recognition.onerror = function(event) {
+            console.log('Speech recognition error:', event.error);
+            
+            // DON'T stop listening for these recoverable errors:
+            if (event.error === 'not-allowed' || 
+                event.error === 'audio-capture' || 
+                event.error === 'network') {
+                console.log('Recoverable error - keeping microphone alive');
+                return; // Don't stop listening
             }
-        }, 1500);
-    } else {
-        // Normal chat mode - stop listening  
-        isListening = false;
-        updateListenButton();
-    }
-};
+            
+            // Only stop for fatal errors
+            if (event.error === 'aborted' || event.error === 'language-not-supported') {
+                stopListening();
+            }
+        };
+
+        recognition.onend = function() {
+            console.log('[DEBUG] Recognition ended');
+            isListening = false;
+            updateListenButton();
+            
+            // ONLY restart if we're in form assistant mode AND we didn't get a valid response
+            if (isFormAssistantActive && !hasReceivedValidResponse) {
+                console.log('[DEBUG] No response received, asking user to try again...');
+                setTimeout(() => {
+                    speakMessage("I didn't catch that. Could you please repeat your answer?");
+                    setTimeout(() => {
+                        startFormFieldListening();
+                    }, 2000);
+                }, 1000);
+            }
+        };
     }
 }
 
@@ -661,16 +654,17 @@ function startFormFieldListening() {
         speakMessage("Sorry, voice recognition isn't available. Please type your response in the highlighted field.");
         return;
     }
-    
+
     // ⚡ KEY FIX: Don't restart if already listening
     if (isListening) {
         console.log('22. Already listening, no need to restart');
         return;
     }
-    
+
     console.log('22. Starting speech recognition...');
     
     try {
+        hasReceivedValidResponse = false; // Reset the flag
         recognition.start();
         isListening = true;
         console.log('23. Recognition started successfully');
