@@ -258,7 +258,7 @@
     
 </div>
             <!-- Using Netlify Forms -->
-            <form id="callbackForm" name="contact">
+            <form id="contactForm" name="contact">
                 <!-- Netlify form name -->
                 <input type="hidden" name="form-name" value="contact">
                 
@@ -282,7 +282,7 @@
                     <label for="preferredDate">Preferred Date to Contact</label>
                     <input type="date" id="preferredDate" name="preferredDate" required>
                 </div>
-                <form id="callbackForm" name="contact" action="thanks.html" method="POST">
+                <form id="contactForm" name="contact" action="thanks.html" method="POST">
     
     <!-- Keep your existing fields -->
     Your Name (keep this one)
@@ -1057,7 +1057,7 @@ function createCallbackInterface() {
     document.body.insertAdjacentHTML('beforeend', callbackHTML);
     
     // Add form submission handler
-    document.getElementById('callbackForm').addEventListener('submit', handleCallbackRequest);
+    document.getElementById('contactForm').addEventListener('submit', handleCallbackRequest);
     document.getElementById('callbackName').focus();
 }
 
