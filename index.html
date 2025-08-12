@@ -556,6 +556,27 @@ async function startVoiceFormProcess(fields) {
     }, 2000); // Extra buffer time
 }
 
+function startVoiceFormProcess(fields) {
+    formFieldsArray = fields;
+    currentFormFieldIndex = 0;
+    isFormAssistantActive = true;
+    
+    // Initialize speech recognition for form filling
+    if (!recognition) {
+        initializeSpeechRecognition();
+    }
+    
+    // Create a small indicator that we're in form assist mode
+    createFormAssistIndicator();
+    
+    // Start with greeting and first question
+    speakMessage("Hi! Let me help you fill out this form. I'll ask you for each piece of information.");
+    
+    setTimeout(() => {
+        askForNextFormField();
+    }, 3000);
+}
+
 function createFormAssistIndicator() {
     const indicatorHTML = `
         <div id="formAssistIndicator" style="
@@ -620,9 +641,9 @@ function askForNextFormField() {
     
     // Start listening for the response
     setTimeout(() => {
-    console.log('🎤 Starting to listen for response...');
-    startFormFieldListening();
-}, 4000);  // Give Hope 4 seconds to finish speaking
+        console.log('19. Starting to listen for response...');
+        startFormFieldListening();
+    }, 2000);
 }
 
 function startFormFieldListening() {
@@ -829,57 +850,61 @@ function stopAllVoices() {
     });
 }
 
-// ENHANCED BROWSER VOICE SYSTEM - WORKING VERSION
-function speakMessage(message) {
-    if (!speechSynthesis) return;
+// PREMIUM ELEVENLABS VOICE INTEGRATION (UPDATED)
+async function speakMessage(message) {
+    stopAllVoices();
     
-    // Cancel any current speech
-    speechSynthesis.cancel();
+    const ELEVENLABS_API_KEY = 'sk_9e7fa2741be74e8cc4af95744fe078712c1e8201cdcada93';
+    const VOICE_ID = 'zGjIP4SZlMnY9m93k97r';
     
-    const utterance = new SpeechSynthesisUtterance(message);
-    
-    // ENHANCED VOICE SELECTION - Finds best female voice
-    const voices = speechSynthesis.getVoices();
-    console.log('Available voices:', voices.length);
-    
-    // Priority order for best female voices
-    const preferredVoices = [
-        'Samantha',           // macOS best female
-        'Karen',              // Windows good female  
-        'Moira',              // macOS alternative
-        'Victoria',           // Windows alternative
-        'Google UK English Female', // Chrome
-        'Microsoft Zira',     // Windows 10
-        'Female',             // Generic female
-    ];
-    
-    let selectedVoice = null;
-    
-    // Find the best available voice
-    for (const preferred of preferredVoices) {
-        selectedVoice = voices.find(voice => 
-            voice.name.includes(preferred) && 
-            voice.lang.startsWith('en')
-        );
-        if (selectedVoice) {
-            console.log('Selected voice:', selectedVoice.name);
-            break;
+    return new Promise(async (resolve, reject) => {
+        try {
+            const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID}`, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'audio/mpeg',
+                    'Content-Type': 'application/json',
+                    'xi-api-key': ELEVENLABS_API_KEY
+                },
+                body: JSON.stringify({
+                    text: message,
+                    model_id: 'eleven_monolingual_v1',
+                    voice_settings: {
+                        stability: 0.5,
+                        similarity_boost: 0.75,
+                        style: 0.0,
+                        use_speaker_boost: true
+                    }
+                })
+            });
+            
+            if (!response.ok) {
+                throw new Error(`ElevenLabs API error: ${response.status}`);
+            }
+            
+            const audioBlob = await response.blob();
+            const audioUrl = URL.createObjectURL(audioBlob);
+            const audio = new Audio(audioUrl);
+            audio.volume = 0.9;
+            
+            audio.onended = () => {
+                URL.revokeObjectURL(audioUrl);
+                console.log('✅ Voice completed:', message);
+                resolve(); // Signal completion
+            };
+            
+            audio.onerror = (error) => {
+                console.log('Audio error:', error);
+                reject(error);
+            };
+            
+            await audio.play();
+            
+        } catch (error) {
+            console.log('ElevenLabs error:', error);
+            reject(error);
         }
-    }
-    
-    // Apply the selected voice
-    if (selectedVoice) {
-        utterance.voice = selectedVoice;
-    }
-    
-    // OPTIMIZED SPEECH SETTINGS
-    utterance.rate = 0.85;     // Slightly slower for clarity
-    utterance.pitch = 1.1;     // Slightly higher for friendliness
-    utterance.volume = 0.9;    // Near maximum volume
-    
-    speechSynthesis.speak(utterance);
-    
-    console.log('✅ Browser voice completed');
+    });
 }
 
 // ============================================================================
