@@ -367,15 +367,12 @@ function initializeSpeechRecognition() {
             console.log('🔚 Recognition ended');
             isListening = false;
             
-            // DON'T automatically move to next field here!
         };
-    }
-}
-    
+ 
     // Only stop for fatal errors
-    if (event.error === 'aborted' || event.error === 'language-not-supported') {
-        stopListening();
-    }
+if (event.error === 'aborted' || event.error === 'language-not-supported') {
+    stopListening();
+}
         
        recognition.onend = function() {
     if (isFormAssistantActive) {
