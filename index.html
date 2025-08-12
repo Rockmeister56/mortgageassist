@@ -686,24 +686,29 @@ function getQuestionForField(field) {
 
 
 function handleFormFieldResponse(response) {
-    const currentField = formFieldsArray[currentFormFieldIndex];
-    currentField && highlightCurrentField(currentField);
-    if (!currentField) return;
+    console.log('🎤 handleFormFieldResponse called with:', response);
+    console.log('🎯 Current field index:', currentFormFieldIndex);
+    console.log('📝 Form fields array length:', formFieldsArray.length);
     
-    console.log('Filling field:', currentField.id, 'with:', response); // Debug log
-
+    const currentField = formFieldsArray[currentFormFieldIndex];
+    
+    if (!currentField) {
+        console.log('❌ No current field found!');
+        return;
+    }
+    
+    console.log('✅ Found field:', currentField.id, currentField.name);
+    
+    // Highlight current field
+    highlightCurrentField(currentField);
     
     // Clean up the response
     const cleanResponse = response.trim();
+    console.log('🧹 Cleaned response:', cleanResponse);
     
-    // Special handling for date fields
-    if (currentField.type === 'date') {
-        // Try to convert spoken date to YYYY-MM-DD format
-        const dateValue = convertSpokenDateToFormat(cleanResponse);
-        currentField.value = dateValue;
-    } else {
-        currentField.value = cleanResponse;
-    }
+    // Fill the field
+    currentField.value = cleanResponse;
+    console.log('📝 Field value set to:', currentField.value);
     
     // Force the form to recognize the change
     currentField.focus();
@@ -712,23 +717,20 @@ function handleFormFieldResponse(response) {
     currentField.dispatchEvent(new Event('blur', { bubbles: true }));
     
     // Visual confirmation
-    currentField.style.backgroundColor = '#e8f5e9'; // Light green background
+    currentField.style.backgroundColor = '#e8f5e9';
     
     setTimeout(() => {
-        currentField.style.backgroundColor = ''; // Reset background
+        currentField.style.backgroundColor = '';
     }, 2000);
     
     // Confirm the entry
     speakMessage(`Perfect! I've recorded: ${cleanResponse}`);
     
-    // Move to next field after a delay
+    // Move to next field
     setTimeout(() => {
         currentFormFieldIndex++;
-        setTimeout(() => {
-            askForNextFormField();
-            startFormFieldListening();
-        }, 1000);
-    }, 1500);
+        askForNextFormField();
+    }, 3000);
 }
 
 // Helper function for date conversion
