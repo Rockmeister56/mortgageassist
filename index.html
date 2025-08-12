@@ -1096,21 +1096,6 @@ async function handleContactFormSubmission(event) {
         alert('Network error. Please check your connection and try again.');
     }
 }
-        
-        if (webhookResponse.ok) {
-            window.location.href = 'certificate-thank-you.html';
-        } else {
-            // Keep your existing error handling
-            const statusDiv = document.getElementById('status');
-            statusDiv.innerHTML = '<p style="color: red;">There was an error submitting your request. Please try again.</p>';
-        }
-        
-    } catch (error) {
-        console.error('Error:', error);
-        const statusDiv = document.getElementById('status');
-        statusDiv.innerHTML = '<p style="color: red;">Network error. Please check your connection and try again.</p>';
-    }
-}
 
 function showCallbackStatus(message, type) {
     const statusDiv = document.getElementById('callbackStatus');
