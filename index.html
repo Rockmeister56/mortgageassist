@@ -756,6 +756,33 @@ function getQuestionForField(field) {
 let processedResponses = new Set();
 
 function handleFormFieldResponse(response) {
+    const currentField = formFieldsArray[currentFormFieldIndex];
+    if (!currentField) return;
+    
+    // 🔥 SPECIAL HANDLING: Delay processing for phone numbers and dates
+    if (currentField.id === 'phone' || currentField.id === 'preferredDate') {
+        console.log('📞📅 Phone/Date field detected - waiting for complete input...');
+        
+        // Don't process if already processed
+        if (processedResponses.has(currentFormFieldIndex)) {
+            console.log('⚠️ Field already processed, ignoring:', response);
+            return;
+        }
+        
+        // Wait 4 seconds to collect complete phone number/date
+        setTimeout(() => {
+            console.log('📞📅 Processing delayed response:', response);
+            processFieldResponseNow(response);
+        }, 4000);
+        return;
+    }
+    
+    // For other fields (name, business, time) - process immediately
+    processFieldResponseNow(response);
+}
+
+// Helper function to actually process the response
+function processFieldResponseNow(response) {
     // 🔥 STOP recognition immediately to prevent duplicates
     if (recognition && isListening) {
         try {
@@ -805,10 +832,10 @@ function handleFormFieldResponse(response) {
     
     // 🔥 SINGLE TIMING SYSTEM - Use callback for everything
     speakMessageWithCallback(`Perfect! I've recorded: ${cleanResponse}`, function() {
-    console.log('✅ Confirmation completed, moving to next field...');
-    currentFormFieldIndex++;
-    askForNextFormField(); // No setTimeout needed!
-});
+        console.log('✅ Confirmation completed, moving to next field...');
+        currentFormFieldIndex++;
+        askForNextFormField();
+    });
 }
 
 // Helper function for date conversion
