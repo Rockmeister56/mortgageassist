@@ -745,8 +745,24 @@ function getQuestionForField(field) {
     return `Please tell me your ${fieldId || fieldName || 'information'}.`;
 }
 
-
-function handleFormFieldResponse(response) {
+    function handleFormFieldResponse(response) {
+    // 🔥 STOP recognition immediately to prevent duplicates
+    if (recognition && isListening) {
+        try {
+            recognition.stop();
+        } catch (error) {
+            console.log('Error stopping recognition:', error);
+        }
+        isListening = false;
+    }
+    
+    // 🔥 Prevent processing if we already handled a response for this field
+    if (hasReceivedValidResponse) {
+        console.log('⚠️ Response already processed for this field, ignoring:', response);
+        return;
+    }
+    hasReceivedValidResponse = true;
+    
     const currentField = formFieldsArray[currentFormFieldIndex];
     currentField && highlightCurrentField(currentField);
     if (!currentField) return;
