@@ -395,10 +395,19 @@ recognition.onend = function() {
         recognition.onend = function() {
     console.log('[DEBUG] Recognition ended');
     isListening = false;
-    // Let the speech timeout system handle retries instead
-};
+    
+    // Only retry if we're in form assistant mode AND didn't get a valid response
+    if (isFormAssistantActive && !hasReceivedValidResponse) {
+        console.log('[DEBUG] No response received, asking user to try again...');
+        
+        setTimeout(() => {
+            speakMessage("I didn't catch that. Could you please repeat your answer?");
+            setTimeout(() => {
+                startFormFieldListening();
+            }, 2000); // Reduced from 3000 to 2000
+        }, 1000); // Reduced from 1500 to 1000
     }
-}
+};
 
 function initializeMicrophonePermission() {
     // Only request permission on first user interaction
