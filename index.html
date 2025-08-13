@@ -883,28 +883,6 @@ async function speakMessage(message) {
     }
 }
 
-// Fallback function (your enhanced browser voice)
-function fallbackSpeakMessage(message) {
-    if (!speechSynthesis) return;
-    
-    speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(message);
-    
-    const voices = speechSynthesis.getVoices();
-    const femaleVoice = voices.find(voice => 
-        voice.name.includes('Samantha') || 
-        voice.name.includes('Karen') ||
-        voice.name.includes('Female')
-    );
-    
-    if (femaleVoice) utterance.voice = femaleVoice;
-    utterance.rate = 0.85;
-    utterance.pitch = 1.1;
-    utterance.volume = 0.9;
-    
-    speechSynthesis.speak(utterance);
-}
-
 // ============================================================================
 // FIX 2: CHAT INTERFACE WITH SIMPLE PHONE EMOJI BUTTON
 // ============================================================================
