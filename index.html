@@ -340,6 +340,22 @@ function initializeSpeechRecognition() {
         recognition.lang = 'en-US';
 
         recognition.onresult = function(event) {
+            console.log('🎤 SPEECH RECOGNITION RESULT:', event.results[0][0].transcript);
+    const transcript = event.results[0][0].transcript.trim();
+    hasReceivedValidResponse = true; // Mark that we got a response
+    
+    console.log('🔍 isFormAssistantActive:', isFormAssistantActive);
+    console.log('🔍 isVoiceChatMode:', isVoiceChatMode);
+    
+    if (isFormAssistantActive) {
+        console.log('📝 Calling handleFormFieldResponse with:', transcript);
+        handleFormFieldResponse(transcript);
+    } else if (isVoiceChatMode) {
+        handleVoiceChatInput(transcript);
+    } else {
+        console.log('❌ No active mode - speech ignored!');
+    }
+};
             const transcript = event.results[0][0].transcript.trim();
             hasReceivedValidResponse = true; // Mark that we got a response
             
@@ -738,6 +754,12 @@ function getQuestionForField(field) {
 
 
 function handleFormFieldResponse(response) {
+    // Prevent duplicate responses
+    if (hasReceivedValidResponse) {
+        console.log('⚠️ Duplicate response ignored:', response);
+        return;
+    }
+    
     const currentField = formFieldsArray[currentFormFieldIndex];
     currentField && highlightCurrentField(currentField);
     if (!currentField) return;
