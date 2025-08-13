@@ -361,21 +361,35 @@ function initializeSpeechRecognition() {
 };
 
         recognition.onerror = function(event) {
-            console.log('Speech recognition error:', event.error);
-            
-            // DON'T stop listening for these recoverable errors:
-            if (event.error === 'not-allowed' || 
-                event.error === 'audio-capture' || 
-                event.error === 'network') {
-                console.log('Recoverable error - keeping microphone alive');
-                return; // Don't stop listening
-            }
-            
-            // Only stop for fatal errors
-            if (event.error === 'aborted' || event.error === 'language-not-supported') {
-                stopListening();
-            }
-        };
+    console.log('Speech recognition error:', event.error);
+    
+    if (event.error === 'no-speech') {
+        // 🔥 DON'T mark field as processed on no-speech errors
+        console.log('🔄 No speech detected, will retry...');
+        return; // Don't block future responses
+    }
+    
+    // Handle other errors normally
+    if (event.error === 'aborted' || event.error === 'language-not-supported') {
+        stopListening();
+    }
+};
+
+recognition.onend = function() {
+    console.log('[DEBUG] Recognition ended');
+    isListening = false;
+    
+    if (isFormAssistantActive && !hasReceivedValidResponse) {
+        console.log('[DEBUG] No response received, asking user to try again...');
+        // 🔥 CLEAR the processed flag so user can try again
+        processedResponses.delete(currentFormFieldIndex);
+        
+        setTimeout(() => {
+            speakMessage("I didn't catch that. Could you please repeat your answer?");
+            setTimeout(() => startFormFieldListening(), 3000);
+        }, 1500);
+    }
+};
 
         recognition.onend = function() {
     console.log('[DEBUG] Recognition ended');
@@ -746,7 +760,10 @@ function getQuestionForField(field) {
     return `Please tell me your ${fieldId || fieldName || 'information'}.`;
 }
 
-    function handleFormFieldResponse(response) {
+   // Create a Set to track which fields have been SUCCESSFULLY filled
+let processedResponses = new Set();
+
+function handleFormFieldResponse(response) {
     // 🔥 STOP recognition immediately to prevent duplicates
     if (recognition && isListening) {
         try {
@@ -760,33 +777,29 @@ function getQuestionForField(field) {
     hasReceivedValidResponse = true;
     
     const currentField = formFieldsArray[currentFormFieldIndex];
-    currentField && highlightCurrentField(currentField);
     if (!currentField) return;
     
-    // 🔥 ADD THIS: Stop current recognition and reset flags
-    if (recognition && isListening) {
-        try {
-            recognition.stop();
-        } catch (error) {
-            console.log('Error stopping recognition:', error);
-        }
+    // 🔥 FIXED: Only block if field already has a value AND was successfully processed
+    if (processedResponses.has(currentFormFieldIndex) && currentField.value.trim() !== '') {
+        console.log('⚠️ Field already successfully filled, ignoring:', response);
+        return;
     }
-    isListening = false;
-    hasReceivedValidResponse = true; // Mark that we got THIS response
     
-    console.log('Filling field:', currentField.id, 'with:', response); // Debug log
+    console.log('✅ Processing response for field:', currentField.id, 'with:', response);
     
     // Clean up the response
     const cleanResponse = response.trim();
     
     // Special handling for date fields
     if (currentField.type === 'date') {
-        // Try to convert spoken date to YYYY-MM-DD format
         const dateValue = convertSpokenDateToFormat(cleanResponse);
         currentField.value = dateValue;
     } else {
         currentField.value = cleanResponse;
     }
+    
+    // 🔥 MARK AS SUCCESSFULLY PROCESSED ONLY AFTER FILLING
+    processedResponses.add(currentFormFieldIndex);
     
     // Force the form to recognize the change
     currentField.focus();
@@ -795,21 +808,16 @@ function getQuestionForField(field) {
     currentField.dispatchEvent(new Event('blur', { bubbles: true }));
     
     // Visual confirmation
-    currentField.style.backgroundColor = '#e8f5e9'; // Light green background
-    
-    setTimeout(() => {
-        currentField.style.backgroundColor = ''; // Reset background
-    }, 2000);
+    currentField.style.backgroundColor = '#e8f5e9';
+    setTimeout(() => currentField.style.backgroundColor = '', 2000);
     
     // Confirm the entry
     speakMessage(`Perfect! I've recorded: ${cleanResponse}`);
     
-    // Move to next field after a delay
+    // Move to next field
     setTimeout(() => {
         currentFormFieldIndex++;
-        setTimeout(() => {
-            askForNextFormField(); // This already calls startFormFieldListening() internally
-        }, 1000);
+        setTimeout(() => askForNextFormField(), 1000);
     }, 1500);
 }
 
