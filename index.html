@@ -549,11 +549,12 @@ function startVoiceFormProcess(fields) {
     
     createFormAssistIndicator();
     
-    // Start with greeting and first question - NO setTimeout needed!
-    speakMessageWithCallback("Hi! I'm here to help you fill out this form. I'll ask you for each piece of information.", function() {
-        // This callback runs immediately when introduction finishes
-        console.log('Introduction completed, moving to first question...');
-        askForNextFormField();
+    // 🔥 COMBINED INTRODUCTION + FIRST QUESTION
+    speakMessageWithCallback("Hi! I'm here to help you fill out this form. Let's start with your first name - what's your name?", function() {
+        console.log('Combined intro + question completed, starting to listen immediately...');
+        // Highlight the name field
+        highlightCurrentField(formFieldsArray[0]);
+        startFormFieldListening();
     });
 }
 
@@ -677,7 +678,6 @@ function askForNextFormField() {
     const question = getQuestionForField(currentField);
     console.log('18. Question:', question);
     
-    // 🔥 USE CALLBACK INSTEAD OF setTimeout - NO GAP!
     speakMessageWithCallback(question, function() {
         console.log('19. Question completed, starting to listen immediately...');
         startFormFieldListening();
