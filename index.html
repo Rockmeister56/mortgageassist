@@ -346,34 +346,21 @@ function initializeSpeechRecognition() {
 let lastTranscript = '';
 
 recognition.onresult = function(event) {
+    console.log('🎤 SPEECH RECOGNITION RESULT:', event.results[0][0].transcript);
     const transcript = event.results[0][0].transcript.trim();
-    console.log('🎤 SPEECH RECOGNITION RESULT:', transcript);
+    hasReceivedValidResponse = true;
     
-    // Clear any existing timeout
-    if (speechTimeout) {
-        clearTimeout(speechTimeout);
+    console.log('🔍 isFormAssistantActive:', isFormAssistantActive);
+    console.log('🔍 isVoiceChatMode:', isVoiceChatMode);
+    
+    if (isFormAssistantActive) {
+        console.log('📝 Calling handleFormFieldResponse with:', transcript);
+        handleFormFieldResponse(transcript);
+    } else if (isVoiceChatMode) {
+        handleVoiceChatInput(transcript);
+    } else {
+        console.log('❌ No active mode - speech ignored!');
     }
-    
-    // Store the latest transcript
-    lastTranscript = transcript;
-    
-    // 🔥 WAIT FOR PAUSE: Only process after user stops speaking for 2 seconds
-    speechTimeout = setTimeout(() => {
-        console.log('🔄 Speech pause detected, processing final result:', lastTranscript);
-        hasReceivedValidResponse = true;
-        
-        console.log('🔍 isFormAssistantActive:', isFormAssistantActive);
-        console.log('🔍 isVoiceChatMode:', isVoiceChatMode);
-        
-        if (isFormAssistantActive) {
-            console.log('📝 Calling handleFormFieldResponse with:', lastTranscript);
-            handleFormFieldResponse(lastTranscript);
-        } else if (isVoiceChatMode) {
-            handleVoiceChatInput(lastTranscript);
-        } else {
-            console.log('❌ No active mode - speech ignored!');
-        }
-    }, 2000); // Wait 2 seconds after user stops speaking
 };
 
 recognition.onend = function() {
