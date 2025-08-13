@@ -345,22 +345,6 @@ function initializeSpeechRecognition() {
      recognition.onresult = function(event) {
     console.log('🎤 SPEECH RECOGNITION RESULT:', event.results[0][0].transcript);
     const transcript = event.results[0][0].transcript.trim();
-    
-    // 🔥 FOR PHONE FIELD: Give extra time to complete the number
-    const currentField = formFieldsArray[currentFormFieldIndex];
-    if (currentField && (currentField.id === 'phone' || currentField.name === 'phone')) {
-        console.log('📞 Phone field detected, giving extra time...');
-        setTimeout(() => {
-            hasReceivedValidResponse = true;
-            console.log('📞 Processing phone number:', transcript);
-            if (isFormAssistantActive) {
-                handleFormFieldResponse(transcript);
-            }
-        }, 1000); // 1 second buffer for phone
-        return;
-    }
-    
-    // For other fields, process immediately
     hasReceivedValidResponse = true;
     
     console.log('🔍 isFormAssistantActive:', isFormAssistantActive);
@@ -378,12 +362,10 @@ function initializeSpeechRecognition() {
 
 recognition.onerror = function(event) {
     console.log('Speech recognition error:', event.error);
-    
     if (event.error === 'no-speech') {
         console.log('🔄 No speech detected, will retry...');
         return;
     }
-    
     if (event.error === 'aborted' || event.error === 'language-not-supported') {
         stopListening();
     }
@@ -392,11 +374,9 @@ recognition.onerror = function(event) {
 recognition.onend = function() {
     console.log('[DEBUG] Recognition ended');
     isListening = false;
-    
     if (isFormAssistantActive && !hasReceivedValidResponse) {
         console.log('[DEBUG] No response received, asking user to try again...');
         processedResponses.delete(currentFormFieldIndex);
-        
         setTimeout(() => {
             speakMessage("I didn't catch that. Could you please repeat your answer?");
             setTimeout(() => startFormFieldListening(), 3000);
