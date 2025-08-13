@@ -356,15 +356,6 @@ function initializeSpeechRecognition() {
         console.log('❌ No active mode - speech ignored!');
     }
 };
-            const transcript = event.results[0][0].transcript.trim();
-            hasReceivedValidResponse = true; // Mark that we got a response
-            
-            if (isFormAssistantActive) {
-                handleFormFieldResponse(transcript);
-            } else if (isVoiceChatMode) {
-                handleVoiceChatInput(transcript);
-            }
-        };
 
         recognition.onerror = function(event) {
             console.log('Speech recognition error:', event.error);
