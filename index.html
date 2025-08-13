@@ -759,7 +759,64 @@ function getQuestionForField(field) {
    // Create a Set to track which fields have been SUCCESSFULLY filled
 let processedResponses = new Set();
 
-handleFormFieldResponse
+function handleFormFieldResponse(response) {
+    // 🔥 STOP recognition immediately to prevent duplicates
+    if (recognition && isListening) {
+        try {
+            recognition.stop();
+        } catch (error) {
+            console.log('Error stopping recognition:', error);
+        }
+        isListening = false;
+    }
+    
+    hasReceivedValidResponse = true;
+    
+    const currentField = formFieldsArray[currentFormFieldIndex];
+    if (!currentField) return;
+    
+    // 🔥 ONLY PROCESS ONCE - Check if already processed
+    if (processedResponses.has(currentFormFieldIndex)) {
+        console.log('⚠️ Field already processed, ignoring:', response);
+        return;
+    }
+    
+    console.log('✅ Processing response for field:', currentField.id, 'with:', response);
+    
+    // Clean up the response
+    const cleanResponse = response.trim();
+    
+    // Special handling for date fields
+    if (currentField.type === 'date') {
+        const dateValue = convertSpokenDateToFormat(cleanResponse);
+        currentField.value = dateValue;
+    } else {
+        currentField.value = cleanResponse;
+    }
+    
+    // 🔥 MARK AS PROCESSED IMMEDIATELY
+    processedResponses.add(currentFormFieldIndex);
+    
+    // Force the form to recognize the change
+    currentField.focus();
+    currentField.dispatchEvent(new Event('input', { bubbles: true }));
+    currentField.dispatchEvent(new Event('change', { bubbles: true }));
+    currentField.dispatchEvent(new Event('blur', { bubbles: true }));
+    
+    // Visual confirmation
+    currentField.style.backgroundColor = '#e8f5e9';
+    setTimeout(() => currentField.style.backgroundColor = '', 2000);
+    
+    // 🔥 SINGLE TIMING SYSTEM - Use callback for everything
+    speakMessageWithCallback(`Perfect! I've recorded: ${cleanResponse}`, function() {
+        console.log('✅ Confirmation completed, moving to next field...');
+        currentFormFieldIndex++;
+        // Small delay to prevent overlap
+        setTimeout(() => {
+            askForNextFormField();
+        }, 500);
+    });
+}
 
 // Helper function for date conversion
 function convertSpokenDateToFormat(spokenDate) {
