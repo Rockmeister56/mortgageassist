@@ -667,29 +667,10 @@ function askForNextFormField() {
     console.log('14. Total fields:', formFieldsArray.length);
     
     if (currentFormFieldIndex >= formFieldsArray.length) {
-    console.log('15. All fields completed!');
-    
-    // 🔥 FIND THE ACTUAL SPECIAL OFFER FUNCTION NAME
-    // Look for functions that show the special offer modal/popup
-    // It might be named something like:
-    // - showSpecialOffer()
-    // - displaySpecialOffer() 
-    // - showModal()
-    // - triggerSpecialOffer()
-    
-    // 🔥 TEMPORARY IMMEDIATE SOLUTION - Just speak the offer directly
-    speakMessageWithCallback("Thank you for allowing me to fill in the form. And for a special, we'd like to offer you a five hundred dollar discount certificate off your closing costs that you'll receive once you submit your quote request. Have a wonderful day!", function() {
-        console.log('🎉 Special offer completed!');
-        
-        // 🔥 ADD THE ACTUAL SPECIAL OFFER DISPLAY HERE
-        // You need to find what triggers the special offer popup
-        // It might be something like:
-        // document.getElementById('specialOffer').style.display = 'block';
-        // or showSpecialOfferModal();
-    });
-    
-    return;
-}
+        console.log('15. All fields completed!');
+        completeFormAssistant();
+        return;
+    }
     
     const currentField = formFieldsArray[currentFormFieldIndex];
     if (!currentField) {
