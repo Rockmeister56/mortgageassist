@@ -392,7 +392,7 @@ recognition.onend = function() {
     }
 };
 
-        recognition.onend = function() {
+     recognition.onend = function() {
     console.log('[DEBUG] Recognition ended');
     isListening = false;
     
@@ -408,6 +408,8 @@ recognition.onend = function() {
         }, 1000); // Reduced from 1500 to 1000
     }
 };
+    }
+}
 
 function initializeMicrophonePermission() {
     // Only request permission on first user interaction
