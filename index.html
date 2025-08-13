@@ -764,17 +764,23 @@ function handleFormFieldResponse(response) {
     if (!currentField) return;
     
     // 🔥 SPECIAL HANDLING FOR PHONE NUMBERS - Don't process immediately
-    if (currentField.id === 'phone' || currentField.name === 'phone') {
-        console.log('📞 Phone field detected, waiting for complete number...');
-        
-        // Only accept phone responses that look complete (7+ digits or formatted)
-        const phonePattern = /\d{7,}|\d{3}[-.\s]?\d{3}[-.\s]?\d{4}/;
-        if (!phonePattern.test(response.replace(/\s+/g, ''))) {
-            console.log('📞 Partial phone number detected, continuing to listen...');
-            return; // Don't process yet - keep listening
-        }
-        console.log('📞 Complete phone number detected:', response);
+   if (currentField.id === 'phone' || currentField.name === 'phone') {
+    console.log('📞 Phone field detected, checking number...');
+    
+    // Only process if we haven't already processed this field
+    if (processedResponses.has(currentFormFieldIndex)) {
+        console.log('📞 Phone already processed, ignoring:', response);
+        return;
     }
+    
+    // Accept any response with 7+ digits for phone
+    const digitCount = response.replace(/\D/g, '').length;
+    if (digitCount < 7) {
+        console.log('📞 Need more digits, continuing to listen...', digitCount);
+        return;
+    }
+    console.log('📞 Complete phone number accepted:', response);
+}
     
     // 🔥 STOP recognition immediately to prevent duplicates
     if (recognition && isListening) {
@@ -821,7 +827,13 @@ function handleFormFieldResponse(response) {
     setTimeout(() => currentField.style.backgroundColor = '', 2000);
     
     // Confirm the entry
-    speakMessage(`Perfect! I've recorded: ${cleanResponse}`);
+    speakMessageWithCallback(`Perfect! I've recorded: ${cleanResponse}`, function() {
+    // Wait for confirmation to finish before moving to next field
+    setTimeout(() => {
+        currentFormFieldIndex++;
+        setTimeout(() => askForNextFormField(), 500);
+    }, 500);
+});
     
     // Move to next field
     setTimeout(() => {
