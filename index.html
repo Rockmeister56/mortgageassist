@@ -395,18 +395,7 @@ recognition.onend = function() {
         recognition.onend = function() {
     console.log('[DEBUG] Recognition ended');
     isListening = false;
-    updateListenButton();
-    
-    // Give more time before assuming no response
-    if (isFormAssistantActive && !hasReceivedValidResponse) {
-        console.log('[DEBUG] No response received, asking user to try again...');
-        setTimeout(() => {
-            speakMessage("I didn't catch that. Could you please repeat your answer?");
-            setTimeout(() => {
-                startFormFieldListening();
-            }, 3000);  // ← Increased from 2000 to 3000
-        }, 1500);  // ← Increased from 1000 to 1500
-    }
+    // Let the speech timeout system handle retries instead
 };
     }
 }
@@ -690,11 +679,11 @@ function askForNextFormField() {
     const question = getQuestionForField(currentField);
     console.log('18. Question:', question);
     
-    // 🔥 START LISTENING IMMEDIATELY while speaking the question
-startFormFieldListening();
-
-// Speak the question (recognition is already active)
-speakMessage(question);
+    // 🔥 USE CALLBACK INSTEAD OF setTimeout - NO GAP!
+    speakMessageWithCallback(question, function() {
+        console.log('19. Question completed, starting to listen immediately...');
+        startFormFieldListening();
+    });
 }
 
 function startFormFieldListening() {
@@ -810,13 +799,10 @@ function handleFormFieldResponse(response) {
     
     // 🔥 SINGLE TIMING SYSTEM - Use callback for everything
     speakMessageWithCallback(`Perfect! I've recorded: ${cleanResponse}`, function() {
-        console.log('✅ Confirmation completed, moving to next field...');
-        currentFormFieldIndex++;
-        // Small delay to prevent overlap
-        setTimeout(() => {
-            askForNextFormField();
-        }, 500);
-    });
+    console.log('✅ Confirmation completed, moving to next field...');
+    currentFormFieldIndex++;
+    askForNextFormField(); // No setTimeout needed!
+});
 }
 
 // Helper function for date conversion
@@ -865,7 +851,7 @@ function completeFormAssistant() {
         setTimeout(() => {
             const offer = document.getElementById('specialOffer');
             if (offer) offer.remove();
-        }, 8000);
+        }, 2000);
         
     }, 3000); // Show visual after speaking
     
@@ -1455,7 +1441,7 @@ function askQuickQuestion(question) {
         const response = getSmartAIResponse(question);
         addAIMessage(response);
         speakResponse(response);
-    }, 500);
+    }, 2000);
 }
 
 // Voice Response
