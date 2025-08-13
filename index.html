@@ -342,10 +342,28 @@ function initializeSpeechRecognition() {
 
         recognition.serviceURI = 'wss://api.speechmatics.com/v1/';
 
-        recognition.onresult = function(event) {
-            console.log('🎤 SPEECH RECOGNITION RESULT:', event.results[0][0].transcript);
+     recognition.onresult = function(event) {
+    console.log('🎤 SPEECH RECOGNITION RESULT:', event.results[0][0].transcript);
     const transcript = event.results[0][0].transcript.trim();
-    hasReceivedValidResponse = true; // Mark that we got a response
+    
+    // 🔥 FOR PHONE FIELD: Give extra time to complete the number
+    const currentField = formFieldsArray[currentFormFieldIndex];
+    if (currentField && (currentField.id === 'phone' || currentField.name === 'phone')) {
+        console.log('📞 Phone field detected, giving extra time for completion...');
+        // Set a flag and wait a bit more for phone numbers
+        setTimeout(() => {
+            hasReceivedValidResponse = true;
+            console.log('📞 Phone timeout complete, processing:', transcript);
+            if (isFormAssistantActive) {
+                console.log('📝 Calling handleFormFieldResponse with:', transcript);
+                handleFormFieldResponse(transcript);
+            }
+        }, 800); // Give 800ms more for phone completion
+        return;
+    }
+    
+    // For other fields, process immediately
+    hasReceivedValidResponse = true;
     
     console.log('🔍 isFormAssistantActive:', isFormAssistantActive);
     console.log('🔍 isVoiceChatMode:', isVoiceChatMode);
@@ -360,7 +378,7 @@ function initializeSpeechRecognition() {
     }
 };
 
-        recognition.onerror = function(event) {
+recognition.onerror = function(event) {
     console.log('Speech recognition error:', event.error);
     
     if (event.error === 'no-speech') {
@@ -390,25 +408,6 @@ recognition.onend = function() {
         }, 1500);
     }
 };
-
-        recognition.onend = function() {
-    console.log('[DEBUG] Recognition ended');
-    isListening = false;
-    updateListenButton();
-    
-    // Give more time before assuming no response
-    if (isFormAssistantActive && !hasReceivedValidResponse) {
-        console.log('[DEBUG] No response received, asking user to try again...');
-        setTimeout(() => {
-            speakMessage("I didn't catch that. Could you please repeat your answer?");
-            setTimeout(() => {
-                startFormFieldListening();
-            }, 3000);  // ← Increased from 2000 to 3000
-        }, 1500);  // ← Increased from 1000 to 1500
-    }
-};
-    }
-}
 
 function initializeMicrophonePermission() {
     // Only request permission on first user interaction
@@ -731,7 +730,6 @@ function getQuestionForField(field) {
     
     console.log('Getting question for field:', fieldId, fieldName);
     
-    // Match your exact field IDs
     if (fieldId === 'name' || fieldName === 'name') {
         return "May I get your name please?";
     }
@@ -741,7 +739,7 @@ function getQuestionForField(field) {
     }
     
     if (fieldId === 'phone' || fieldName === 'phone') {
-        return "What's your phone number?";
+        return "What's your phone number? Please say all the digits clearly."; // ← UPDATED
     }
     
     if (fieldId === 'besttime' || fieldName === 'bestTime') {
@@ -760,6 +758,22 @@ function getQuestionForField(field) {
 let processedResponses = new Set();
 
 function handleFormFieldResponse(response) {
+    const currentField = formFieldsArray[currentFormFieldIndex];
+    if (!currentField) return;
+    
+    // 🔥 SPECIAL HANDLING FOR PHONE NUMBERS - Don't process immediately
+    if (currentField.id === 'phone' || currentField.name === 'phone') {
+        console.log('📞 Phone field detected, waiting for complete number...');
+        
+        // Only accept phone responses that look complete (7+ digits or formatted)
+        const phonePattern = /\d{7,}|\d{3}[-.\s]?\d{3}[-.\s]?\d{4}/;
+        if (!phonePattern.test(response.replace(/\s+/g, ''))) {
+            console.log('📞 Partial phone number detected, continuing to listen...');
+            return; // Don't process yet - keep listening
+        }
+        console.log('📞 Complete phone number detected:', response);
+    }
+    
     // 🔥 STOP recognition immediately to prevent duplicates
     if (recognition && isListening) {
         try {
@@ -771,9 +785,6 @@ function handleFormFieldResponse(response) {
     }
     
     hasReceivedValidResponse = true;
-    
-    const currentField = formFieldsArray[currentFormFieldIndex];
-    if (!currentField) return;
     
     // 🔥 FIXED: Only block if field already has a value AND was successfully processed
     if (processedResponses.has(currentFormFieldIndex) && currentField.value.trim() !== '') {
