@@ -664,7 +664,7 @@ function highlightCurrentField(field) {
 }
 
 function askForNextFormField() {
-    hasReceivedValidResponse = false; // Reset for new field
+    hasReceivedValidResponse = false;
     
     console.log('13. Inside askForNextFormField, currentIndex:', currentFormFieldIndex);
     console.log('14. Total fields:', formFieldsArray.length);
@@ -684,20 +684,16 @@ function askForNextFormField() {
     }
     
     console.log('17. Processing field:', currentField.id);
-    
-    // Highlight the current field
     highlightCurrentField(currentField);
     
-    // Ask for the appropriate information based on field type
     const question = getQuestionForField(currentField);
     console.log('18. Question:', question);
-    speakMessage(question); // Back to regular speakMessage
     
-    // Give enough time for ElevenLabs to finish + small buffer
-    setTimeout(() => {
-        console.log('19. Starting to listen for response...');
+    // 🔥 USE CALLBACK INSTEAD OF setTimeout - NO GAP!
+    speakMessageWithCallback(question, function() {
+        console.log('19. Question completed, starting to listen immediately...');
         startFormFieldListening();
-    }, 4000); // 4 seconds should be safe for most questions
+    });
 }
 
 function startFormFieldListening() {
