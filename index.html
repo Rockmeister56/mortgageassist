@@ -677,12 +677,13 @@ function askForNextFormField() {
     // Ask for the appropriate information based on field type
     const question = getQuestionForField(currentField);
     console.log('18. Question:', question);
+    speakMessage(question); // Back to regular speakMessage
     
-    // 🔥 USE DYNAMIC TIMING FOR ALL QUESTIONS
-    speakMessageWithCallback(question, function() {
-        console.log('19. Question completed, starting to listen immediately...');
+    // Give enough time for ElevenLabs to finish + small buffer
+    setTimeout(() => {
+        console.log('19. Starting to listen for response...');
         startFormFieldListening();
-    });
+    }, 4000); // 4 seconds should be safe for most questions
 }
 
 function startFormFieldListening() {
@@ -756,11 +757,6 @@ function getQuestionForField(field) {
         isListening = false;
     }
     
-    // 🔥 Prevent processing if we already handled a response for this field
-    if (hasReceivedValidResponse) {
-        console.log('⚠️ Response already processed for this field, ignoring:', response);
-        return;
-    }
     hasReceivedValidResponse = true;
     
     const currentField = formFieldsArray[currentFormFieldIndex];
