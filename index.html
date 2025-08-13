@@ -542,7 +542,7 @@ function startVoiceFormProcess(fields) {
     
     setTimeout(() => {
         askForNextFormField();
-    }, 8000);  // ← CHANGE FROM 3000 TO 8000 (8 seconds)
+    }, 12000);  // ← CHANGE FROM 3000 TO 8000 (8 seconds)
 }
 
 function createFormAssistIndicator() {
@@ -613,7 +613,7 @@ function askForNextFormField() {
     setTimeout(() => {
         console.log('19. Starting to listen for response...');
         startFormFieldListening();
-    }, 2000);
+    }, 5000);
 }
 
 function startFormFieldListening() {
@@ -879,7 +879,7 @@ async function speakMessage(message) {
     } catch (error) {
         console.log('ElevenLabs failed, using fallback:', error);
         // ONLY fallback if ElevenLabs completely fails
-        fallbackSpeakMessage(message);
+        console.log('ElevenLabs failed - no fallback used');
     }
 }
 
