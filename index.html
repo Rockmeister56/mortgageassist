@@ -683,13 +683,12 @@ function askForNextFormField() {
     // Ask for the appropriate information based on field type
     const question = getQuestionForField(currentField);
     console.log('18. Question:', question);
-    speakMessage(question);
     
-    // Start listening for the response
-    setTimeout(() => {
-        console.log('19. Starting to listen for response...');
+    // 🔥 USE DYNAMIC TIMING FOR ALL QUESTIONS
+    speakMessageWithCallback(question, function() {
+        console.log('19. Question completed, starting to listen immediately...');
         startFormFieldListening();
-    }, 1000);
+    });
 }
 
 function startFormFieldListening() {
@@ -759,7 +758,7 @@ function handleFormFieldResponse(response) {
         console.log('⚠️ Duplicate response ignored:', response);
         return;
     }
-    
+
     const currentField = formFieldsArray[currentFormFieldIndex];
     currentField && highlightCurrentField(currentField);
     if (!currentField) return;
