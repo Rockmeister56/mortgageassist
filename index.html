@@ -342,10 +342,10 @@ function initializeSpeechRecognition() {
 
         recognition.serviceURI = 'wss://api.speechmatics.com/v1/';
 
-     recognition.onresult = function(event) {
-    console.log('🎤 SPEECH RECOGNITION RESULT:', event.results[0][0].transcript);
+        recognition.onresult = function(event) {
+            console.log('🎤 SPEECH RECOGNITION RESULT:', event.results[0][0].transcript);
     const transcript = event.results[0][0].transcript.trim();
-    hasReceivedValidResponse = true;
+    hasReceivedValidResponse = true; // Mark that we got a response
     
     console.log('🔍 isFormAssistantActive:', isFormAssistantActive);
     console.log('🔍 isVoiceChatMode:', isVoiceChatMode);
@@ -360,12 +360,16 @@ function initializeSpeechRecognition() {
     }
 };
 
-recognition.onerror = function(event) {
+        recognition.onerror = function(event) {
     console.log('Speech recognition error:', event.error);
+    
     if (event.error === 'no-speech') {
+        // 🔥 DON'T mark field as processed on no-speech errors
         console.log('🔄 No speech detected, will retry...');
-        return;
+        return; // Don't block future responses
     }
+    
+    // Handle other errors normally
     if (event.error === 'aborted' || event.error === 'language-not-supported') {
         stopListening();
     }
@@ -374,15 +378,37 @@ recognition.onerror = function(event) {
 recognition.onend = function() {
     console.log('[DEBUG] Recognition ended');
     isListening = false;
+    
     if (isFormAssistantActive && !hasReceivedValidResponse) {
         console.log('[DEBUG] No response received, asking user to try again...');
+        // 🔥 CLEAR the processed flag so user can try again
         processedResponses.delete(currentFormFieldIndex);
+        
         setTimeout(() => {
             speakMessage("I didn't catch that. Could you please repeat your answer?");
             setTimeout(() => startFormFieldListening(), 3000);
         }, 1500);
     }
 };
+
+        recognition.onend = function() {
+    console.log('[DEBUG] Recognition ended');
+    isListening = false;
+    updateListenButton();
+    
+    // Give more time before assuming no response
+    if (isFormAssistantActive && !hasReceivedValidResponse) {
+        console.log('[DEBUG] No response received, asking user to try again...');
+        setTimeout(() => {
+            speakMessage("I didn't catch that. Could you please repeat your answer?");
+            setTimeout(() => {
+                startFormFieldListening();
+            }, 3000);  // ← Increased from 2000 to 3000
+        }, 1500);  // ← Increased from 1000 to 1500
+    }
+};
+    }
+}
 
 function initializeMicrophonePermission() {
     // Only request permission on first user interaction
@@ -705,6 +731,7 @@ function getQuestionForField(field) {
     
     console.log('Getting question for field:', fieldId, fieldName);
     
+    // Match your exact field IDs
     if (fieldId === 'name' || fieldName === 'name') {
         return "May I get your name please?";
     }
@@ -714,7 +741,7 @@ function getQuestionForField(field) {
     }
     
     if (fieldId === 'phone' || fieldName === 'phone') {
-        return "What's your phone number? Please say all the digits clearly."; // ← UPDATED
+        return "What's your phone number?";
     }
     
     if (fieldId === 'besttime' || fieldName === 'bestTime') {
