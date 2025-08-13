@@ -690,11 +690,11 @@ function askForNextFormField() {
     const question = getQuestionForField(currentField);
     console.log('18. Question:', question);
     
-    // 🔥 USE CALLBACK INSTEAD OF setTimeout - NO GAP!
-    speakMessageWithCallback(question, function() {
-        console.log('19. Question completed, starting to listen immediately...');
-        startFormFieldListening();
-    });
+    // 🔥 START LISTENING IMMEDIATELY while speaking the question
+startFormFieldListening();
+
+// Speak the question (recognition is already active)
+speakMessage(question);
 }
 
 function startFormFieldListening() {
