@@ -667,10 +667,20 @@ function askForNextFormField() {
     console.log('14. Total fields:', formFieldsArray.length);
     
     if (currentFormFieldIndex >= formFieldsArray.length) {
-        console.log('15. All fields completed!');
-        completeFormAssistant();
-        return;
-    }
+    console.log('15. All fields completed!');
+    
+    // 🔥 IMMEDIATE SPECIAL OFFER - No speech delay
+    completeArcadesistant(); // Call the special offer function directly
+    
+    // Optional: Add a quick completion message AFTER showing the offer
+    setTimeout(() => {
+        speakMessageWithCallback("Thank you! Your special discount is now available above.", function() {
+            console.log('🎉 Completion message delivered!');
+        });
+    }, 500); // Brief delay to let the offer display first
+    
+    return;
+}
     
     const currentField = formFieldsArray[currentFormFieldIndex];
     if (!currentField) {
@@ -786,7 +796,7 @@ function handleFormFieldResponse(response) {
             processFieldResponseNow(lastPhoneResponse);
             phoneTimeout = null;
             lastPhoneResponse = '';
-        }, 2000); // 🔥 REDUCED FROM 3000 TO 2000 (2 seconds)
+        }, 1000); // 🔥 REDUCED FROM 3000 TO 2000 (2 seconds)
         return;
     }
     
