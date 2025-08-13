@@ -744,12 +744,6 @@ function getQuestionForField(field) {
 
 
 function handleFormFieldResponse(response) {
-    // Prevent duplicate responses
-    if (hasReceivedValidResponse) {
-        console.log('⚠️ Duplicate response ignored:', response);
-        return;
-    }
-
     const currentField = formFieldsArray[currentFormFieldIndex];
     currentField && highlightCurrentField(currentField);
     if (!currentField) return;
