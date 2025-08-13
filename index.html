@@ -335,9 +335,12 @@ let hasReceivedValidResponse = false;
 function initializeSpeechRecognition() {
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
         recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-        recognition.continuous = true;
-        recognition.interimResults = false;
+        recognition.continuous = false;        // ← Change from true to false
+        recognition.interimResults = true;     // ← Change from false to true
+        recognition.maxAlternatives = 3;       // ← ADD this line
         recognition.lang = 'en-US';
+
+        recognition.serviceURI = 'wss://api.speechmatics.com/v1/';
 
         recognition.onresult = function(event) {
             console.log('🎤 SPEECH RECOGNITION RESULT:', event.results[0][0].transcript);
@@ -375,21 +378,21 @@ function initializeSpeechRecognition() {
         };
 
         recognition.onend = function() {
-            console.log('[DEBUG] Recognition ended');
-            isListening = false;
-            updateListenButton();
-            
-            // ONLY restart if we're in form assistant mode AND we didn't get a valid response
-            if (isFormAssistantActive && !hasReceivedValidResponse) {
-                console.log('[DEBUG] No response received, asking user to try again...');
-                setTimeout(() => {
-                    speakMessage("I didn't catch that. Could you please repeat your answer?");
-                    setTimeout(() => {
-                        startFormFieldListening();
-                    }, 2000);
-                }, 1000);
-            }
-        };
+    console.log('[DEBUG] Recognition ended');
+    isListening = false;
+    updateListenButton();
+    
+    // Give more time before assuming no response
+    if (isFormAssistantActive && !hasReceivedValidResponse) {
+        console.log('[DEBUG] No response received, asking user to try again...');
+        setTimeout(() => {
+            speakMessage("I didn't catch that. Could you please repeat your answer?");
+            setTimeout(() => {
+                startFormFieldListening();
+            }, 3000);  // ← Increased from 2000 to 3000
+        }, 1500);  // ← Increased from 1000 to 1500
+    }
+};
     }
 }
 
