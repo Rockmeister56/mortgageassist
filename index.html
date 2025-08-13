@@ -375,57 +375,6 @@ function initializeSpeechRecognition() {
     }
 };
 
-recognition.onresult = function(event) {
-    console.log('🎤 SPEECH RECOGNITION RESULT:', event.results[0][0].transcript);
-    const transcript = event.results[0][0].transcript.trim();
-    
-    // 🔥 FOR PHONE FIELD: Give extra time to complete the number
-    const currentField = formFieldsArray[currentFormFieldIndex];
-    if (currentField && (currentField.id === 'phone' || currentField.name === 'phone')) {
-        console.log('📞 Phone field detected, giving extra time for completion...');
-        // Set a flag and wait a bit more for phone numbers
-        setTimeout(() => {
-            hasReceivedValidResponse = true;
-            console.log('📞 Phone timeout complete, processing:', transcript);
-            if (isFormAssistantActive) {
-                console.log('📝 Calling handleFormFieldResponse with:', transcript);
-                handleFormFieldResponse(transcript);
-            }
-        }, 800); // Give 800ms more for phone completion
-        return;
-    }
-    
-    // For other fields, process immediately
-    hasReceivedValidResponse = true;
-    
-    console.log('🔍 isFormAssistantActive:', isFormAssistantActive);
-    console.log('🔍 isVoiceChatMode:', isVoiceChatMode);
-    
-    if (isFormAssistantActive) {
-        console.log('📝 Calling handleFormFieldResponse with:', transcript);
-        handleFormFieldResponse(transcript);
-    } else if (isVoiceChatMode) {
-        handleVoiceChatInput(transcript);
-    } else {
-        console.log('❌ No active mode - speech ignored!');
-    }
-};
-
-recognition.onerror = function(event) {
-    console.log('Speech recognition error:', event.error);
-    
-    if (event.error === 'no-speech') {
-        // 🔥 DON'T mark field as processed on no-speech errors
-        console.log('🔄 No speech detected, will retry...');
-        return; // Don't block future responses
-    }
-    
-    // Handle other errors normally
-    if (event.error === 'aborted' || event.error === 'language-not-supported') {
-        stopListening();
-    }
-};
-
 recognition.onend = function() {
     console.log('[DEBUG] Recognition ended');
     isListening = false;
@@ -441,6 +390,25 @@ recognition.onend = function() {
         }, 1500);
     }
 };
+
+        recognition.onend = function() {
+    console.log('[DEBUG] Recognition ended');
+    isListening = false;
+    updateListenButton();
+    
+    // Give more time before assuming no response
+    if (isFormAssistantActive && !hasReceivedValidResponse) {
+        console.log('[DEBUG] No response received, asking user to try again...');
+        setTimeout(() => {
+            speakMessage("I didn't catch that. Could you please repeat your answer?");
+            setTimeout(() => {
+                startFormFieldListening();
+            }, 3000);  // ← Increased from 2000 to 3000
+        }, 1500);  // ← Increased from 1000 to 1500
+    }
+};
+    }
+}
 
 function initializeMicrophonePermission() {
     // Only request permission on first user interaction
