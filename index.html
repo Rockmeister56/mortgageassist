@@ -762,9 +762,9 @@ function handleFormFieldResponse(response) {
     const currentField = formFieldsArray[currentFormFieldIndex];
     if (!currentField) return;
     
-    // 🔥 SPECIAL HANDLING: Only process LAST result for phone numbers and dates
-    if (currentField.id === 'phone' || currentField.id === 'preferredDate') {
-        console.log('📞📅 Phone/Date field detected - updating with latest result:', response);
+    // 🔥 SPECIAL HANDLING: Only process LAST result for phone numbers, dates, and times
+    if (currentField.id === 'phone' || currentField.id === 'preferredDate' || currentField.id === 'bestTime') {
+        console.log('📞📅⏰ Phone/Date/Time field detected - updating with latest result:', response);
         
         // Don't process if already processed
         if (processedResponses.has(currentFormFieldIndex)) {
@@ -782,15 +782,15 @@ function handleFormFieldResponse(response) {
         
         // Set new timeout - only the LAST one will actually run
         phoneTimeout = setTimeout(() => {
-            console.log('📞📅 Processing final phone/date response:', lastPhoneResponse);
+            console.log('📞📅⏰ Processing final phone/date/time response:', lastPhoneResponse);
             processFieldResponseNow(lastPhoneResponse);
             phoneTimeout = null;
             lastPhoneResponse = '';
-        }, 3000);
+        }, 2000); // 🔥 REDUCED FROM 3000 TO 2000 (2 seconds)
         return;
     }
     
-    // For other fields (name, business, time) - process immediately
+    // For other fields (name, business) - process immediately
     processFieldResponseNow(response);
 }
 
