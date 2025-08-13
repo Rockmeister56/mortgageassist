@@ -760,22 +760,6 @@ function getQuestionForField(field) {
 let processedResponses = new Set();
 
 function handleFormFieldResponse(response) {
-    const currentField = formFieldsArray[currentFormFieldIndex];
-    if (!currentField) return;
-    
-    // 🔥 SPECIAL HANDLING FOR PHONE NUMBERS - Don't process immediately
-    if (currentField.id === 'phone' || currentField.name === 'phone') {
-        console.log('📞 Phone field detected, waiting for complete number...');
-        
-        // Only accept phone responses that look complete (7+ digits or formatted)
-        const phonePattern = /\d{7,}|\d{3}[-.\s]?\d{3}[-.\s]?\d{4}/;
-        if (!phonePattern.test(response.replace(/\s+/g, ''))) {
-            console.log('📞 Partial phone number detected, continuing to listen...');
-            return; // Don't process yet - keep listening
-        }
-        console.log('📞 Complete phone number detected:', response);
-    }
-    
     // 🔥 STOP recognition immediately to prevent duplicates
     if (recognition && isListening) {
         try {
@@ -787,6 +771,9 @@ function handleFormFieldResponse(response) {
     }
     
     hasReceivedValidResponse = true;
+    
+    const currentField = formFieldsArray[currentFormFieldIndex];
+    if (!currentField) return;
     
     // 🔥 FIXED: Only block if field already has a value AND was successfully processed
     if (processedResponses.has(currentFormFieldIndex) && currentField.value.trim() !== '') {
