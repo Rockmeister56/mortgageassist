@@ -549,9 +549,9 @@ function startVoiceFormProcess(fields) {
     
     createFormAssistIndicator();
     
-    // 🔥 COMBINED INTRODUCTION + FIRST QUESTION
-    speakMessageWithCallback("Hi! I'm here to help you fill out this form. Let's start with your first name - what's your name?", function() {
-        console.log('Combined intro + question completed, starting to listen immediately...');
+    // 🔥 SINGLE SENTENCE - ONE VOICE CALL
+    speakMessageWithCallback("Hi! I'm here to help you fill out this form can we start with your name please.", function() {
+        console.log('Single intro+question completed, starting to listen immediately...');
         // Highlight the name field
         highlightCurrentField(formFieldsArray[0]);
         startFormFieldListening();
