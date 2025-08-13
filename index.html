@@ -755,13 +755,16 @@ function getQuestionForField(field) {
    // Create a Set to track which fields have been SUCCESSFULLY filled
 let processedResponses = new Set();
 
+let phoneTimeout = null; // Track the phone timeout
+let lastPhoneResponse = ''; // Store the latest phone response
+
 function handleFormFieldResponse(response) {
     const currentField = formFieldsArray[currentFormFieldIndex];
     if (!currentField) return;
     
-    // 🔥 SPECIAL HANDLING: Delay processing for phone numbers and dates
+    // 🔥 SPECIAL HANDLING: Only process LAST result for phone numbers and dates
     if (currentField.id === 'phone' || currentField.id === 'preferredDate') {
-        console.log('📞📅 Phone/Date field detected - waiting for complete input...');
+        console.log('📞📅 Phone/Date field detected - updating with latest result:', response);
         
         // Don't process if already processed
         if (processedResponses.has(currentFormFieldIndex)) {
@@ -769,11 +772,21 @@ function handleFormFieldResponse(response) {
             return;
         }
         
-        // Wait 4 seconds to collect complete phone number/date
-        setTimeout(() => {
-            console.log('📞📅 Processing delayed response:', response);
-            processFieldResponseNow(response);
-        }, 4000);
+        // Cancel any existing timeout
+        if (phoneTimeout) {
+            clearTimeout(phoneTimeout);
+        }
+        
+        // Store the latest response
+        lastPhoneResponse = response;
+        
+        // Set new timeout - only the LAST one will actually run
+        phoneTimeout = setTimeout(() => {
+            console.log('📞📅 Processing final phone/date response:', lastPhoneResponse);
+            processFieldResponseNow(lastPhoneResponse);
+            phoneTimeout = null;
+            lastPhoneResponse = '';
+        }, 3000);
         return;
     }
     
@@ -781,7 +794,7 @@ function handleFormFieldResponse(response) {
     processFieldResponseNow(response);
 }
 
-// Helper function to actually process the response
+// Keep your existing processFieldResponseNow function exactly as it is
 function processFieldResponseNow(response) {
     // 🔥 STOP recognition immediately to prevent duplicates
     if (recognition && isListening) {
