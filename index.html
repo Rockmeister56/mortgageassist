@@ -667,10 +667,15 @@ function askForNextFormField() {
     console.log('14. Total fields:', formFieldsArray.length);
     
     if (currentFormFieldIndex >= formFieldsArray.length) {
-        console.log('15. All fields completed!');
-        completeFormAssistant();
-        return;
-    }
+    console.log('15. All fields completed!');
+    
+    // 🔥 Use speakMessageWithCallback for immediate delivery
+    speakMessageWithCallback("Thank you for allowing me to fill in the form. And for a special, we'd like to offer you a five hundred dollar discount certificate off your closing costs that you'll receive once you submit your quote request. Have a wonderful day!", function() {
+        console.log('🎉 Special offer completed!');
+        // Add any additional completion logic here if needed
+    });
+    return;
+}
     
     const currentField = formFieldsArray[currentFormFieldIndex];
     if (!currentField) {
@@ -786,7 +791,7 @@ function handleFormFieldResponse(response) {
             processFieldResponseNow(lastPhoneResponse);
             phoneTimeout = null;
             lastPhoneResponse = '';
-        }, 2000); // 🔥 REDUCED FROM 3000 TO 2000 (2 seconds)
+        }, 1000); // 🔥 REDUCED FROM 3000 TO 2000 (2 seconds)
         return;
     }
     
