@@ -593,15 +593,4 @@ footer {
     .message-left, .message-right {
         max-width: 85%;
     }
-    /* Hide LemonSlice intro text */
-lemonslice-widget .lemonslice-chat-message:first-child,
-lemonslice-widget [class*="message"]:first-child,
-lemonslice-widget [class*="bubble"]:first-child {
-    display: none !important;
-    visibility: hidden !important;
-    height: 0 !important;
-    opacity: 0 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-}
 }

@@ -1,4 +1,4 @@
-// bridge.js - Clean minimal version
+// bridge.js - NO TEXT AT BOTTOM
 class MortgageBotemia {
     constructor() {
         this.widget = null;
@@ -6,7 +6,6 @@ class MortgageBotemia {
     }
 
     async init() {
-        // Find widget
         this.widget = document.querySelector('lemon-slice-widget');
         
         if (!this.widget) {
@@ -29,31 +28,31 @@ class MortgageBotemia {
             // Show status
             if (status) {
                 status.style.display = 'block';
-                status.textContent = 'Starting...';
+                status.textContent = 'Starting mortgage assistant...';
             }
             
             try {
                 // 1. Open widget
                 this.widget.setAttribute('controlled-widget-state', 'active');
                 
-                // 2. Unmute audio
+                // 2. Unmute audio FIRST
                 await this.widget.unmute?.();
                 
                 // 3. Activate mic
                 await this.widget.micOn?.();
                 
-                // 4. Send greeting
-                setTimeout(() => {
-                    this.widget.sendMessage?.("Hello! How can I help with your mortgage?");
-                }, 1000);
+                // 4. DO NOT send message - let Botemia's default audio play
+                // (Her default greeting will play automatically when mic activates)
                 
-                // Update status
+                // 5. Update status
                 if (status) {
-                    status.textContent = '✅ Ready to help!';
+                    status.textContent = '✅ Ready! Speak your question.';
                     setTimeout(() => {
                         status.style.display = 'none';
                     }, 2000);
                 }
+                
+                console.log('✅ Botemia activated - audio only, no text');
                 
             } catch (error) {
                 console.log('Error:', error);
