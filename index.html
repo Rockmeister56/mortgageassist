@@ -25,13 +25,27 @@
     </header>
 
     <section class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h1>Need Loan Assistance?</h1>
-                <a href="#chatbot" class="btn-primary">Get Personalized/Smart AI Assistance here →</a>
+    <div class="container">
+        <div class="hero-content">
+            <h1>Need Loan Assistance?</h1>
+            
+            <!-- This button expands avatar + activates mic -->
+            <button class="btn-primary" id="hero-botemia-btn">
+                🎤 Talk to Botemia Now
+            </button>
+            
+            <!-- Optional simple status -->
+            <div id="botemia-status" style="
+                margin-top: 10px;
+                font-size: 13px;
+                color: rgba(255,255,255,0.7);
+                display: none;
+            ">
+                Botemia is connecting...
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
     <!-- Testimonials Section -->
     <section id="testimonials">
