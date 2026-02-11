@@ -31,7 +31,7 @@
             
             <!-- This button opens avatar with audio & mic -->
             <button class="btn-primary" id="hero-botemia-btn">
-                 <h3>🏠 Meet our "Smart & Friendly" Mortgage Assistant >> </h3>
+                 <h3> 🏠 Meet our "Smart & Friendly" Mortgage Assistant >> </h3>
             </button>
             
             <!-- Simple status indicator -->
@@ -45,82 +45,112 @@
     </div>
 </section>
 
-    <!-- Testimonials Section -->
-    <section id="testimonials">
-        <h2>Client Testimonials</h2>
-        <!-- Widget appears here -->
-        <lemon-slice-widget agent-id="agent_7b0776ef6b855de5"></lemon-slice-widget>
-    </section>
+    <div class="reasons-card">
     
-    <script>
-    // Simple function to open YOUR system
-    function openBotemiaAssistant() {
-        window.open(
-            'https://your-netlify-app.netlify.app/trigger-system.html',
-            'BotemiaAssistant',
-            'width=800,height=600'
-        );
-    }
+    <div class="badge">
+        <span>🤖 MOBILEWISE AI</span>
+        <span style="margin-left: 8px;">✦</span>
+        <span style="margin-left: 8px;">BOTEMIA CORE</span>
+    </div>
     
-    // Optional: Auto-open widget when scrolled to
-    window.addEventListener('scroll', function() {
-        const testimonials = document.getElementById('testimonials');
-        const rect = testimonials.getBoundingClientRect();
+    <h2>10 reasons <span class="accent">MobileWise AI</span><br>destroys ordinary bots</h2>
+    <div class="subhead">
+        Not a FAQ robot. A closing agent with a voice, a memory, and a mission.
+    </div>
+    
+    <div class="reasons-grid">
         
-        if (rect.top < window.innerHeight * 0.8) {
-            const widget = document.querySelector('lemon-slice-widget');
-            if (widget) {
-                widget.setAttribute('controlled-widget-state', 'active');
-            }
-        }
-    });
-    </script>
-
-    <section id="chatbot" class="chatbot-section">
-        <div class="container">
-            <h2>Ask Our AI Assistant</h2>
-            
-            <div class="chatbot-wrapper">
-                <!-- Left chat bubble example -->
-                <div class="example-chat-left">
-                    <div class="user-message">
-                        <div class="message-bubble blue">
-                            What's my loan's interest rate?
-                        </div>
-                    </div>
-                    <div class="ai-message">
-                        <div class="message-bubble white border-green">
-                            Your rate is 6.25% (30-year fixed).
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Chatbase embed iframe -->
-                <div class="chatbot-container">
-                    <iframe
-                        src="https://www.chatbase.co/chatbot-iframe/JKHQAJDGl0bRE-7LSQkv4"
-                        width="100%"
-                        style="height: 520px;"
-                        frameborder="0"
-                    ></iframe>
-                </div>
-                
-                <!-- Right chat bubble example -->
-                <div class="example-chat-right">
-                    <div class="user-message">
-                        <div class="message-bubble blue">
-                            What documents do I need to upload?
-                        </div>
-                    </div>
-                    <div class="ai-message">
-                        <div class="message-bubble white border-green">
-                            You're missing your 2023 W-2. Upload here.
-                        </div>
-                    </div>
-                </div>
+        <div class="reason-item">
+            <div class="check">✓</div>
+            <div class="reason-content">
+                <div class="reason-title">🎤 Voice-first intelligence</div>
+                <div class="reason-desc">Speaks naturally, listens actively. No typing required. Conversational AI that feels human.</div>
             </div>
         </div>
-    </section>
+        
+        <div class="reason-item">
+            <div class="check">✓</div>
+            <div class="reason-content">
+                <div class="reason-title">🧠 Name-first protocol</div>
+                <div class="reason-desc">Asks for their name in the first 2 seconds. Every answer personalized. Every interaction humanized.</div>
+            </div>
+        </div>
+        
+        <div class="reason-item">
+            <div class="check">✓</div>
+            <div class="reason-content">
+                <div class="reason-title">📹 Testimonial-driven selling</div>
+                <div class="reason-desc">Matches real client success stories to the visitor's exact concern. Credit repair? Here's Sarah. Self-employed? Here's Marcus.</div>
+            </div>
+        </div>
+        
+        <div class="reason-item">
+            <div class="check">✓</div>
+            <div class="reason-content">
+                <div class="reason-title">🎯 Buying signal detection</div>
+                <div class="reason-desc">Hears "I'm ready" and immediately routes to a live loan officer. No friction. No delays.</div>
+            </div>
+        </div>
+        
+        <div class="reason-item">
+            <div class="check">✓</div>
+            <div class="reason-content">
+                <div class="reason-title">📊 Industry-preset intelligence</div>
+                <div class="reason-desc">Pre-trained on mortgage, legal, tax, dental, manufacturing. Knows the vocabulary before the first conversation.</div>
+            </div>
+        </div>
+        
+        <div class="reason-item">
+            <div class="check">✓</div>
+            <div class="reason-content">
+                <div class="reason-title">🖼️ Visual Proof Vault</div>
+                <div class="reason-desc">Pulls real before/after images, success photos, and loan summaries on demand. See it. Believe it.</div>
+            </div>
+        </div>
+        
+        <div class="reason-item">
+            <div class="check">✓</div>
+            <div class="reason-content">
+                <div class="reason-title">📞 Multi-channel communication</div>
+                <div class="reason-desc">Click to call, request callback, schedule consultation, or jump into a 16-question pre-qualification interview.</div>
+            </div>
+        </div>
+        
+        <div class="reason-item">
+            <div class="check">✓</div>
+            <div class="reason-content">
+                <div class="reason-title">⚡ 14-day closing capability</div>
+                <div class="reason-desc">Average mortgage process is 30 days. Botemia-accelerated files have closed in 14. Urgency is handled.</div>
+            </div>
+        </div>
+        
+        <div class="reason-item">
+            <div class="check">✓</div>
+            <div class="reason-content">
+                <div class="reason-title">🧾 Transcripts + lead routing</div>
+                <div class="reason-desc">Every conversation is transcribed. Every qualified lead is sent directly to your CRM or loan officer inbox.</div>
+            </div>
+        </div>
+        
+        <div class="reason-item">
+            <div class="check">✓</div>
+            <div class="reason-content">
+                <div class="reason-title">🚀 Not a chatbot. A closer.</div>
+                <div class="reason-desc">Ordinary bots answer questions. Botemia closes loans. 94% approval rate. 9 out of 10 close.</div>
+            </div>
+        </div>
+        
+    </div>
+    
+    <div class="footer-note">
+        <span>✦ Built for lenders who don't do "good enough"</span>
+        <div class="botemia-tag">
+            <span>🤖</span>
+            <span>BOTEMIA · Your personal closing agent</span>
+        </div>
+    </div>
+    
+</div>
 
     <section id="features" class="benefits-section">
         <div class="container">
