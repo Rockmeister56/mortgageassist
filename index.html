@@ -29,19 +29,39 @@
         <div class="hero-content">
             <h1>Need Loan Assistance?</h1>
             
-            <!-- This button expands avatar + activates mic -->
             <button class="btn-primary" id="hero-botemia-btn">
-                🎤 Talk to Botemia Now
+                🔊 Start Voice Chat
             </button>
             
-            <!-- Optional simple status -->
             <div id="botemia-status" style="
                 margin-top: 10px;
                 font-size: 13px;
                 color: rgba(255,255,255,0.7);
                 display: none;
-            ">
-                Botemia is connecting...
+            "></div>
+            
+            <!-- Debug buttons (remove in production) -->
+            <div style="margin-top: 15px; display: flex; gap: 10px;">
+                <button onclick="forceUnmute()" style="
+                    background: #4CAF50;
+                    color: white;
+                    border: none;
+                    padding: 8px 15px;
+                    border-radius: 5px;
+                    font-size: 12px;
+                ">
+                    🔊 Force Unmute
+                </button>
+                <button onclick="testAudio()" style="
+                    background: #2196F3;
+                    color: white;
+                    border: none;
+                    padding: 8px 15px;
+                    border-radius: 5px;
+                    font-size: 12px;
+                ">
+                    🔊 Test Audio
+                </button>
             </div>
         </div>
     </div>
