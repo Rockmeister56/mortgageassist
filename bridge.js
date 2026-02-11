@@ -1,232 +1,309 @@
-// File: bridge.js - WITH UNMUTE FUNCTIONALITY
-class BotemiaHeroController {
+// bridge.js - WORKING UNMUTE VERSION
+class BotemiaController {
     constructor() {
         this.widget = null;
-        this.isMicActive = false;
-        this.isAudioMuted = true; // Widget starts muted
+        this.audioUnmuted = false;
+        this.retryCount = 0;
+        this.maxRetries = 5;
     }
 
-    // Initialize when page loads
-    init() {
-        console.log('🔧 Setting up Botemia Hero Controller');
+    async init() {
+        console.log('🎯 Initializing Botemia Controller');
         
-        // Find widget (poll for it since it loads async)
-        const findWidget = () => {
-            this.widget = document.querySelector('lemon-slice-widget');
-            
-            if (this.widget) {
-                console.log('✅ Botemia widget found');
-                this.setupHeroButton();
-                this.setupAudioMonitoring();
-            } else {
-                setTimeout(findWidget, 500);
+        // Wait for widget to load
+        await this.waitForWidget();
+        
+        // Setup button
+        this.setupHeroButton();
+        
+        // Pre-warm audio (important!)
+        await this.preWarmAudio();
+        
+        console.log('✅ Botemia ready');
+    }
+
+    // Wait for widget to appear
+    async waitForWidget() {
+        return new Promise((resolve) => {
+            const checkWidget = () => {
+                this.widget = document.querySelector('lemon-slice-widget');
+                if (this.widget) {
+                    console.log('✅ Widget found');
+                    resolve();
+                } else {
+                    console.log('⏳ Waiting for widget...');
+                    setTimeout(checkWidget, 500);
+                }
+            };
+            checkWidget();
+        });
+    }
+
+    // Pre-warm audio system
+    async preWarmAudio() {
+        console.log('🎵 Pre-warming audio system...');
+        
+        // Method 1: Create and play silent audio
+        try {
+            const audio = new Audio();
+            audio.src = 'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEAQB8AAEAfAAABAAgAZGF0YQ';
+            audio.volume = 0.01;
+            await audio.play();
+            console.log('✅ Audio context activated');
+        } catch (e) {
+            console.log('⚠️ Silent audio failed:', e);
+        }
+
+        // Method 2: Resume audio context
+        if (typeof AudioContext !== 'undefined') {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioContext.state === 'suspended') {
+                await audioContext.resume();
+                console.log('✅ AudioContext resumed');
             }
-        };
-        
-        findWidget();
-    }
-
-    // Setup audio monitoring (check mute state)
-    setupAudioMonitoring() {
-        // Check every second for mute state changes
-        setInterval(() => {
-            this.checkAudioState();
-        }, 1000);
-    }
-
-    // Check and fix audio state
-    async checkAudioState() {
-        if (!this.widget) return;
-        
-        // Try to detect if audio is muted
-        // Note: This depends on LemonSlice's internal API
-        // We'll try multiple approaches
-        
-        // Approach 1: Check for mute icon/state in DOM
-        const muteElements = document.querySelectorAll('[class*="mute"], [class*="Mute"]');
-        if (muteElements.length > 0) {
-            this.isAudioMuted = true;
-            console.log('🔇 Audio appears muted');
         }
     }
 
-    // Setup the hero button
     setupHeroButton() {
-        const heroBtn = document.getElementById('hero-botemia-btn');
-        const statusDiv = document.getElementById('botemia-status');
+        const btn = document.getElementById('hero-botemia-btn');
+        const status = document.getElementById('botemia-status');
         
-        if (!heroBtn) {
-            console.log('❌ Hero button not found');
+        if (!btn) {
+            console.error('❌ Hero button not found');
             return;
         }
 
-        heroBtn.addEventListener('click', async (e) => {
+        btn.addEventListener('click', async (e) => {
             e.preventDefault();
-            console.log('🎯 Hero button clicked - activating Botemia');
+            console.log('🎤 Hero button clicked');
             
-            // Show status
-            if (statusDiv) {
-                statusDiv.style.display = 'block';
-                statusDiv.textContent = 'Activating Botemia...';
+            // Update status
+            if (status) {
+                status.style.display = 'block';
+                status.textContent = 'Starting Botemia...';
+                status.style.color = 'rgba(255,255,255,0.9)';
             }
             
             try {
-                // 1. Expand avatar (skip minimized state)
-                this.widget.setAttribute('controlled-widget-state', 'active');
-                console.log('📱 Avatar expanded');
+                // Step 1: Expand widget
+                await this.expandWidget();
                 
-                // 2. Wait for widget to fully load
-                await this.sleep(1000);
+                // Step 2: UNMUTE AUDIO (critical!)
+                await this.ensureAudioUnmuted();
                 
-                // 3. UNMUTE AUDIO FIRST (CRITICAL STEP!)
-                await this.unmuteAudio();
+                // Step 3: Wait for audio to be ready
+                await this.delay(800);
                 
-                // 4. Wait for audio to unmute
-                await this.sleep(500);
+                // Step 4: Activate microphone
+                await this.activateMic();
                 
-                // 5. Activate microphone
-                await this.widget.micOn();
-                this.isMicActive = true;
-                console.log('🎤 Microphone activated');
+                // Step 5: Send greeting
+                await this.sendGreeting();
                 
-                // 6. Update status
-                if (statusDiv) {
-                    statusDiv.textContent = 'Botemia is listening...';
+                // Update status
+                if (status) {
+                    status.textContent = '✅ Botemia is listening!';
                     setTimeout(() => {
-                        statusDiv.style.display = 'none';
-                    }, 2000);
+                        status.style.display = 'none';
+                    }, 3000);
                 }
                 
-                // 7. Send greeting (audio should now work)
-                setTimeout(async () => {
-                    try {
-                        await this.widget.sendMessage("Hi! I'm ready to help with your mortgage questions. What would you like to know?");
-                    } catch (e) {
-                        console.log('⚠️ Greeting message failed:', e);
-                    }
-                }, 1000);
-                
             } catch (error) {
-                console.log('❌ Error activating Botemia:', error);
-                if (statusDiv) {
-                    statusDiv.textContent = 'Error - please refresh page';
-                    statusDiv.style.color = '#ff6b6b';
+                console.error('❌ Activation failed:', error);
+                if (status) {
+                    status.textContent = '❌ Failed to start. Click Force Unmute button.';
+                    status.style.color = '#ff6b6b';
                 }
             }
         });
     }
 
-    // UNMUTE FUNCTION - CRITICAL!
-    async unmuteAudio() {
-        console.log('🔊 Attempting to unmute audio...');
+    async expandWidget() {
+        if (!this.widget) throw new Error('No widget found');
         
-        if (!this.widget) {
-            console.log('❌ No widget for unmute');
-            return;
-        }
-        
-        try {
-            // METHOD 1: Try to click mute button in widget (if exists)
-            this.clickMuteButton();
-            
-            // METHOD 2: Wait and try to send audio-related command
-            await this.sleep(300);
-            
-            // METHOD 3: Check if audio context needs resuming
-            this.resumeAudioContext();
-            
-            // METHOD 4: Send empty message to trigger audio
-            try {
-                await this.widget.sendMessage(" "); // Space to trigger audio
-            } catch (e) {
-                // Ignore if fails
-            }
-            
-            this.isAudioMuted = false;
-            console.log('✅ Audio unmute attempted');
-            
-        } catch (error) {
-            console.log('⚠️ Unmute attempt failed:', error);
-        }
+        console.log('📱 Expanding widget...');
+        this.widget.setAttribute('controlled-widget-state', 'active');
+        await this.delay(500); // Wait for animation
     }
 
-    // Try to find and click mute button in widget
-    clickMuteButton() {
-        // Look for mute/unmute buttons in the widget
-        const selectors = [
-            'button[class*="mute"]',
-            'button[class*="Mute"]',
-            '[aria-label*="mute"]',
-            '[aria-label*="Mute"]',
-            '.audio-control button',
-            'button svg path[d*="M16.5 12"]' // Common mute icon path
+    async ensureAudioUnmuted() {
+        console.log('🔊 Ensuring audio is unmuted...');
+        
+        if (this.audioUnmuted) {
+            console.log('✅ Audio already unmuted');
+            return;
+        }
+
+        // Try multiple unmute methods
+        const methods = [
+            this.clickMuteButton.bind(this),
+            this.sendUnmuteCommand.bind(this),
+            this.triggerAudioPlayback.bind(this),
+            this.simulateUserInteraction.bind(this)
         ];
-        
-        for (const selector of selectors) {
-            const muteBtn = document.querySelector(selector);
-            if (muteBtn) {
-                console.log('🔘 Found mute button:', selector);
-                muteBtn.click();
-                return true;
+
+        for (let i = 0; i < methods.length; i++) {
+            console.log(`🔄 Trying unmute method ${i + 1}...`);
+            const success = await methods[i]();
+            
+            if (success) {
+                this.audioUnmuted = true;
+                console.log('✅ Audio unmuted successfully');
+                return;
             }
+            
+            await this.delay(500); // Wait between attempts
         }
-        
-        // Try to find by text content
-        const allButtons = document.querySelectorAll('button');
-        for (const btn of allButtons) {
-            const text = btn.textContent || btn.innerText || '';
-            if (text.toLowerCase().includes('mute') || 
-                text.toLowerCase().includes('unmute') ||
-                text.toLowerCase().includes('audio')) {
-                console.log('🔘 Found audio button by text:', text);
-                btn.click();
-                return true;
+
+        throw new Error('Could not unmute audio');
+    }
+
+    async clickMuteButton() {
+        try {
+            // Look for any mute/unmute buttons in the entire document
+            const buttons = document.querySelectorAll('button, [role="button"], [onclick]');
+            
+            for (const btn of buttons) {
+                const text = (btn.textContent || btn.innerText || '').toLowerCase();
+                const ariaLabel = (btn.getAttribute('aria-label') || '').toLowerCase();
+                const className = (btn.className || '').toLowerCase();
+                
+                if (text.includes('mute') || text.includes('unmute') || 
+                    text.includes('audio') || text.includes('sound') ||
+                    ariaLabel.includes('mute') || ariaLabel.includes('unmute') ||
+                    className.includes('mute') || className.includes('unmute') ||
+                    className.includes('audio') || className.includes('sound')) {
+                    
+                    console.log('🔘 Found audio button:', text || ariaLabel || className);
+                    btn.click();
+                    return true;
+                }
             }
+        } catch (e) {
+            console.log('⚠️ Click method failed:', e);
         }
-        
         return false;
     }
 
-    // Resume audio context if suspended
-    resumeAudioContext() {
-        if (window.AudioContext || window.webkitAudioContext) {
-            const AudioContext = window.AudioContext || window.webkitAudioContext;
-            
-            // Create a silent sound to resume context
-            const audioContext = new AudioContext();
-            if (audioContext.state === 'suspended') {
-                audioContext.resume().then(() => {
-                    console.log('🎵 Audio context resumed');
-                });
+    async sendUnmuteCommand() {
+        try {
+            // Try to send a command that might trigger audio
+            if (this.widget && this.widget.sendMessage) {
+                await this.widget.sendMessage("unmute audio");
+                return true;
             }
+        } catch (e) {
+            console.log('⚠️ Send command failed:', e);
+        }
+        return false;
+    }
+
+    async triggerAudioPlayback() {
+        try {
+            // Create and play a test sound
+            const audio = new Audio();
+            audio.src = 'https://assets.mixkit.co/active_storage/sfx/286/286-preview.mp3';
+            audio.volume = 0.1;
+            audio.playbackRate = 2.0;
+            
+            const played = await audio.play().then(() => true).catch(() => false);
+            if (played) {
+                setTimeout(() => audio.pause(), 100);
+                return true;
+            }
+        } catch (e) {
+            console.log('⚠️ Playback trigger failed:', e);
+        }
+        return false;
+    }
+
+    async simulateUserInteraction() {
+        try {
+            // Simulate user interaction (clicks, touches)
+            const event = new MouseEvent('click', {
+                view: window,
+                bubbles: true,
+                cancelable: true
+            });
+            
+            document.body.dispatchEvent(event);
+            
+            // Also try touch event for mobile
+            const touch = new TouchEvent('touchstart', {
+                bubbles: true,
+                cancelable: true
+            });
+            
+            document.body.dispatchEvent(touch);
+            
+            return true;
+        } catch (e) {
+            console.log('⚠️ Interaction simulation failed:', e);
+        }
+        return false;
+    }
+
+    async activateMic() {
+        if (!this.widget) throw new Error('No widget');
+        
+        console.log('🎤 Activating microphone...');
+        await this.widget.micOn();
+        console.log('✅ Microphone active');
+    }
+
+    async sendGreeting() {
+        if (!this.widget) return;
+        
+        await this.delay(1000); // Wait for mic to be ready
+        
+        try {
+            await this.widget.sendMessage("Hello! I'm Botemia, your mortgage assistant. How can I help you today?");
+            console.log('👋 Greeting sent');
+        } catch (e) {
+            console.log('⚠️ Greeting failed:', e);
         }
     }
 
-    // Toggle mute/unmute (for manual control if needed)
-    async toggleAudio() {
-        if (this.isAudioMuted) {
-            await this.unmuteAudio();
-        } else {
-            // You could add mute functionality here if needed
-            console.log('Mute toggle - currently unmuted');
-        }
-    }
-
-    // Helper: sleep function
-    sleep(ms) {
+    delay(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    // Public unmute function
+    async forceUnmute() {
+        console.log('🔊 Force unmute requested');
+        this.audioUnmuted = false;
+        await this.ensureAudioUnmuted();
     }
 }
 
-// Auto-initialize
-document.addEventListener('DOMContentLoaded', () => {
-    window.botemiaController = new BotemiaHeroController();
-    window.botemiaController.init();
+// Global functions for debugging
+function forceUnmute() {
+    if (window.botemiaController) {
+        window.botemiaController.forceUnmute();
+    } else {
+        alert('Botemia controller not loaded yet');
+    }
+}
+
+function testAudio() {
+    const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/286/286-preview.mp3');
+    audio.volume = 0.3;
+    audio.play().then(() => {
+        console.log('🔊 Test audio playing');
+    }).catch(e => {
+        console.log('❌ Test audio failed:', e);
+        alert('Audio playback blocked. Click the page first, then try again.');
+    });
+}
+
+// Initialize when ready
+document.addEventListener('DOMContentLoaded', async () => {
+    window.botemiaController = new BotemiaController();
+    await window.botemiaController.init();
     
-    // Optional: Add global function for manual unmute
-    window.unmuteBotemia = function() {
-        if (window.botemiaController) {
-            window.botemiaController.unmuteAudio();
-        }
-    };
+    // Add click handler to entire page to enable audio
+    document.body.addEventListener('click', function enableAudio() {
+        console.log('👆 Page clicked - audio should work now');
+        document.body.removeEventListener('click', enableAudio);
+    });
 });
