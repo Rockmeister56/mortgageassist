@@ -28,10 +28,41 @@
         <div class="container">
             <div class="hero-content">
                 <h1>Need Loan Assistance?</h1>
-                <a href="#chatbot" class="btn-primary">Get Personal AI Assistance here →</a>
+                <a href="#chatbot" class="btn-primary">Get AI Assistance here →</a>
             </div>
         </div>
     </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials">
+        <h2>Client Testimonials</h2>
+        <!-- Widget appears here -->
+        <lemon-slice-widget agent-id="agent_1db77d60ec132469"></lemon-slice-widget>
+    </section>
+    
+    <script>
+    // Simple function to open YOUR system
+    function openBotemiaAssistant() {
+        window.open(
+            'https://your-netlify-app.netlify.app/trigger-system.html',
+            'BotemiaAssistant',
+            'width=800,height=600'
+        );
+    }
+    
+    // Optional: Auto-open widget when scrolled to
+    window.addEventListener('scroll', function() {
+        const testimonials = document.getElementById('testimonials');
+        const rect = testimonials.getBoundingClientRect();
+        
+        if (rect.top < window.innerHeight * 0.8) {
+            const widget = document.querySelector('lemon-slice-widget');
+            if (widget) {
+                widget.setAttribute('controlled-widget-state', 'active');
+            }
+        }
+    });
+    </script>
 
     <section id="chatbot" class="chatbot-section">
         <div class="container">
