@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkedIn War Room · Botemia Sales Engine</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(145deg, #0a1a2a 0%, #0f2b4b 100%);
+            color: white;
+            padding: 30px 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff, #0a66c2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .badge {
+            background: rgba(10, 102, 194, 0.15);
+            border: 1px solid #0a66c2;
+            color: #7fc1ff;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px;
+            padding: 20px;
+            border-bottom: 3px solid #0a66c2;
+        }
+
+        .stat-number {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #0a66c2;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .campaign-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .campaign-card {
+            background: rgba(18, 28, 46, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 24px;
+        }
+
+        .campaign-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 16px;
+        }
+
+        .campaign-icon {
+            font-size: 1.8rem;
+        }
+
+        .campaign-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .campaign-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .campaign-stat {
+            text-align: center;
+        }
+
+        .campaign-stat-number {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #0a66c2;
+        }
+
+        .campaign-stat-label {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.6);
+            text-transform: uppercase;
+        }
+
+        .progress-bar {
+            background: rgba(0,0,0,0.3);
+            height: 8px;
+            border-radius: 4px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0a66c2, #4c9aff);
+            width: 0%;
+            border-radius: 4px;
+        }
+
+        .prospect-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .prospect-table th {
+            text-align: left;
+            padding: 12px;
+            color: rgba(255,255,255,0.7);
+            font-weight: 600;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .prospect-table td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            color: rgba(255,255,255,0.9);
+        }
+
+        .status-badge {
+            background: rgba(255,255,255,0.1);
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-connected {
+            background: rgba(10,102,194,0.15);
+            color: #7fc1ff;
+            border: 1px solid #0a66c2;
+        }
+
+        .status-replied {
+            background: rgba(0,200,83,0.15);
+            color: #00c853;
+            border: 1px solid #00c853;
+        }
+
+        .status-interested {
+            background: rgba(248,196,0,0.15);
+            color: #f8c400;
+            border: 1px solid #f8c400;
+        }
+
+        .status-demo {
+            background: rgba(0,200,83,0.15);
+            color: #00c853;
+            border: 1px solid #00c853;
+        }
+
+        .btn {
+            background: rgba(10,102,194,0.1);
+            border: 1px solid #0a66c2;
+            color: #7fc1ff;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-right: 8px;
+        }
+
+        .btn:hover {
+            background: #0a66c2;
+            color: white;
+        }
+
+        .btn-small {
+            padding: 4px 12px;
+            font-size: 0.7rem;
+        }
+
+        .btn-success {
+            background: rgba(0,200,83,0.15);
+            border: 1px solid #00c853;
+            color: #00c853;
+        }
+
+        .btn-success:hover {
+            background: #00c853;
+            color: black;
+        }
+
+        .sequence-section {
+            background: rgba(18, 28, 46, 0.8);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 30px;
+        }
+
+        .sequence-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .sequence-step {
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            padding: 16px;
+            border-left: 3px solid #0a66c2;
+        }
+
+        .step-day {
+            color: #0a66c2;
+            font-weight: 700;
+            font-size: 0.8rem;
+            margin-bottom: 8px;
+        }
+
+        .step-message {
+            color: white;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+            font-style: italic;
+        }
+
+        .step-status {
+            color: rgba(255,255,255,0.5);
+            font-size: 0.75rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: flex-end;
+            margin-top: 30px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(145deg, #0a66c2, #054a91);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 40px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 40px;
+            font-weight: 600;
+        }
+
+        .script-box {
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            border-left: 4px solid #0a66c2;
+            font-style: italic;
+            color: rgba(255,255,255,0.9);
+        }
+
+        @media (max-width: 1200px) {
+            .stats-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .campaign-grid {
+                grid-template-columns: 1fr;
+            }
+            .sequence-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 800px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .sequence-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <div style="font-size: 2.5rem;">🔵</div>
+                <h1>LinkedIn War Room</h1>
+            </div>
+            <div class="badge">
+                <span>🎯 BOTEMIA OUTBOUND ENGINE</span>
+                <span style="margin-left: 8px;">v1.0</span>
+            </div>
+        </div>
+
+        <!-- MASTER STATS -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalConnections">847</div>
+                <div class="stat-label">Connection Requests</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalAccepted">312</div>
+                <div class="stat-label">Accepted (36.8%)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalReplies">98</div>
+                <div class="stat-label">Replies</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalInterested">47</div>
+                <div class="stat-label">Interested</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalDemos">23</div>
+                <div class="stat-label">Demos</div>
+            </div>
+        </div>
+
+        <!-- ACTIVE CAMPAIGNS -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <h2 style="color: white; display: flex; align-items: center; gap: 10px;">
+                <span>🚀</span> Active Outreach Campaigns
+            </h2>
+            <button class="btn" onclick="addCampaign()">
+                <i class="fas fa-plus"></i> + New Campaign
+            </button>
+        </div>
+
+        <div class="campaign-grid">
+            <!-- CAMPAIGN 1: Mortgage Brokers -->
+            <div class="campaign-card" id="campaign1">
+                <div class="campaign-header">
+                    <div class="campaign-icon">🏠</div>
+                    <div class="campaign-title">Mortgage Brokers · Q1 2024</div>
+                </div>
+                <div class="campaign-stats">
+                    <div class="campaign-stat">
+                        <div class="campaign-stat-number">500</div>
+                        <div class="campaign-stat-label">Sent</div>
+                    </div>
+                    <div class="campaign-stat">
+                        <div class="campaign-stat-number">186</div>
+                        <div class="campaign-stat-label">Accepted</div>
+                    </div>
+                    <div class="campaign-stat">
+                        <div class="campaign-stat-number">58</div>
+                        <div class="campaign-stat-label">Replies</div>
+                    </div>
+                    <div class="campaign-stat">
+                        <div class="campaign-stat-number">14</div>
+                        <div class="campaign-stat-label">Demos</div>
+                    </div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 37%;"></div>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-top: 8px;">
+                    <span style="color: rgba(255,255,255,0.6);">Accept rate: 37%</span>
+                    <span style="color: #0a66c2; font-weight: 600;">14 closes target</span>
+                </div>
+                <button class="btn" style="width: 100%; margin-top: 20px;" onclick="viewCampaign('Mortgage Brokers')">
+                    <i class="fas fa-eye"></i> View Prospects
+                </button>
+            </div>
+
+            <!-- CAMPAIGN 2: Branch Managers -->
+            <div class="campaign-card" id="campaign2">
+                <div class="campaign-header">
+                    <div class="campaign-icon">🏦</div>
+                    <div class="campaign-title">Branch Managers · East Coast</div>
+                </div>
+                <div class="campaign-stats">
+                    <div class="campaign-stat">
+                        <div class="campaign-stat-number">250</div>
+                        <div class="campaign-stat-label">Sent</div>
+                    </div>
+                    <div class="campaign-stat">
+                        <div class="campaign-stat-number">89</div>
+                        <div class="campaign-stat-label">Accepted</div>
+                    </div>
+                    <div class="campaign-stat">
+                        <div class="campaign-stat-number">31</div>
+                        <div class="campaign-stat-label">Replies</div>
+                    </div>
+                    <div class="campaign-stat">
+                        <div class="campaign-stat-number">7</div>
+                        <div class="campaign-stat-label">Demos</div>
+                    </div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 35%;"></div>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-top: 8px;">
+                    <span style="color: rgba(255,255,255,0.6);">Accept rate: 35%</span>
+                    <span style="color: #0a66c2; font-weight: 600;">8 closes target</span>
+                </div>
+                <button class="btn" style="width: 100%; margin-top: 20px;" onclick="viewCampaign('Branch Managers')">
+                    <i class="fas fa-eye"></i> View Prospects
+                </button>
+            </div>
+        </div>
+
+        <!-- ACTIVE PROSPECTS TABLE -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin: 30px 0 16px;">
+            <h2 style="color: white; display: flex; align-items: center; gap: 10px;">
+                <span>📋</span> Active Prospects · In Progress
+            </h2>
+            <button class="btn btn-success" onclick="addProspect()">
+                <i class="fas fa-user-plus"></i> + Log New Prospect
+            </button>
+        </div>
+
+        <div style="background: rgba(18, 28, 46, 0.8); border-radius: 20px; padding: 20px; overflow-x: auto;">
+            <table class="prospect-table">
+                <thead>
+                    <tr>
+                        <th>NAME</th>
+                        <th>TITLE</th>
+                        <th>COMPANY</th>
+                        <th>CAMPAIGN</th>
+                        <th>STATUS</th>
+                        <th>LAST CONTACT</th>
+                        <th>NEXT STEP</th>
+                        <th>ACTIONS</th>
+                    </tr>
+                </thead>
+                <tbody id="prospectTableBody">
+                    <tr>
+                        <td>Michael Chen</td>
+                        <td>Branch Manager</td>
+                        <td>CrossCountry Mortgage</td>
+                        <td>Branch Managers</td>
+                        <td><span class="status-badge status-connected">✅ Connected</span></td>
+                        <td>Feb 12</td>
+                        <td>DM Day 3</td>
+                        <td>
+                            <button class="btn btn-small" onclick="updateStatus(this, 'replied')">+ Reply</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Sarah Rodriguez</td>
+                        <td>Senior Loan Officer</td>
+                        <td>Fairway Independent</td>
+                        <td>Mortgage Brokers</td>
+                        <td><span class="status-badge status-replied">💬 Replied</span></td>
+                        <td>Feb 11</td>
+                        <td>Send Demo</td>
+                        <td>
+                            <button class="btn btn-small" onclick="updateStatus(this, 'interested')">🎯 Interested</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>David Kim</td>
+                        <td>Owner/Broker</td>
+                        <td>Premier Lending</td>
+                        <td>Mortgage Brokers</td>
+                        <td><span class="status-badge status-interested">🔥 Interested</span></td>
+                        <td>Feb 10</td>
+                        <td>Demo Feb 15</td>
+                        <td>
+                            <button class="btn btn-small" onclick="updateStatus(this, 'demo')">📅 Demo Done</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Jennifer Walsh</td>
+                        <td>Regional Manager</td>
+                        <td>Guaranteed Rate</td>
+                        <td>Branch Managers</td>
+                        <td><span class="status-badge status-demo">✅ Demo Done</span></td>
+                        <td>Feb 09</td>
+                        <td>Follow-up</td>
+                        <td>
+                            <button class="btn btn-small" onclick="updateStatus(this, 'closed')">💰 Close</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Robert Taylor</td>
+                        <td>Mortgage Broker</td>
+                        <td>Nexa Mortgage</td>
+                        <td>Mortgage Brokers</td>
+                        <td><span class="status-badge status-connected">✅ Connected</span></td>
+                        <td>Feb 12</td>
+                        <td>DM Day 2</td>
+                        <td>
+                            <button class="btn btn-small" onclick="updateStatus(this, 'replied')">+ Reply</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- OUTBOUND SEQUENCE ENGINE -->
+        <div class="sequence-section">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+                <span style="font-size: 1.8rem;">⏱️</span>
+                <h2 style="color: white; margin: 0;">LinkedIn Outreach Sequence · Mortgage Brokers</h2>
+            </div>
+
+            <div class="sequence-grid">
+                <div class="sequence-step">
+                    <div class="step-day">DAY 1 · Connection</div>
+                    <div class="step-message">"Hey [Name], saw your work at [Company]. I'm helping mortgage brokers close 94% of qualified apps with AI. Would love to connect."</div>
+                    <div class="step-status">✅ 312 sent · 186 accepted</div>
+                </div>
+                <div class="sequence-step">
+                    <div class="step-day">DAY 3 · DM Follow-up</div>
+                    <div class="step-message">"Thanks for connecting! Quick question — are you currently using any AI for lead follow-up or pre-qualification? We built something called Botemia that's been a game changer."</div>
+                    <div class="step-status">💬 186 sent · 58 replies</div>
+                </div>
+                <div class="sequence-step">
+                    <div class="step-day">DAY 5 · Value Add</div>
+                    <div class="step-message">"Here's a quick 2-min demo of how Botemia works. She asks for their name, answers rate questions, and routes ready buyers to your LOs. No typing. No friction."</div>
+                    <div class="step-status">🎯 58 sent · 31 interested</div>
+                </div>
+                <div class="sequence-step">
+                    <div class="step-day">DAY 7 · Call to Action</div>
+                    <div class="step-message">"Want to see what she'd look like on your site? Happy to spin up a demo instance for you. Got 10 minutes this week?"</div>
+                    <div class="step-status">📅 31 sent · 23 demos</div>
+                </div>
+            </div>
+
+            <div class="script-box">
+                <strong>📋 CONNECTION REQUEST TEMPLATE (300 char):</strong><br>
+                "Hey [Name], saw your profile and work at [Company]. I'm helping mortgage brokers automate lead follow-up and close more apps with AI. Worth connecting?"
+            </div>
+        </div>
+
+        <!-- EVABOOT INTEGRATION PANEL -->
+        <div style="background: linear-gradient(145deg, rgba(10,102,194,0.1), rgba(0,0,0,0.2)); border-radius: 20px; padding: 24px; margin-bottom: 30px; border: 1px solid #0a66c2;">
+            <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
+                <div style="background: #0a66c2; width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem;">
+                    📊
+                </div>
+                <div style="flex: 1;">
+                    <h3 style="color: white; margin-bottom: 8px;">Evaboot + Apollo Pipeline</h3>
+                    <p style="color: rgba(255,255,255,0.7);">Import 500 mortgage broker contacts from Sales Navigator in 2 clicks</p>
+                </div>
+                <button class="btn-primary" onclick="importEvaboot()">
+                    <i class="fas fa-file-import"></i> Import CSV
+                </button>
+                <button class="btn" onclick="showSampleData()">
+                    <i class="fas fa-eye"></i> Preview
+                </button>
+            </div>
+        </div>
+
+        <!-- QUICK ADD PROSPECT -->
+        <div style="background: rgba(18, 28, 46, 0.8); border-radius: 20px; padding: 24px; margin-bottom: 40px;">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+                <span style="font-size: 1.5rem;">⚡</span>
+                <h3 style="color: white; margin: 0;">Quick Add Prospect</h3>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                <input type="text" id="prospectName" placeholder="Full Name" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 12px; color: white;">
+                <input type="text" id="prospectTitle" placeholder="Title" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 12px; color: white;">
+                <input type="text" id="prospectCompany" placeholder="Company" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 12px; color: white;">
+                <select id="prospectCampaign" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 12px; color: white;">
+                    <option value="Mortgage Brokers">Mortgage Brokers</option>
+                    <option value="Branch Managers">Branch Managers</option>
+                    <option value="New Campaign">+ New Campaign</option>
+                </select>
+                <button class="btn-success" onclick="quickAddProspect()" style="padding: 12px; border-radius: 10px;">
+                    <i class="fas fa-plus-circle"></i> Add Prospect
+                </button>
+            </div>
+        </div>
+
+        <!-- ACTION BUTTONS -->
+        <div class="action-buttons">
+            <button class="btn-secondary" onclick="exportLinkedInData()">
+                <i class="fas fa-download"></i> Export CSV
+            </button>
+            <button class="btn-secondary" onclick="resetLinkedInData()">
+                <i class="fas fa-undo"></i> Reset Demo
+            </button>
+            <button class="btn-primary" onclick="launchEvaboot()">
+                <i class="fas fa-external-link-alt"></i> Open Evaboot
+            </button>
+        </div>
+
+        <div style="margin-top: 30px; color: rgba(255,255,255,0.5); font-size: 0.8rem; text-align: center; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 30px;">
+            <p>🔵 LinkedIn War Room · Botemia Outbound Engine · 37% accept rate · 14% reply rate · $49 Evaboot = $83k pipeline</p>
+            <p style="margin-top: 10px;">💾 Data auto-saves · Export CSV weekly · One connection = $500+ pipeline value</p>
+        </div>
+    </div>
+
+    <script>
+        // ===== LINKEDIN WAR ROOM ENGINE =====
+        let stats = {
+            connections: 847,
+            accepted: 312,
+            replies: 98,
+            interested: 47,
+            demos: 23
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStats();
+            
+            // Add Font Awesome
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css';
+            document.head.appendChild(link);
+        });
+
+        // Update all stats
+        function updateStats() {
+            document.getElementById('totalConnections').innerText = stats.connections;
+            document.getElementById('totalAccepted').innerText = stats.accepted;
+            document.getElementById('totalReplies').innerText = stats.replies;
+            document.getElementById('totalInterested').innerText = stats.interested;
+            document.getElementById('totalDemos').innerText = stats.demos;
+        }
+
+        // Update prospect status
+        function updateStatus(button, status) {
+            const row = button.closest('tr');
+            const statusCell = row.children[4];
+            
+            switch(status) {
+                case 'replied':
+                    statusCell.innerHTML = '<span class="status-badge status-replied">💬 Replied</span>';
+                    stats.replies++;
+                    break;
+                case 'interested':
+                    statusCell.innerHTML = '<span class="status-badge status-interested">🔥 Interested</span>';
+                    stats.interested++;
+                    break;
+                case 'demo':
+                    statusCell.innerHTML = '<span class="status-badge status-demo">✅ Demo Done</span>';
+                    stats.demos++;
+                    break;
+                case 'closed':
+                    statusCell.innerHTML = '<span class="status-badge status-demo">💰 Closed</span>';
+                    break;
+            }
+            
+            updateStats();
+            button.style.opacity = '0.5';
+            button.disabled = true;
+        }
+
+        // Quick add prospect
+        function quickAddProspect() {
+            const name = document.getElementById('prospectName').value;
+            const title = document.getElementById('prospectTitle').value;
+            const company = document.getElementById('prospectCompany').value;
+            const campaign = document.getElementById('prospectCampaign').value;
+            
+            if (!name || !title || !company) {
+                alert('Please fill in name, title, and company');
+                return;
+            }
+            
+            const tbody = document.getElementById('prospectTableBody');
+            const newRow = document.createElement('tr');
+            const today = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            
+            newRow.innerHTML = `
+                <td>${name}</td>
+                <td>${title}</td>
+                <td>${company}</td>
+                <td>${campaign}</td>
+                <td><span class="status-badge status-connected">✅ Connected</span></td>
+                <td>${today}</td>
+                <td>DM Day 1</td>
+                <td>
+                    <button class="btn btn-small" onclick="updateStatus(this, 'replied')">+ Reply</button>
+                </td>
+            `;
+            
+            tbody.appendChild(newRow);
+            
+            // Clear inputs
+            document.getElementById('prospectName').value = '';
+            document.getElementById('prospectTitle').value = '';
+            document.getElementById('prospectCompany').value = '';
+            
+            // Update stats
+            stats.connections++;
+            stats.accepted++;
+            updateStats();
+        }
+
+        // Add new campaign
+        function addCampaign() {
+            const name = prompt('Enter campaign name:', 'Mortgage Brokers · West Coast');
+            if (!name) return;
+            
+            const grid = document.querySelector('.campaign-grid');
+            const newCampaign = document.createElement('div');
+            newCampaign.className = 'campaign-card';
+            newCampaign.innerHTML = `
+                <div class="campaign-header">
+                    <div class="campaign-icon">📌</div>
+                    <div class="campaign-title">${name}</div>
+                </div>
+                <div class="campaign-stats">
+                    <div class="campaign-stat">
+                        <div class="campaign-stat-number">0</div>
+                        <div class="campaign-stat-label">Sent</div>
+                    </div>
+                    <div class="campaign-stat">
+                        <div class="campaign-stat-number">0</div>
+                        <div class="campaign-stat-label">Accepted</div>
+                    </div>
+                    <div class="campaign-stat">
+                        <div class="campaign-stat-number">0</div>
+                        <div class="campaign-stat-label">Replies</div>
+                    </div>
+                    <div class="campaign-stat">
+                        <div class="campaign-stat-number">0</div>
+                        <div class="campaign-stat-label">Demos</div>
+                    </div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%;"></div>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-top: 8px;">
+                    <span style="color: rgba(255,255,255,0.6);">Accept rate: 0%</span>
+                    <span style="color: #0a66c2; font-weight: 600;">New campaign</span>
+                </div>
+                <button class="btn" style="width: 100%; margin-top: 20px;" onclick="viewCampaign('${name}')">
+                    <i class="fas fa-eye"></i> View Prospects
+                </button>
+            `;
+            grid.appendChild(newCampaign);
+        }
+
+        // Add new prospect
+        function addProspect() {
+            document.getElementById('prospectName').focus();
+        }
+
+        // View campaign prospects
+        function viewCampaign(campaignName) {
+            alert(`Filtering prospects for: ${campaignName}\n\nIn full version, this would show only prospects from this campaign.`);
+        }
+
+        // Import from Evaboot
+        function importEvaboot() {
+            const mockImport = [
+                'Michael Chen,Branch Manager,CrossCountry Mortgage',
+                'Sarah Rodriguez,Senior Loan Officer,Fairway Independent',
+                'David Kim,Owner/Broker,Premier Lending',
+                'Jennifer Walsh,Regional Manager,Guaranteed Rate',
+                'Robert Taylor,Mortgage Broker,Nexa Mortgage'
+            ];
+            
+            let importCount = 0;
+            mockImport.forEach(entry => {
+                const [name, title, company] = entry.split(',');
+                
+                const tbody = document.getElementById('prospectTableBody');
+                const newRow = document.createElement('tr');
+                const today = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                
+                newRow.innerHTML = `
+                    <td>${name}</td>
+                    <td>${title}</td>
+                    <td>${company}</td>
+                    <td>Mortgage Brokers</td>
+                    <td><span class="status-badge status-connected">✅ Connected</span></td>
+                    <td>${today}</td>
+                    <td>DM Day 1</td>
+                    <td>
+                        <button class="btn btn-small" onclick="updateStatus(this, 'replied')">+ Reply</button>
+                    </td>
+                `;
+                tbody.appendChild(newRow);
+                importCount++;
+            });
+            
+            stats.connections += importCount;
+            stats.accepted += importCount;
+            updateStats();
+            
+            alert(`✅ Imported ${importCount} prospects from Evaboot export`);
+        }
+
+        // Show sample data
+        function showSampleData() {
+            alert(`📊 EVABOOT PREVIEW\n\n5 Sample Contacts:\n• Michael Chen - Branch Manager - CrossCountry\n• Sarah Rodriguez - Sr LO - Fairway\n• David Kim - Owner - Premier Lending\n• Jennifer Walsh - Regional - Guaranteed Rate\n• Robert Taylor - Broker - Nexa\n\nFull export: 500 contacts · 68% email match rate · $49/mo`);
+        }
+
+        // Launch Evaboot
+        function launchEvaboot() {
+            window.open('https://evaboot.com', '_blank');
+        }
+
+        // Export LinkedIn data
+        function exportLinkedInData() {
+            let csv = 'Name,Title,Company,Campaign,Status,Last Contact\n';
+            const rows = document.querySelectorAll('#prospectTableBody tr');
+            
+            rows.forEach(row => {
+                const name = row.children[0].innerText;
+                const title = row.children[1].innerText;
+                const company = row.children[2].innerText;
+                const campaign = row.children[3].innerText;
+                const status = row.children[4].innerText.replace(/[✅💬🔥]/g, '').trim();
+                const date = row.children[5].innerText;
+                
+                csv += `${name},${title},${company},${campaign},${status},${date}\n`;
+            });
+            
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'linkedin-war-room-export.csv';
+            link.click();
+        }
+
+        // Reset demo data
+        function resetLinkedInData() {
+            stats = {
+                connections: 847,
+                accepted: 312,
+                replies: 98,
+                interested: 47,
+                demos: 23
+            };
+            
+            updateStats();
+            
+            // Reset prospect table
+            const tbody = document.getElementById('prospectTableBody');
+            tbody.innerHTML = `
+                <tr>
+                    <td>Michael Chen</td>
+                    <td>Branch Manager</td>
+                    <td>CrossCountry Mortgage</td>
+                    <td>Branch Managers</td>
+                    <td><span class="status-badge status-connected">✅ Connected</span></td>
+                    <td>Feb 12</td>
+                    <td>DM Day 3</td>
+                    <td><button class="btn btn-small" onclick="updateStatus(this, 'replied')">+ Reply</button></td>
+                </tr>
+                <tr>
+                    <td>Sarah Rodriguez</td>
+                    <td>Senior Loan Officer</td>
+                    <td>Fairway Independent</td>
+                    <td>Mortgage Brokers</td>
+                    <td><span class="status-badge status-replied">💬 Replied</span></td>
+                    <td>Feb 11</td>
+                    <td>Send Demo</td>
+                    <td><button class="btn btn-small" onclick="updateStatus(this, 'interested')">🎯 Interested</button></td>
+                </tr>
+                <tr>
+                    <td>David Kim</td>
+                    <td>Owner/Broker</td>
+                    <td>Premier Lending</td>
+                    <td>Mortgage Brokers</td>
+                    <td><span class="status-badge status-interested">🔥 Interested</span></td>
+                    <td>Feb 10</td>
+                    <td>Demo Feb 15</td>
+                    <td><button class="btn btn-small" onclick="updateStatus(this, 'demo')">📅 Demo Done</button></td>
+                </tr>
+                <tr>
+                    <td>Jennifer Walsh</td>
+                    <td>Regional Manager</td>
+                    <td>Guaranteed Rate</td>
+                    <td>Branch Managers</td>
+                    <td><span class="status-badge status-demo">✅ Demo Done</span></td>
+                    <td>Feb 09</td>
+                    <td>Follow-up</td>
+                    <td><button class="btn btn-small" onclick="updateStatus(this, 'closed')">💰 Close</button></td>
+                </tr>
+                <tr>
+                    <td>Robert Taylor</td>
+                    <td>Mortgage Broker</td>
+                    <td>Nexa Mortgage</td>
+                    <td>Mortgage Brokers</td>
+                    <td><span class="status-badge status-connected">✅ Connected</span></td>
+                    <td>Feb 12</td>
+                    <td>DM Day 2</td>
+                    <td><button class="btn btn-small" onclick="updateStatus(this, 'replied')">+ Reply</button></td>
+                </tr>
+            `;
+            
+            alert('LinkedIn War Room reset to demo data');
+        }
+    </script>
+</body>
+</html>
