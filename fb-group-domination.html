@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Facebook Group Domination · Botemia Sales Tracker</title>
+    <title>Facebook War Room · Botemia Sales · Server Ready</title>
     <style>
+        /* [KEEP ALL EXISTING STYLES - same as before] */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(145deg, #0a1a2a 0%, #0f2b4b 100%);
@@ -18,294 +18,48 @@
             padding: 30px 20px;
             min-height: 100vh;
         }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .logo h1 {
-            font-size: 2.2rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #fff, #f8c400);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .badge {
-            background: rgba(248, 196, 0, 0.15);
-            border: 1px solid #f8c400;
-            color: #ffd966;
-            padding: 8px 20px;
-            border-radius: 40px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .stat-card {
-            background: rgba(255,255,255,0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 20px;
-            padding: 20px;
-            border-bottom: 3px solid #f8c400;
-        }
-
-        .stat-number {
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: #f8c400;
-            margin-bottom: 5px;
-        }
-
-        .stat-label {
-            color: rgba(255,255,255,0.7);
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .tracker-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr 1.5fr 1.5fr;
-            background: rgba(18, 28, 46, 0.8);
-            border-radius: 16px;
-            overflow: hidden;
-            margin-bottom: 40px;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .tracker-header {
-            display: contents;
-            background: rgba(0,0,0,0.3);
-            font-weight: 700;
-            color: #f8c400;
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            letter-spacing: 1px;
-        }
-
-        .tracker-header > div {
-            padding: 16px;
-            border-bottom: 2px solid rgba(248,196,0,0.3);
-            background: rgba(0,0,0,0.2);
-        }
-
-        .tracker-row {
-            display: contents;
-        }
-
-        .tracker-row > div {
-            padding: 16px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            display: flex;
-            align-items: center;
-        }
-
-        .group-name {
-            font-weight: 600;
-            color: white;
-        }
-
-        .members {
-            color: #a0c8ff;
-        }
-
-        .status-badge {
-            background: rgba(255,255,255,0.1);
-            padding: 6px 12px;
-            border-radius: 30px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-align: center;
-            display: inline-block;
-        }
-
-        .status-joined {
-            background: rgba(0,200,83,0.15);
-            color: #00c853;
-            border: 1px solid #00c853;
-        }
-
-        .status-lurking {
-            background: rgba(255,152,0,0.15);
-            color: #ff9800;
-            border: 1px solid #ff9800;
-        }
-
-        .status-active {
-            background: rgba(248,196,0,0.15);
-            color: #f8c400;
-            border: 1px solid #f8c400;
-        }
-
-        .btn {
-            background: rgba(248,196,0,0.1);
-            border: 1px solid #f8c400;
-            color: #f8c400;
-            padding: 8px 16px;
-            border-radius: 30px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            margin-right: 8px;
-        }
-
-        .btn:hover {
-            background: #f8c400;
-            color: #0a1a2a;
-        }
-
-        .btn-small {
-            padding: 4px 12px;
-            font-size: 0.75rem;
-        }
-
-        .dm-log-section {
-            background: rgba(18, 28, 46, 0.8);
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 40px;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .section-title {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
-            font-size: 1.3rem;
-            color: #f8c400;
-        }
-
-        .dm-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .dm-table th {
-            text-align: left;
-            padding: 12px;
-            color: rgba(255,255,255,0.7);
-            font-weight: 600;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .dm-table td {
-            padding: 12px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            color: rgba(255,255,255,0.9);
-        }
-
-        .pipeline-section {
-            background: rgba(18, 28, 46, 0.8);
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 40px;
-        }
-
-        .pipeline-stages {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 16px;
-            margin-top: 20px;
-        }
-
-        .stage-card {
-            background: rgba(0,0,0,0.3);
-            border-radius: 12px;
-            padding: 16px;
-            border-top: 3px solid #f8c400;
-        }
-
-        .stage-count {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #f8c400;
-            margin-bottom: 4px;
-        }
-
-        .stage-name {
-            color: rgba(255,255,255,0.7);
-            font-size: 0.8rem;
-            text-transform: uppercase;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 16px;
-            justify-content: flex-end;
-            margin-top: 30px;
-        }
-
-        .btn-primary {
-            background: linear-gradient(145deg, #f8c400, #e0b000);
-            color: #0a1a2a;
-            border: none;
-            padding: 14px 28px;
-            border-radius: 40px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .btn-secondary {
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.2);
-            color: white;
-            padding: 14px 28px;
-            border-radius: 40px;
-            font-weight: 600;
-        }
-
-        @media (max-width: 1200px) {
-            .tracker-grid {
-                grid-template-columns: 1fr;
-                display: block;
-                overflow-x: auto;
-            }
-            .tracker-header, .tracker-row {
-                display: flex;
-                flex-wrap: wrap;
-            }
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .pipeline-stages {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
+        .container { max-width: 1400px; margin: 0 auto; }
+        .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px; flex-wrap: wrap; gap: 20px; }
+        .logo { display: flex; align-items: center; gap: 15px; }
+        .logo h1 { font-size: 2.2rem; font-weight: 700; background: linear-gradient(135deg, #fff, #f8c400); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .badge { background: rgba(248, 196, 0, 0.15); border: 1px solid #f8c400; color: #ffd966; padding: 8px 20px; border-radius: 40px; font-weight: 600; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 20px; border-bottom: 3px solid #f8c400; }
+        .stat-number { font-size: 2.2rem; font-weight: 700; color: #f8c400; margin-bottom: 5px; }
+        .stat-label { color: rgba(255,255,255,0.7); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+        .tracker-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1.5fr 1.5fr; background: rgba(18, 28, 46, 0.8); border-radius: 16px; overflow: hidden; margin-bottom: 40px; border: 1px solid rgba(255,255,255,0.05); }
+        .tracker-header { display: contents; background: rgba(0,0,0,0.3); font-weight: 700; color: #f8c400; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; }
+        .tracker-header > div { padding: 16px; border-bottom: 2px solid rgba(248,196,0,0.3); background: rgba(0,0,0,0.2); }
+        .tracker-row { display: contents; }
+        .tracker-row > div { padding: 16px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; }
+        .group-name { font-weight: 600; color: white; }
+        .members { color: #a0c8ff; }
+        .status-badge { background: rgba(255,255,255,0.1); padding: 6px 12px; border-radius: 30px; font-size: 0.8rem; font-weight: 600; display: inline-block; }
+        .status-joined { background: rgba(0,200,83,0.15); color: #00c853; border: 1px solid #00c853; }
+        .status-lurking { background: rgba(255,152,0,0.15); color: #ff9800; border: 1px solid #ff9800; }
+        .status-active { background: rgba(248,196,0,0.15); color: #f8c400; border: 1px solid #f8c400; }
+        .btn { background: rgba(248,196,0,0.1); border: 1px solid #f8c400; color: #f8c400; padding: 8px 16px; border-radius: 30px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s; margin-right: 8px; }
+        .btn:hover { background: #f8c400; color: #0a1a2a; }
+        .btn-small { padding: 4px 12px; font-size: 0.75rem; }
+        .btn-primary { background: linear-gradient(145deg, #f8c400, #e0b000); color: #0a1a2a; border: none; padding: 14px 28px; border-radius: 40px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+        .btn-success { background: rgba(0,200,83,0.15); border: 1px solid #00c853; color: #00c853; }
+        .btn-success:hover { background: #00c853; color: black; }
+        .dm-log-section { background: rgba(18, 28, 46, 0.8); border-radius: 16px; padding: 24px; margin-bottom: 40px; border: 1px solid rgba(255,255,255,0.05); }
+        .section-title { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; font-size: 1.3rem; color: #f8c400; }
+        .dm-table { width: 100%; border-collapse: collapse; }
+        .dm-table th { text-align: left; padding: 12px; color: rgba(255,255,255,0.7); font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .dm-table td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); color: rgba(255,255,255,0.9); }
+        .pipeline-section { background: rgba(18, 28, 46, 0.8); border-radius: 16px; padding: 24px; margin-bottom: 40px; }
+        .pipeline-stages { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-top: 20px; }
+        .stage-card { background: rgba(0,0,0,0.3); border-radius: 12px; padding: 16px; border-top: 3px solid #f8c400; }
+        .stage-count { font-size: 1.8rem; font-weight: 700; color: #f8c400; margin-bottom: 4px; }
+        .stage-name { color: rgba(255,255,255,0.7); font-size: 0.8rem; text-transform: uppercase; }
+        .action-buttons { display: flex; gap: 16px; justify-content: flex-end; margin-top: 30px; flex-wrap: wrap; }
+        .server-sync-bar { background: rgba(10,102,194,0.15); border: 1px solid #0a66c2; border-radius: 12px; padding: 16px 24px; margin-bottom: 30px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+        .sync-status { display: flex; align-items: center; gap: 8px; color: #7fc1ff; }
+        .sync-dot { width: 10px; height: 10px; border-radius: 50%; background: #00c853; box-shadow: 0 0 10px #00c853; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+        @media (max-width: 1200px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } .tracker-grid { display: block; overflow-x: auto; } .pipeline-stages { grid-template-columns: repeat(2, 1fr); } }
     </style>
 </head>
 <body>
@@ -313,11 +67,27 @@
         <div class="header">
             <div class="logo">
                 <div style="font-size: 2.5rem;">📊</div>
-                <h1>FB Group Domination</h1>
+                <h1>Facebook War Room</h1>
             </div>
             <div class="badge">
                 <span>🔥 BOTEMIA SALES ENGINE</span>
-                <span style="margin-left: 8px;">v1.0</span>
+                <span style="margin-left: 8px;">v2.0 · SERVER READY</span>
+            </div>
+        </div>
+
+        <!-- SERVER SYNC BAR -->
+        <div class="server-sync-bar" id="serverSyncBar">
+            <div style="display: flex; align-items: center; gap: 16px;">
+                <div class="sync-dot"></div>
+                <span class="sync-status" id="syncStatus">🟢 Auto-save active · LocalStorage</span>
+            </div>
+            <div style="display: flex; gap: 12px;">
+                <button class="btn" onclick="configureServer()">
+                    <i class="fas fa-plug"></i> Connect Server
+                </button>
+                <button class="btn-success" onclick="exportFullBackup()">
+                    <i class="fas fa-database"></i> Export Backup
+                </button>
             </div>
         </div>
 
@@ -351,120 +121,16 @@
             </button>
         </div>
 
-        <div class="tracker-grid">
-            <!-- HEADER -->
+        <div class="tracker-grid" id="groupTracker">
             <div class="tracker-header">
                 <div>GROUP NAME</div>
                 <div>MEMBERS</div>
                 <div>STATUS</div>
-                <div>POSTS/WEEK</div>
+                <div>POSTS</div>
                 <div>COMMENTS</div>
                 <div>ACTIONS</div>
             </div>
-
-            <!-- ROW 1 -->
-            <div class="tracker-row" id="group1">
-                <div class="group-name">📌 Mortgage Brokers USA</div>
-                <div class="members">42.5K</div>
-                <div><span class="status-badge status-active">🔥 ACTIVE</span></div>
-                <div>5</div>
-                <div>23</div>
-                <div>
-                    <button class="btn btn-small" onclick="logDM('Mortgage Brokers USA')">+ DM</button>
-                    <button class="btn btn-small" onclick="incrementPosts('group1')">+ Post</button>
-                </div>
-            </div>
-
-            <!-- ROW 2 -->
-            <div class="tracker-row" id="group2">
-                <div class="group-name">🏠 Loan Originators Network</div>
-                <div class="members">28.1K</div>
-                <div><span class="status-badge status-active">🔥 ACTIVE</span></div>
-                <div>4</div>
-                <div>17</div>
-                <div>
-                    <button class="btn btn-small" onclick="logDM('Loan Originators Network')">+ DM</button>
-                    <button class="btn btn-small" onclick="incrementPosts('group2')">+ Post</button>
-                </div>
-            </div>
-
-            <!-- ROW 3 -->
-            <div class="tracker-row" id="group3">
-                <div class="group-name">💰 Wholesale Warriors</div>
-                <div class="members">15.2K</div>
-                <div><span class="status-badge status-active">🔥 ACTIVE</span></div>
-                <div>3</div>
-                <div>12</div>
-                <div>
-                    <button class="btn btn-small" onclick="logDM('Wholesale Warriors')">+ DM</button>
-                    <button class="btn btn-small" onclick="incrementPosts('group3')">+ Post</button>
-                </div>
-            </div>
-
-            <!-- ROW 4 -->
-            <div class="tracker-row" id="group4">
-                <div class="group-name">📈 Mortgage Professionals</div>
-                <div class="members">34.7K</div>
-                <div><span class="status-badge status-lurking">👀 LURKING</span></div>
-                <div>0</div>
-                <div>0</div>
-                <div>
-                    <button class="btn btn-small" onclick="logDM('Mortgage Professionals')">+ DM</button>
-                    <button class="btn btn-small" onclick="incrementPosts('group4')">+ Post</button>
-                </div>
-            </div>
-
-            <!-- ROW 5 -->
-            <div class="tracker-row" id="group5">
-                <div class="group-name">🏦 FHA/VA Specialists</div>
-                <div class="members">12.8K</div>
-                <div><span class="status-badge status-joined">✅ JOINED</span></div>
-                <div>0</div>
-                <div>0</div>
-                <div>
-                    <button class="btn btn-small" onclick="logDM('FHA/VA Specialists')">+ DM</button>
-                    <button class="btn btn-small" onclick="incrementPosts('group5')">+ Post</button>
-                </div>
-            </div>
-
-            <!-- ROW 6 -->
-            <div class="tracker-row" id="group6">
-                <div class="group-name">🤝 Mortgage Originators</div>
-                <div class="members">52.3K</div>
-                <div><span class="status-badge status-lurking">👀 LURKING</span></div>
-                <div>1</div>
-                <div>3</div>
-                <div>
-                    <button class="btn btn-small" onclick="logDM('Mortgage Originators')">+ DM</button>
-                    <button class="btn btn-small" onclick="incrementPosts('group6')">+ Post</button>
-                </div>
-            </div>
-
-            <!-- ROW 7 -->
-            <div class="tracker-row" id="group7">
-                <div class="group-name">📊 Mortgage Tech & AI</div>
-                <div class="members">8.9K</div>
-                <div><span class="status-badge status-active">🔥 ACTIVE</span></div>
-                <div>2</div>
-                <div>9</div>
-                <div>
-                    <button class="btn btn-small" onclick="logDM('Mortgage Tech & AI')">+ DM</button>
-                    <button class="btn btn-small" onclick="incrementPosts('group7')">+ Post</button>
-                </div>
-            </div>
-
-            <!-- ROW 8 -->
-            <div class="tracker-row" id="group8">
-                <div class="group-name">📝 First-Time Homebuyer Pros</div>
-                <div class="members">11.4K</div>
-                <div><span class="status-badge status-joined">✅ JOINED</span></div>
-                <div>0</div>
-                <div>0</div>
-                <div>
-                    <button class="btn btn-small" onclick="logDM('First-Time Homebuyer Pros')">+ DM</button>
-                    <button class="btn btn-small" onclick="incrementPosts('group8')">+ Post</button>
-                </div>
-            </div>
+            <!-- Groups will be dynamically loaded here -->
         </div>
 
         <!-- DM LOG -->
@@ -475,7 +141,7 @@
                     <i class="fas fa-download"></i> Export CSV
                 </button>
             </div>
-            <table class="dm-table" id="dmTable">
+            <table class="dm-table">
                 <thead>
                     <tr>
                         <th>DATE</th>
@@ -486,41 +152,7 @@
                         <th>ACTION</th>
                     </tr>
                 </thead>
-                <tbody id="dmTableBody">
-                    <tr>
-                        <td>2024-02-12</td>
-                        <td>Mortgage Brokers USA</td>
-                        <td>Jason Miller</td>
-                        <td><span style="color: #00c853;">✅ Demo Scheduled</span></td>
-                        <td>Feb 15</td>
-                        <td><button class="btn btn-small" onclick="markFollowedUp(this)">✔️ Done</button></td>
-                    </tr>
-                    <tr>
-                        <td>2024-02-12</td>
-                        <td>Loan Originators Network</td>
-                        <td>Sarah Chen</td>
-                        <td><span style="color: #ff9800;">⏳ Awaiting Reply</span></td>
-                        <td>Feb 14</td>
-                        <td><button class="btn btn-small" onclick="markFollowedUp(this)">✔️ Done</button></td>
-                    </tr>
-                    <tr>
-                        <td>2024-02-11</td>
-                        <td>Wholesale Warriors</td>
-                        <td>Mike Torres</td>
-                        <td><span style="color: #f8c400;">📞 Call Scheduled</span></td>
-                        <td>Feb 13</td>
-                        <td><button class="btn btn-small" onclick="markFollowedUp(this)">✔️ Done</button></td>
-                    </tr>
-                    <tr>
-                        <td>2024-02-11</td>
-                        <td>Mortgage Tech & AI</td>
-                        <td>David Kim</td>
-                        <td><span style="color: #00c853;">✅ Demo Done</span></td>
-                        <td>-</td>
-                        <td><button class="btn btn-small" onclick="markFollowedUp(this)">✔️ Done</button></td>
-                    </tr>
-                    <tr id="newDMRow" style="display: none;"></tr>
-                </tbody>
+                <tbody id="dmTableBody"></tbody>
             </table>
             <div style="margin-top: 20px; display: flex; gap: 12px;">
                 <input type="text" id="newDMGroup" placeholder="Group name" style="flex: 1; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px; color: white;">
@@ -558,297 +190,440 @@
             </div>
         </div>
 
-        <!-- ACTION BUTTONS -->
-        <div class="action-buttons">
-            <button class="btn-secondary" onclick="resetTracker()">
-                <i class="fas fa-undo"></i> Reset Demo Data
-            </button>
-            <button class="btn-primary" onclick="exportFullCSV()">
-                <i class="fas fa-download"></i> Export Full Report
-            </button>
-            <button class="btn-primary" onclick="window.print()" style="background: linear-gradient(145deg, #00c853, #00a844);">
-                <i class="fas fa-print"></i> Print Tracker
-            </button>
+        <!-- IMPORT/EXPORT SECTION -->
+        <div style="background: rgba(0,0,0,0.2); border-radius: 16px; padding: 24px; margin-bottom: 40px;">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+                <span style="font-size: 1.5rem;">💾</span>
+                <h3 style="color: white; margin: 0;">Data Management</h3>
+            </div>
+            <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+                <button class="btn-primary" onclick="exportFullBackup()">
+                    <i class="fas fa-download"></i> Download Full Backup (.json)
+                </button>
+                <div style="position: relative; overflow: hidden; display: inline-block;">
+                    <button class="btn" onclick="document.getElementById('importFile').click()">
+                        <i class="fas fa-upload"></i> Import Backup
+                    </button>
+                    <input type="file" id="importFile" accept=".json" style="position: absolute; opacity: 0; width: 0.1px; height: 0.1px;" onchange="importBackup(event)">
+                </div>
+                <button class="btn" onclick="resetToDemo()">
+                    <i class="fas fa-undo"></i> Reset to Demo
+                </button>
+                <button class="btn-success" onclick="syncToServer()" id="syncButton">
+                    <i class="fas fa-cloud-upload-alt"></i> Sync to Server
+                </button>
+            </div>
+            <p style="color: rgba(255,255,255,0.5); margin-top: 16px; font-size: 0.85rem;">
+                <i class="fas fa-info-circle"></i> Data auto-saves to browser. Export backup weekly. Server sync ready — configure your URL below.
+            </p>
+        </div>
+
+        <!-- SERVER CONFIGURATION -->
+        <div style="background: rgba(10,102,194,0.05); border-radius: 16px; padding: 20px; margin-bottom: 30px; border: 1px dashed #0a66c2;">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                <span style="font-size: 1.3rem;">☁️</span>
+                <h4 style="color: white; margin: 0;">Server Sync Configuration</h4>
+            </div>
+            <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-end;">
+                <div style="flex: 1;">
+                    <label style="display: block; color: rgba(255,255,255,0.7); font-size: 0.8rem; margin-bottom: 6px;">Server URL</label>
+                    <input type="text" id="serverUrl" placeholder="https://your-mortgage-site.com/data/" value="https://your-mortgage-site.com/data/" style="width: 100%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 12px; color: white;">
+                </div>
+                <div>
+                    <label style="display: block; color: rgba(255,255,255,0.7); font-size: 0.8rem; margin-bottom: 6px;">API Key (optional)</label>
+                    <input type="text" id="serverApiKey" placeholder="••••••••" style="width: 200px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 12px; color: white;">
+                </div>
+                <button class="btn" onclick="testServerConnection()">
+                    <i class="fas fa-plug"></i> Test Connection
+                </button>
+            </div>
         </div>
 
         <div style="margin-top: 30px; color: rgba(255,255,255,0.5); font-size: 0.8rem; text-align: center; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 30px;">
-            <p>🔥 Botemia Facebook Group Domination Tracker · Update daily · 1 DM = $500+ pipeline value</p>
-            <p style="margin-top: 10px;">💾 Data auto-saves in browser · Export CSV to save permanently</p>
+            <p>🔥 Botemia Facebook War Room · v2.0 · Auto-save enabled · Server ready</p>
         </div>
     </div>
 
     <script>
-        // ===== TRACKER ENGINE =====
-        let dmCount = 48;
-        let replyCount = 31;
-        let interestedCount = 19;
-        let demoCount = 12;
-        let closeCount = 4;
+        // ===== FACEBOOK WAR ROOM · FULL DATA PERSISTENCE =====
+        const STORAGE_KEY = 'botemia_facebook_data';
+        let SERVER_URL = localStorage.getItem('botemia_server_url') || 'https://your-mortgage-site.com/data/';
+        let API_KEY = localStorage.getItem('botemia_api_key') || '';
 
-        // Add new group
-        function addGroup() {
-            const groupName = prompt("Enter group name:");
-            if (!groupName) return;
-            
-            const members = prompt("Member count (e.g., 15.2K):", "10K");
-            const tracker = document.querySelector('.tracker-grid');
-            
-            const newRow = document.createElement('div');
-            newRow.className = 'tracker-row';
-            newRow.innerHTML = `
-                <div class="group-name">📌 ${groupName}</div>
-                <div class="members">${members}</div>
-                <div><span class="status-badge status-joined">✅ JOINED</span></div>
-                <div>0</div>
-                <div>0</div>
-                <div>
-                    <button class="btn btn-small" onclick="logDM('${groupName}')">+ DM</button>
-                    <button class="btn btn-small" onclick="incrementPosts(this)">+ Post</button>
-                </div>
-            `;
-            tracker.appendChild(newRow);
-            
-            updateGroupCount();
+        // Default demo data
+        const defaultData = {
+            groups: [
+                { name: 'Mortgage Brokers USA', members: '42.5K', status: 'active', posts: 5, comments: 23 },
+                { name: 'Loan Originators Network', members: '28.1K', status: 'active', posts: 4, comments: 17 },
+                { name: 'Wholesale Warriors', members: '15.2K', status: 'active', posts: 3, comments: 12 },
+                { name: 'Mortgage Professionals', members: '34.7K', status: 'lurking', posts: 0, comments: 0 },
+                { name: 'FHA/VA Specialists', members: '12.8K', status: 'joined', posts: 0, comments: 0 },
+                { name: 'Mortgage Originators', members: '52.3K', status: 'lurking', posts: 1, comments: 3 },
+                { name: 'Mortgage Tech & AI', members: '8.9K', status: 'active', posts: 2, comments: 9 },
+                { name: 'First-Time Homebuyer Pros', members: '11.4K', status: 'joined', posts: 0, comments: 0 }
+            ],
+            dms: [
+                { date: '2024-02-12', group: 'Mortgage Brokers USA', contact: 'Jason Miller', status: 'Demo Scheduled', followup: 'Feb 15' },
+                { date: '2024-02-12', group: 'Loan Originators Network', contact: 'Sarah Chen', status: 'Awaiting Reply', followup: 'Feb 14' },
+                { date: '2024-02-11', group: 'Wholesale Warriors', contact: 'Mike Torres', status: 'Call Scheduled', followup: 'Feb 13' },
+                { date: '2024-02-11', group: 'Mortgage Tech & AI', contact: 'David Kim', status: 'Demo Done', followup: '-' }
+            ],
+            stats: {
+                dms: 48,
+                replies: 31,
+                interested: 19,
+                demos: 12,
+                closes: 4
+            },
+            lastUpdated: new Date().toISOString()
+        };
+
+        // Load data on startup
+        let appData = loadData();
+
+        // ===== PERSISTENCE ENGINE =====
+        function loadData() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    document.getElementById('serverUrl').value = data.serverUrl || SERVER_URL;
+                    document.getElementById('serverApiKey').value = data.apiKey || API_KEY;
+                    SERVER_URL = data.serverUrl || SERVER_URL;
+                    API_KEY = data.apiKey || API_KEY;
+                    updateSyncStatus('🟢 Data loaded from localStorage');
+                    return data;
+                } catch(e) {
+                    console.error('Error loading data:', e);
+                }
+            }
+            // First time - save default data
+            saveData(defaultData);
+            return defaultData;
         }
 
-        // Log DM from group
+        function saveData(data) {
+            data.lastUpdated = new Date().toISOString();
+            data.serverUrl = document.getElementById('serverUrl')?.value || SERVER_URL;
+            data.apiKey = document.getElementById('serverApiKey')?.value || API_KEY;
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            appData = data;
+            renderAll();
+            updateSyncStatus('🟢 Auto-saved to localStorage');
+        }
+
+        function saveCurrentState() {
+            const data = {
+                groups: getCurrentGroups(),
+                dms: getCurrentDMs(),
+                stats: getCurrentStats(),
+                serverUrl: document.getElementById('serverUrl').value,
+                apiKey: document.getElementById('serverApiKey').value
+            };
+            saveData(data);
+        }
+
+        // ===== RENDER FUNCTIONS =====
+        function renderAll() {
+            renderGroups();
+            renderDMs();
+            renderStats();
+        }
+
+        function renderGroups() {
+            const container = document.getElementById('groupTracker');
+            // Keep header
+            const header = container.children[0];
+            container.innerHTML = '';
+            container.appendChild(header);
+            
+            appData.groups.forEach((group, index) => {
+                const row = document.createElement('div');
+                row.className = 'tracker-row';
+                row.innerHTML = `
+                    <div class="group-name">📌 ${group.name}</div>
+                    <div class="members">${group.members}</div>
+                    <div><span class="status-badge status-${group.status}">${getStatusEmoji(group.status)} ${group.status.toUpperCase()}</span></div>
+                    <div>${group.posts}</div>
+                    <div>${group.comments}</div>
+                    <div>
+                        <button class="btn btn-small" onclick="logDM('${group.name}')">+ DM</button>
+                        <button class="btn btn-small" onclick="incrementPosts(${index})">+ Post</button>
+                    </div>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function renderDMs() {
+            const tbody = document.getElementById('dmTableBody');
+            tbody.innerHTML = '';
+            appData.dms.forEach((dm, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${dm.date}</td>
+                    <td>${dm.group}</td>
+                    <td>${dm.contact}</td>
+                    <td><span style="color: ${getStatusColor(dm.status)};">${getStatusIcon(dm.status)} ${dm.status}</span></td>
+                    <td>${dm.followup}</td>
+                    <td>
+                        <button class="btn btn-small" onclick="updateDMStatus(${index})">✔️ Update</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function renderStats() {
+            const stats = appData.stats;
+            document.getElementById('totalGroups').innerText = appData.groups.length;
+            document.getElementById('totalDMs').innerText = stats.dms;
+            document.getElementById('totalDemos').innerText = stats.demos;
+            document.getElementById('pipelineDMs').innerText = stats.dms;
+            document.getElementById('pipelineReplies').innerText = stats.replies;
+            document.getElementById('pipelineInterested').innerText = stats.interested;
+            document.getElementById('pipelineDemos').innerText = stats.demos;
+            document.getElementById('pipelineCloses').innerText = stats.closes;
+            
+            // Calculate total members
+            let totalMembers = 0;
+            appData.groups.forEach(g => {
+                if (g.members.includes('K')) totalMembers += parseFloat(g.members) * 1000;
+                else if (g.members.includes('M')) totalMembers += parseFloat(g.members) * 1000000;
+            });
+            document.getElementById('totalMembers').innerText = totalMembers > 1000000 ? 
+                (totalMembers / 1000000).toFixed(1) + 'M' : 
+                Math.round(totalMembers / 1000) + 'K';
+        }
+
+        // ===== ACTIONS =====
+        function addGroup() {
+            const name = prompt('Enter group name:');
+            if (!name) return;
+            const members = prompt('Member count (e.g., 15.2K):', '10K');
+            
+            appData.groups.push({
+                name: name,
+                members: members,
+                status: 'joined',
+                posts: 0,
+                comments: 0
+            });
+            saveCurrentState();
+        }
+
         function logDM(groupName) {
-            const contact = prompt("Contact name:");
+            const contact = prompt('Contact name:');
             if (!contact) return;
             
-            dmCount++;
-            document.getElementById('totalDMs').innerText = dmCount;
-            document.getElementById('pipelineDMs').innerText = dmCount;
+            appData.dms.unshift({
+                date: new Date().toISOString().split('T')[0],
+                group: groupName,
+                contact: contact,
+                status: 'Awaiting Reply',
+                followup: new Date(Date.now() + 2*24*60*60*1000).toISOString().split('T')[0]
+            });
             
-            const tableBody = document.getElementById('dmTableBody');
-            const newRow = document.createElement('tr');
-            const today = new Date().toISOString().split('T')[0];
-            
-            newRow.innerHTML = `
-                <td>${today}</td>
-                <td>${groupName}</td>
-                <td>${contact}</td>
-                <td><span style="color: #ff9800;">⏳ Awaiting Reply</span></td>
-                <td>${new Date(Date.now() + 2*24*60*60*1000).toISOString().split('T')[0]}</td>
-                <td><button class="btn btn-small" onclick="markFollowedUp(this)">✔️ Done</button></td>
-            `;
-            tableBody.appendChild(newRow);
-            
-            updatePipeline();
+            appData.stats.dms++;
+            saveCurrentState();
         }
 
-        // Increment posts/comments
-        function incrementPosts(button) {
-            const row = button.closest('.tracker-row');
-            const postsCell = row.children[3];
-            const commentsCell = row.children[4];
-            
-            postsCell.innerText = parseInt(postsCell.innerText || 0) + 1;
-            
-            // Random comment increment
-            const newComments = parseInt(commentsCell.innerText || 0) + Math.floor(Math.random() * 3) + 1;
-            commentsCell.innerText = newComments;
-            
-            // Update status
-            const statusBadge = row.querySelector('.status-badge');
-            statusBadge.className = 'status-badge status-active';
-            statusBadge.innerHTML = '🔥 ACTIVE';
-            statusBadge.style.color = '#f8c400';
-        }
-
-        // Mark DM as followed up
-        function markFollowedUp(button) {
-            const row = button.closest('tr');
-            const statusCell = row.children[3];
-            const followupCell = row.children[4];
-            
-            if (statusCell.innerHTML.includes('Awaiting Reply')) {
-                statusCell.innerHTML = '<span style="color: #f8c400;">📞 Interested</span>';
-                interestedCount++;
-            } else if (statusCell.innerHTML.includes('Interested')) {
-                statusCell.innerHTML = '<span style="color: #00c853;">✅ Demo Scheduled</span>';
-                demoCount++;
-            } else if (statusCell.innerHTML.includes('Demo Scheduled')) {
-                statusCell.innerHTML = '<span style="color: #00c853;">✅ Demo Done</span>';
-                followupCell.innerText = '-';
-                button.style.display = 'none';
-            }
-            
-            updatePipeline();
-        }
-
-        // Add new DM manually
         function addDM() {
             const group = document.getElementById('newDMGroup').value;
             const contact = document.getElementById('newDMContact').value;
+            if (!group || !contact) return alert('Enter both group and contact name');
             
-            if (!group || !contact) {
-                alert("Enter both group and contact name");
-                return;
-            }
+            appData.dms.unshift({
+                date: new Date().toISOString().split('T')[0],
+                group: group,
+                contact: contact,
+                status: 'Awaiting Reply',
+                followup: new Date(Date.now() + 2*24*60*60*1000).toISOString().split('T')[0]
+            });
             
-            dmCount++;
-            document.getElementById('totalDMs').innerText = dmCount;
-            document.getElementById('pipelineDMs').innerText = dmCount;
-            
-            const tableBody = document.getElementById('dmTableBody');
-            const newRow = document.createElement('tr');
-            const today = new Date().toISOString().split('T')[0];
-            const followup = new Date(Date.now() + 2*24*60*60*1000).toISOString().split('T')[0];
-            
-            newRow.innerHTML = `
-                <td>${today}</td>
-                <td>${group}</td>
-                <td>${contact}</td>
-                <td><span style="color: #ff9800;">⏳ Awaiting Reply</span></td>
-                <td>${followup}</td>
-                <td><button class="btn btn-small" onclick="markFollowedUp(this)">✔️ Done</button></td>
-            `;
-            tableBody.appendChild(newRow);
-            
+            appData.stats.dms++;
             document.getElementById('newDMGroup').value = '';
             document.getElementById('newDMContact').value = '';
-            
-            updatePipeline();
+            saveCurrentState();
         }
 
-        // Update group count
-        function updateGroupCount() {
-            const rows = document.querySelectorAll('.tracker-row');
-            document.getElementById('totalGroups').innerText = rows.length;
-            
-            // Update total members (rough estimate)
-            let totalMembers = 0;
-            rows.forEach(row => {
-                const members = row.children[1].innerText;
-                if (members.includes('K')) {
-                    totalMembers += parseFloat(members) * 1000;
-                }
-            });
-            
-            if (totalMembers > 1000000) {
-                document.getElementById('totalMembers').innerText = (totalMembers / 1000000).toFixed(1) + 'M';
-            } else {
-                document.getElementById('totalMembers').innerText = Math.round(totalMembers / 1000) + 'K';
+        function incrementPosts(index) {
+            appData.groups[index].posts++;
+            appData.groups[index].comments += Math.floor(Math.random() * 3) + 1;
+            appData.groups[index].status = 'active';
+            saveCurrentState();
+        }
+
+        function updateDMStatus(index) {
+            const dm = appData.dms[index];
+            const statuses = ['Awaiting Reply', 'Interested', 'Demo Scheduled', 'Demo Done', 'Closed'];
+            const currentIndex = statuses.indexOf(dm.status);
+            if (currentIndex < statuses.length - 1) {
+                dm.status = statuses[currentIndex + 1];
+                
+                // Update stats
+                if (dm.status === 'Interested') appData.stats.interested++;
+                if (dm.status === 'Demo Scheduled') appData.stats.demos++;
+                if (dm.status === 'Demo Done') appData.stats.closes++;
+                
+                saveCurrentState();
             }
         }
 
-        // Update pipeline numbers
-        function updatePipeline() {
-            document.getElementById('totalDMs').innerText = dmCount;
-            document.getElementById('pipelineDMs').innerText = dmCount;
-            document.getElementById('pipelineReplies').innerText = replyCount;
-            document.getElementById('pipelineInterested').innerText = interestedCount;
-            document.getElementById('pipelineDemos').innerText = demoCount;
-            document.getElementById('pipelineCloses').innerText = closeCount;
-            document.getElementById('totalDemos').innerText = demoCount;
+        // ===== DATA EXPORT/IMPORT =====
+        function exportFullBackup() {
+            const backup = {
+                version: '2.0',
+                tool: 'Facebook War Room',
+                timestamp: new Date().toISOString(),
+                data: appData,
+                serverUrl: document.getElementById('serverUrl').value
+            };
+            
+            const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `facebook-war-room-backup-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
         }
 
-        // Export DM log as CSV
-        function exportDMs() {
-            const rows = document.querySelectorAll('#dmTableBody tr');
-            let csv = 'Date,Group,Contact,Status,Follow-up\n';
+        function importBackup(event) {
+            const file = event.target.files[0];
+            if (!file) return;
             
-            rows.forEach(row => {
-                if (row.id !== 'newDMRow' && row.style.display !== 'none') {
-                    const cols = row.querySelectorAll('td');
-                    let status = cols[3].innerText.replace(/[✅⏳📞]/g, '').trim();
-                    csv += `${cols[0].innerText},${cols[1].innerText},${cols[2].innerText},${status},${cols[4].innerText}\n`;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const backup = JSON.parse(e.target.result);
+                    if (backup.data) {
+                        saveData(backup.data);
+                        alert('✅ Backup imported successfully!');
+                    }
+                } catch(e) {
+                    alert('❌ Invalid backup file');
                 }
-            });
-            
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = 'botemia-dm-log.csv';
-            link.click();
+            };
+            reader.readAsText(file);
+            event.target.value = ''; // Reset input
         }
 
-        // Export full report
-        function exportFullCSV() {
-            // Groups export
-            let groupCsv = 'Group,Members,Status,Posts,Comments\n';
-            const rows = document.querySelectorAll('.tracker-row');
-            rows.forEach(row => {
-                const name = row.children[0].innerText.replace('📌 ', '');
-                const members = row.children[1].innerText;
-                const status = row.children[2].innerText.replace(/[🔥✅👀]/g, '').trim();
-                const posts = row.children[3].innerText;
-                const comments = row.children[4].innerText;
-                groupCsv += `${name},${members},${status},${posts},${comments}\n`;
-            });
-            
-            const blob = new Blob([groupCsv], { type: 'text/csv' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = 'botemia-group-tracker.csv';
-            link.click();
-            
-            // Also export DMs
-            exportDMs();
+        // ===== SERVER SYNC =====
+        function configureServer() {
+            const url = prompt('Enter your server URL (e.g., https://your-site.com/data/):', SERVER_URL);
+            if (url) {
+                SERVER_URL = url;
+                localStorage.setItem('botemia_server_url', url);
+                document.getElementById('serverUrl').value = url;
+                updateSyncStatus('🟡 Server URL configured');
+            }
         }
 
-        // Reset to demo data
-        function resetTracker() {
-            dmCount = 48;
-            replyCount = 31;
-            interestedCount = 19;
-            demoCount = 12;
-            closeCount = 4;
+        async function testServerConnection() {
+            const url = document.getElementById('serverUrl').value;
+            updateSyncStatus('🟡 Testing connection...');
             
-            updatePipeline();
-            updateGroupCount();
-            
-            // Reset DM table to demo rows
-            const tbody = document.getElementById('dmTableBody');
-            tbody.innerHTML = `
-                <tr>
-                    <td>2024-02-12</td>
-                    <td>Mortgage Brokers USA</td>
-                    <td>Jason Miller</td>
-                    <td><span style="color: #00c853;">✅ Demo Scheduled</span></td>
-                    <td>Feb 15</td>
-                    <td><button class="btn btn-small" onclick="markFollowedUp(this)">✔️ Done</button></td>
-                </tr>
-                <tr>
-                    <td>2024-02-12</td>
-                    <td>Loan Originators Network</td>
-                    <td>Sarah Chen</td>
-                    <td><span style="color: #ff9800;">⏳ Awaiting Reply</span></td>
-                    <td>Feb 14</td>
-                    <td><button class="btn btn-small" onclick="markFollowedUp(this)">✔️ Done</button></td>
-                </tr>
-                <tr>
-                    <td>2024-02-11</td>
-                    <td>Wholesale Warriors</td>
-                    <td>Mike Torres</td>
-                    <td><span style="color: #f8c400;">📞 Call Scheduled</span></td>
-                    <td>Feb 13</td>
-                    <td><button class="btn btn-small" onclick="markFollowedUp(this)">✔️ Done</button></td>
-                </tr>
-                <tr>
-                    <td>2024-02-11</td>
-                    <td>Mortgage Tech & AI</td>
-                    <td>David Kim</td>
-                    <td><span style="color: #00c853;">✅ Demo Done</span></td>
-                    <td>-</td>
-                    <td><button class="btn btn-small" onclick="markFollowedUp(this)">✔️ Done</button></td>
-                </tr>
-            `;
-            
-            alert("Tracker reset to demo data");
+            try {
+                const response = await fetch(url + 'test-connection.json?' + Date.now(), { 
+                    method: 'HEAD',
+                    mode: 'no-cors'
+                });
+                updateSyncStatus('🟢 Server reachable (CORS mode)');
+            } catch(e) {
+                updateSyncStatus('🔴 Server unreachable - check URL');
+            }
         }
 
-        // Initialize on load
-        document.addEventListener('DOMContentLoaded', function() {
-            updateGroupCount();
-            updatePipeline();
+        async function syncToServer() {
+            const url = document.getElementById('serverUrl').value;
+            const apiKey = document.getElementById('serverApiKey').value;
+            
+            updateSyncStatus('🟡 Syncing to server...');
+            
+            // Save to localStorage first
+            saveCurrentState();
+            
+            // For now, just export a backup
+            exportFullBackup();
+            
+            updateSyncStatus('🟢 Backup exported - upload to your server');
+            
+            // TODO: Add actual POST to your server when endpoint is ready
+            // This is ready for when you add the PHP endpoint
+        }
+
+        function updateSyncStatus(message) {
+            const statusEl = document.getElementById('syncStatus');
+            if (statusEl) statusEl.innerHTML = message;
+        }
+
+        // ===== UTILITIES =====
+        function getCurrentGroups() {
+            return appData.groups;
+        }
+
+        function getCurrentDMs() {
+            return appData.dms;
+        }
+
+        function getCurrentStats() {
+            return appData.stats;
+        }
+
+        function getStatusEmoji(status) {
+            const emojis = { active: '🔥', lurking: '👀', joined: '✅' };
+            return emojis[status] || '';
+        }
+
+        function getStatusColor(status) {
+            const colors = {
+                'Awaiting Reply': '#ff9800',
+                'Interested': '#f8c400',
+                'Call Scheduled': '#f8c400',
+                'Demo Scheduled': '#00c853',
+                'Demo Done': '#00c853',
+                'Closed': '#00c853'
+            };
+            return colors[status] || '#ffffff';
+        }
+
+        function getStatusIcon(status) {
+            const icons = {
+                'Awaiting Reply': '⏳',
+                'Interested': '📞',
+                'Call Scheduled': '📞',
+                'Demo Scheduled': '✅',
+                'Demo Done': '✅',
+                'Closed': '💰'
+            };
+            return icons[status] || '';
+        }
+
+        function resetToDemo() {
+            if (confirm('Reset to demo data? Your current data will be backed up first.')) {
+                exportFullBackup();
+                saveData(defaultData);
+            }
+        }
+
+        // Auto-save on page unload
+        window.addEventListener('beforeunload', () => {
+            saveCurrentState();
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            // Load server settings
+            document.getElementById('serverUrl').value = SERVER_URL;
+            document.getElementById('serverApiKey').value = API_KEY;
             
             // Add Font Awesome
             const link = document.createElement('link');
             link.rel = 'stylesheet';
             link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css';
             document.head.appendChild(link);
+            
+            renderAll();
+            updateSyncStatus('🟢 Ready · Auto-save enabled');
         });
     </script>
 </body>

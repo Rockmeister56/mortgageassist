@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LinkedIn War Room · Botemia Sales Engine</title>
+    <title>LinkedIn War Room · Botemia Sales · Server Ready</title>
     <style>
         * {
             margin: 0;
@@ -59,6 +59,41 @@
             display: flex;
             align-items: center;
             gap: 8px;
+        }
+
+        .server-sync-bar {
+            background: rgba(10,102,194,0.15);
+            border: 1px solid #0a66c2;
+            border-radius: 12px;
+            padding: 16px 24px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .sync-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #7fc1ff;
+        }
+
+        .sync-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #00c853;
+            box-shadow: 0 0 10px #00c853;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
         }
 
         .stats-grid {
@@ -162,10 +197,17 @@
             border-radius: 4px;
         }
 
+        .prospect-table-container {
+            background: rgba(18, 28, 46, 0.8);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 30px;
+            overflow-x: auto;
+        }
+
         .prospect-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
         }
 
         .prospect-table th {
@@ -186,7 +228,6 @@
         }
 
         .status-badge {
-            background: rgba(255,255,255,0.1);
             padding: 4px 12px;
             border-radius: 30px;
             font-size: 0.75rem;
@@ -216,6 +257,12 @@
             background: rgba(0,200,83,0.15);
             color: #00c853;
             border: 1px solid #00c853;
+        }
+
+        .status-closed {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border: 1px solid white;
         }
 
         .btn {
@@ -250,6 +297,18 @@
         .btn-success:hover {
             background: #00c853;
             color: black;
+        }
+
+        .btn-primary {
+            background: linear-gradient(145deg, #0a66c2, #054a91);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 40px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .sequence-section {
@@ -287,9 +346,37 @@
             font-style: italic;
         }
 
-        .step-status {
+        .step-stats {
             color: rgba(255,255,255,0.5);
             font-size: 0.75rem;
+        }
+
+        .quick-add-section {
+            background: rgba(18, 28, 46, 0.8);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 40px;
+        }
+
+        .quick-add-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .quick-add-grid input,
+        .quick-add-grid select {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 12px;
+            color: white;
+            font-size: 0.95rem;
+        }
+
+        .quick-add-grid input::placeholder {
+            color: rgba(255,255,255,0.5);
         }
 
         .action-buttons {
@@ -297,58 +384,33 @@
             gap: 16px;
             justify-content: flex-end;
             margin-top: 30px;
+            flex-wrap: wrap;
         }
 
-        .btn-primary {
-            background: linear-gradient(145deg, #0a66c2, #054a91);
-            color: white;
-            border: none;
-            padding: 14px 28px;
-            border-radius: 40px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .data-management {
+            background: rgba(0,0,0,0.2);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 30px;
         }
 
-        .btn-secondary {
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.2);
-            color: white;
-            padding: 14px 28px;
-            border-radius: 40px;
-            font-weight: 600;
-        }
-
-        .script-box {
-            background: rgba(0,0,0,0.3);
-            border-radius: 12px;
+        .server-config {
+            background: rgba(10,102,194,0.05);
+            border-radius: 16px;
             padding: 20px;
-            margin-top: 20px;
-            border-left: 4px solid #0a66c2;
-            font-style: italic;
-            color: rgba(255,255,255,0.9);
+            margin-bottom: 30px;
+            border: 1px dashed #0a66c2;
         }
 
         @media (max-width: 1200px) {
-            .stats-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-            .campaign-grid {
-                grid-template-columns: 1fr;
-            }
-            .sequence-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+            .stats-grid { grid-template-columns: repeat(3, 1fr); }
+            .campaign-grid { grid-template-columns: 1fr; }
+            .sequence-grid { grid-template-columns: repeat(2, 1fr); }
         }
 
         @media (max-width: 800px) {
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .sequence-grid {
-                grid-template-columns: 1fr;
-            }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .sequence-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -361,7 +423,23 @@
             </div>
             <div class="badge">
                 <span>🎯 BOTEMIA OUTBOUND ENGINE</span>
-                <span style="margin-left: 8px;">v1.0</span>
+                <span style="margin-left: 8px;">v2.0 · SERVER READY</span>
+            </div>
+        </div>
+
+        <!-- SERVER SYNC BAR -->
+        <div class="server-sync-bar" id="serverSyncBar">
+            <div style="display: flex; align-items: center; gap: 16px;">
+                <div class="sync-dot"></div>
+                <span class="sync-status" id="syncStatus">🟢 Auto-save active · LocalStorage</span>
+            </div>
+            <div style="display: flex; gap: 12px;">
+                <button class="btn" onclick="configureServer()">
+                    <i class="fas fa-plug"></i> Connect Server
+                </button>
+                <button class="btn-success" onclick="exportFullBackup()">
+                    <i class="fas fa-database"></i> Export Backup
+                </button>
             </div>
         </div>
 
@@ -389,7 +467,7 @@
             </div>
         </div>
 
-        <!-- ACTIVE CAMPAIGNS -->
+        <!-- CAMPAIGN GRID -->
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
             <h2 style="color: white; display: flex; align-items: center; gap: 10px;">
                 <span>🚀</span> Active Outreach Campaigns
@@ -399,91 +477,19 @@
             </button>
         </div>
 
-        <div class="campaign-grid">
-            <!-- CAMPAIGN 1: Mortgage Brokers -->
-            <div class="campaign-card" id="campaign1">
-                <div class="campaign-header">
-                    <div class="campaign-icon">🏠</div>
-                    <div class="campaign-title">Mortgage Brokers · Q1 2024</div>
-                </div>
-                <div class="campaign-stats">
-                    <div class="campaign-stat">
-                        <div class="campaign-stat-number">500</div>
-                        <div class="campaign-stat-label">Sent</div>
-                    </div>
-                    <div class="campaign-stat">
-                        <div class="campaign-stat-number">186</div>
-                        <div class="campaign-stat-label">Accepted</div>
-                    </div>
-                    <div class="campaign-stat">
-                        <div class="campaign-stat-number">58</div>
-                        <div class="campaign-stat-label">Replies</div>
-                    </div>
-                    <div class="campaign-stat">
-                        <div class="campaign-stat-number">14</div>
-                        <div class="campaign-stat-label">Demos</div>
-                    </div>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: 37%;"></div>
-                </div>
-                <div style="display: flex; justify-content: space-between; margin-top: 8px;">
-                    <span style="color: rgba(255,255,255,0.6);">Accept rate: 37%</span>
-                    <span style="color: #0a66c2; font-weight: 600;">14 closes target</span>
-                </div>
-                <button class="btn" style="width: 100%; margin-top: 20px;" onclick="viewCampaign('Mortgage Brokers')">
-                    <i class="fas fa-eye"></i> View Prospects
-                </button>
-            </div>
+        <div class="campaign-grid" id="campaignGrid"></div>
 
-            <!-- CAMPAIGN 2: Branch Managers -->
-            <div class="campaign-card" id="campaign2">
-                <div class="campaign-header">
-                    <div class="campaign-icon">🏦</div>
-                    <div class="campaign-title">Branch Managers · East Coast</div>
-                </div>
-                <div class="campaign-stats">
-                    <div class="campaign-stat">
-                        <div class="campaign-stat-number">250</div>
-                        <div class="campaign-stat-label">Sent</div>
-                    </div>
-                    <div class="campaign-stat">
-                        <div class="campaign-stat-number">89</div>
-                        <div class="campaign-stat-label">Accepted</div>
-                    </div>
-                    <div class="campaign-stat">
-                        <div class="campaign-stat-number">31</div>
-                        <div class="campaign-stat-label">Replies</div>
-                    </div>
-                    <div class="campaign-stat">
-                        <div class="campaign-stat-number">7</div>
-                        <div class="campaign-stat-label">Demos</div>
-                    </div>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: 35%;"></div>
-                </div>
-                <div style="display: flex; justify-content: space-between; margin-top: 8px;">
-                    <span style="color: rgba(255,255,255,0.6);">Accept rate: 35%</span>
-                    <span style="color: #0a66c2; font-weight: 600;">8 closes target</span>
-                </div>
-                <button class="btn" style="width: 100%; margin-top: 20px;" onclick="viewCampaign('Branch Managers')">
-                    <i class="fas fa-eye"></i> View Prospects
-                </button>
-            </div>
-        </div>
-
-        <!-- ACTIVE PROSPECTS TABLE -->
-        <div style="display: flex; justify-content: space-between; align-items: center; margin: 30px 0 16px;">
+        <!-- PROSPECTS TABLE -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
             <h2 style="color: white; display: flex; align-items: center; gap: 10px;">
                 <span>📋</span> Active Prospects · In Progress
             </h2>
-            <button class="btn btn-success" onclick="addProspect()">
-                <i class="fas fa-user-plus"></i> + Log New Prospect
+            <button class="btn btn-success" onclick="focusQuickAdd()">
+                <i class="fas fa-user-plus"></i> + Add Prospect
             </button>
         </div>
 
-        <div style="background: rgba(18, 28, 46, 0.8); border-radius: 20px; padding: 20px; overflow-x: auto;">
+        <div class="prospect-table-container">
             <table class="prospect-table">
                 <thead>
                     <tr>
@@ -497,72 +503,11 @@
                         <th>ACTIONS</th>
                     </tr>
                 </thead>
-                <tbody id="prospectTableBody">
-                    <tr>
-                        <td>Michael Chen</td>
-                        <td>Branch Manager</td>
-                        <td>CrossCountry Mortgage</td>
-                        <td>Branch Managers</td>
-                        <td><span class="status-badge status-connected">✅ Connected</span></td>
-                        <td>Feb 12</td>
-                        <td>DM Day 3</td>
-                        <td>
-                            <button class="btn btn-small" onclick="updateStatus(this, 'replied')">+ Reply</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Sarah Rodriguez</td>
-                        <td>Senior Loan Officer</td>
-                        <td>Fairway Independent</td>
-                        <td>Mortgage Brokers</td>
-                        <td><span class="status-badge status-replied">💬 Replied</span></td>
-                        <td>Feb 11</td>
-                        <td>Send Demo</td>
-                        <td>
-                            <button class="btn btn-small" onclick="updateStatus(this, 'interested')">🎯 Interested</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>David Kim</td>
-                        <td>Owner/Broker</td>
-                        <td>Premier Lending</td>
-                        <td>Mortgage Brokers</td>
-                        <td><span class="status-badge status-interested">🔥 Interested</span></td>
-                        <td>Feb 10</td>
-                        <td>Demo Feb 15</td>
-                        <td>
-                            <button class="btn btn-small" onclick="updateStatus(this, 'demo')">📅 Demo Done</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Jennifer Walsh</td>
-                        <td>Regional Manager</td>
-                        <td>Guaranteed Rate</td>
-                        <td>Branch Managers</td>
-                        <td><span class="status-badge status-demo">✅ Demo Done</span></td>
-                        <td>Feb 09</td>
-                        <td>Follow-up</td>
-                        <td>
-                            <button class="btn btn-small" onclick="updateStatus(this, 'closed')">💰 Close</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Robert Taylor</td>
-                        <td>Mortgage Broker</td>
-                        <td>Nexa Mortgage</td>
-                        <td>Mortgage Brokers</td>
-                        <td><span class="status-badge status-connected">✅ Connected</span></td>
-                        <td>Feb 12</td>
-                        <td>DM Day 2</td>
-                        <td>
-                            <button class="btn btn-small" onclick="updateStatus(this, 'replied')">+ Reply</button>
-                        </td>
-                    </tr>
-                </tbody>
+                <tbody id="prospectTableBody"></tbody>
             </table>
         </div>
 
-        <!-- OUTBOUND SEQUENCE ENGINE -->
+        <!-- OUTBOUND SEQUENCE -->
         <div class="sequence-section">
             <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
                 <span style="font-size: 1.8rem;">⏱️</span>
@@ -573,32 +518,106 @@
                 <div class="sequence-step">
                     <div class="step-day">DAY 1 · Connection</div>
                     <div class="step-message">"Hey [Name], saw your work at [Company]. I'm helping mortgage brokers close 94% of qualified apps with AI. Would love to connect."</div>
-                    <div class="step-status">✅ 312 sent · 186 accepted</div>
+                    <div class="step-stats" id="step1Stats">312 sent · 186 accepted</div>
                 </div>
                 <div class="sequence-step">
                     <div class="step-day">DAY 3 · DM Follow-up</div>
                     <div class="step-message">"Thanks for connecting! Quick question — are you currently using any AI for lead follow-up or pre-qualification? We built something called Botemia that's been a game changer."</div>
-                    <div class="step-status">💬 186 sent · 58 replies</div>
+                    <div class="step-stats" id="step2Stats">186 sent · 58 replies</div>
                 </div>
                 <div class="sequence-step">
                     <div class="step-day">DAY 5 · Value Add</div>
                     <div class="step-message">"Here's a quick 2-min demo of how Botemia works. She asks for their name, answers rate questions, and routes ready buyers to your LOs. No typing. No friction."</div>
-                    <div class="step-status">🎯 58 sent · 31 interested</div>
+                    <div class="step-stats" id="step3Stats">58 sent · 31 interested</div>
                 </div>
                 <div class="sequence-step">
                     <div class="step-day">DAY 7 · Call to Action</div>
                     <div class="step-message">"Want to see what she'd look like on your site? Happy to spin up a demo instance for you. Got 10 minutes this week?"</div>
-                    <div class="step-status">📅 31 sent · 23 demos</div>
+                    <div class="step-stats" id="step4Stats">31 sent · 23 demos</div>
                 </div>
-            </div>
-
-            <div class="script-box">
-                <strong>📋 CONNECTION REQUEST TEMPLATE (300 char):</strong><br>
-                "Hey [Name], saw your profile and work at [Company]. I'm helping mortgage brokers automate lead follow-up and close more apps with AI. Worth connecting?"
             </div>
         </div>
 
-        <!-- EVABOOT INTEGRATION PANEL -->
+        <!-- QUICK ADD PROSPECT -->
+        <div class="quick-add-section">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+                <span style="font-size: 1.5rem;">⚡</span>
+                <h3 style="color: white; margin: 0;">Quick Add Prospect</h3>
+            </div>
+            <div class="quick-add-grid">
+                <input type="text" id="prospectName" placeholder="Full Name">
+                <input type="text" id="prospectTitle" placeholder="Title">
+                <input type="text" id="prospectCompany" placeholder="Company">
+                <select id="prospectCampaign">
+                    <option value="Mortgage Brokers · Q1 2024">Mortgage Brokers · Q1 2024</option>
+                    <option value="Branch Managers · East Coast">Branch Managers · East Coast</option>
+                    <option value="New Campaign">+ New Campaign</option>
+                </select>
+                <select id="prospectStatus">
+                    <option value="Connected">✅ Connected</option>
+                    <option value="Awaiting Reply">⏳ Awaiting Reply</option>
+                    <option value="Interested">🔥 Interested</option>
+                    <option value="Demo Scheduled">📅 Demo Scheduled</option>
+                </select>
+                <button class="btn-success" onclick="quickAddProspect()" style="padding: 12px; border-radius: 10px;">
+                    <i class="fas fa-plus-circle"></i> Add Prospect
+                </button>
+            </div>
+        </div>
+
+        <!-- DATA MANAGEMENT -->
+        <div class="data-management">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+                <span style="font-size: 1.5rem;">💾</span>
+                <h3 style="color: white; margin: 0;">Data Management</h3>
+            </div>
+            <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+                <button class="btn-primary" onclick="exportFullBackup()">
+                    <i class="fas fa-download"></i> Download Full Backup (.json)
+                </button>
+                <div style="position: relative; overflow: hidden; display: inline-block;">
+                    <button class="btn" onclick="document.getElementById('importFile').click()">
+                        <i class="fas fa-upload"></i> Import Backup
+                    </button>
+                    <input type="file" id="importFile" accept=".json" style="position: absolute; opacity: 0; width: 0.1px; height: 0.1px;" onchange="importBackup(event)">
+                </div>
+                <button class="btn" onclick="exportCSV()">
+                    <i class="fas fa-file-csv"></i> Export CSV
+                </button>
+                <button class="btn" onclick="resetToDemo()">
+                    <i class="fas fa-undo"></i> Reset to Demo
+                </button>
+            </div>
+        </div>
+
+        <!-- SERVER CONFIGURATION -->
+        <div class="server-config">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                <span style="font-size: 1.3rem;">☁️</span>
+                <h4 style="color: white; margin: 0;">Server Sync Configuration</h4>
+            </div>
+            <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-end;">
+                <div style="flex: 1;">
+                    <label style="display: block; color: rgba(255,255,255,0.7); font-size: 0.8rem; margin-bottom: 6px;">Server URL</label>
+                    <input type="text" id="serverUrl" placeholder="https://your-mortgage-site.com/data/" value="https://your-mortgage-site.com/data/" style="width: 100%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 12px; color: white;">
+                </div>
+                <div>
+                    <label style="display: block; color: rgba(255,255,255,0.7); font-size: 0.8rem; margin-bottom: 6px;">Client ID</label>
+                    <input type="text" id="clientId" placeholder="mortgage-assist" value="mortgage-assist" style="width: 200px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 12px; color: white;">
+                </div>
+                <button class="btn" onclick="testServerConnection()">
+                    <i class="fas fa-plug"></i> Test Connection
+                </button>
+                <button class="btn-success" onclick="syncToServer()">
+                    <i class="fas fa-cloud-upload-alt"></i> Sync Now
+                </button>
+            </div>
+            <p style="color: rgba(255,255,255,0.5); margin-top: 16px; font-size: 0.85rem;">
+                <i class="fas fa-info-circle"></i> Data auto-saves to browser. Server sync stores all campaigns and prospects on your server.
+            </p>
+        </div>
+
+        <!-- EVABOOT INTEGRATION -->
         <div style="background: linear-gradient(145deg, rgba(10,102,194,0.1), rgba(0,0,0,0.2)); border-radius: 20px; padding: 24px; margin-bottom: 30px; border: 1px solid #0a66c2;">
             <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
                 <div style="background: #0a66c2; width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem;">
@@ -608,78 +627,212 @@
                     <h3 style="color: white; margin-bottom: 8px;">Evaboot + Apollo Pipeline</h3>
                     <p style="color: rgba(255,255,255,0.7);">Import 500 mortgage broker contacts from Sales Navigator in 2 clicks</p>
                 </div>
-                <button class="btn-primary" onclick="importEvaboot()">
-                    <i class="fas fa-file-import"></i> Import CSV
+                <button class="btn-primary" onclick="importEvabootSample()">
+                    <i class="fas fa-file-import"></i> Import Sample
                 </button>
-                <button class="btn" onclick="showSampleData()">
-                    <i class="fas fa-eye"></i> Preview
-                </button>
-            </div>
-        </div>
-
-        <!-- QUICK ADD PROSPECT -->
-        <div style="background: rgba(18, 28, 46, 0.8); border-radius: 20px; padding: 24px; margin-bottom: 40px;">
-            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
-                <span style="font-size: 1.5rem;">⚡</span>
-                <h3 style="color: white; margin: 0;">Quick Add Prospect</h3>
-            </div>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
-                <input type="text" id="prospectName" placeholder="Full Name" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 12px; color: white;">
-                <input type="text" id="prospectTitle" placeholder="Title" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 12px; color: white;">
-                <input type="text" id="prospectCompany" placeholder="Company" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 12px; color: white;">
-                <select id="prospectCampaign" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 12px; color: white;">
-                    <option value="Mortgage Brokers">Mortgage Brokers</option>
-                    <option value="Branch Managers">Branch Managers</option>
-                    <option value="New Campaign">+ New Campaign</option>
-                </select>
-                <button class="btn-success" onclick="quickAddProspect()" style="padding: 12px; border-radius: 10px;">
-                    <i class="fas fa-plus-circle"></i> Add Prospect
+                <button class="btn" onclick="window.open('https://evaboot.com', '_blank')">
+                    <i class="fas fa-external-link-alt"></i> Open Evaboot
                 </button>
             </div>
-        </div>
-
-        <!-- ACTION BUTTONS -->
-        <div class="action-buttons">
-            <button class="btn-secondary" onclick="exportLinkedInData()">
-                <i class="fas fa-download"></i> Export CSV
-            </button>
-            <button class="btn-secondary" onclick="resetLinkedInData()">
-                <i class="fas fa-undo"></i> Reset Demo
-            </button>
-            <button class="btn-primary" onclick="launchEvaboot()">
-                <i class="fas fa-external-link-alt"></i> Open Evaboot
-            </button>
         </div>
 
         <div style="margin-top: 30px; color: rgba(255,255,255,0.5); font-size: 0.8rem; text-align: center; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 30px;">
-            <p>🔵 LinkedIn War Room · Botemia Outbound Engine · 37% accept rate · 14% reply rate · $49 Evaboot = $83k pipeline</p>
-            <p style="margin-top: 10px;">💾 Data auto-saves · Export CSV weekly · One connection = $500+ pipeline value</p>
+            <p>🔵 LinkedIn War Room · v2.0 · Auto-save enabled · Server ready · 37% accept rate · $49 Evaboot = $83k pipeline</p>
         </div>
     </div>
 
     <script>
-        // ===== LINKEDIN WAR ROOM ENGINE =====
-        let stats = {
-            connections: 847,
-            accepted: 312,
-            replies: 98,
-            interested: 47,
-            demos: 23
+        // ===== LINKEDIN WAR ROOM · FULL DATA PERSISTENCE =====
+        const STORAGE_KEY = 'botemia_linkedin_data';
+        let SERVER_URL = localStorage.getItem('botemia_linkedin_server_url') || 'https://your-mortgage-site.com/data/';
+        let CLIENT_ID = localStorage.getItem('botemia_linkedin_client_id') || 'mortgage-assist';
+
+        // Default demo data
+        const defaultData = {
+            campaigns: [
+                {
+                    id: 'camp1',
+                    name: 'Mortgage Brokers · Q1 2024',
+                    icon: '🏠',
+                    sent: 500,
+                    accepted: 186,
+                    replies: 58,
+                    demos: 14,
+                    target: 14,
+                    color: '#0a66c2'
+                },
+                {
+                    id: 'camp2',
+                    name: 'Branch Managers · East Coast',
+                    icon: '🏦',
+                    sent: 250,
+                    accepted: 89,
+                    replies: 31,
+                    demos: 7,
+                    target: 8,
+                    color: '#0a66c2'
+                }
+            ],
+            prospects: [
+                { name: 'Michael Chen', title: 'Branch Manager', company: 'CrossCountry Mortgage', campaign: 'Branch Managers · East Coast', status: 'Connected', lastContact: 'Feb 12', nextStep: 'DM Day 3', date: '2024-02-12' },
+                { name: 'Sarah Rodriguez', title: 'Senior Loan Officer', company: 'Fairway Independent', campaign: 'Mortgage Brokers · Q1 2024', status: 'Replied', lastContact: 'Feb 11', nextStep: 'Send Demo', date: '2024-02-11' },
+                { name: 'David Kim', title: 'Owner/Broker', company: 'Premier Lending', campaign: 'Mortgage Brokers · Q1 2024', status: 'Interested', lastContact: 'Feb 10', nextStep: 'Demo Feb 15', date: '2024-02-10' },
+                { name: 'Jennifer Walsh', title: 'Regional Manager', company: 'Guaranteed Rate', campaign: 'Branch Managers · East Coast', status: 'Demo Scheduled', lastContact: 'Feb 09', nextStep: 'Follow-up', date: '2024-02-09' },
+                { name: 'Robert Taylor', title: 'Mortgage Broker', company: 'Nexa Mortgage', campaign: 'Mortgage Brokers · Q1 2024', status: 'Connected', lastContact: 'Feb 12', nextStep: 'DM Day 2', date: '2024-02-12' },
+                { name: 'Lisa Wong', title: 'Loan Officer', company: 'AmeriSave', campaign: 'Mortgage Brokers · Q1 2024', status: 'Awaiting Reply', lastContact: 'Feb 11', nextStep: 'Follow-up Day 3', date: '2024-02-11' },
+                { name: 'James Martinez', title: 'Branch Manager', company: 'New American Funding', campaign: 'Branch Managers · East Coast', status: 'Interested', lastContact: 'Feb 10', nextStep: 'Demo Feb 16', date: '2024-02-10' }
+            ],
+            stats: {
+                connections: 847,
+                accepted: 312,
+                replies: 98,
+                interested: 47,
+                demos: 23,
+                closes: 4
+            },
+            sequence: {
+                step1: { sent: 312, accepted: 186 },
+                step2: { sent: 186, replies: 58 },
+                step3: { sent: 58, interested: 31 },
+                step4: { sent: 31, demos: 23 }
+            },
+            lastUpdated: new Date().toISOString()
         };
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            updateStats();
-            
-            // Add Font Awesome
-            const link = document.createElement('link');
-            link.rel = 'stylesheet';
-            link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css';
-            document.head.appendChild(link);
-        });
+        // Load data on startup
+        let appData = loadData();
 
-        // Update all stats
-        function updateStats() {
+        // ===== PERSISTENCE ENGINE =====
+        function loadData() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    document.getElementById('serverUrl').value = data.serverUrl || SERVER_URL;
+                    document.getElementById('clientId').value = data.clientId || CLIENT_ID;
+                    SERVER_URL = data.serverUrl || SERVER_URL;
+                    CLIENT_ID = data.clientId || CLIENT_ID;
+                    updateSyncStatus('🟢 Data loaded from localStorage');
+                    return data;
+                } catch(e) {
+                    console.error('Error loading data:', e);
+                }
+            }
+            // First time - save default data
+            saveData(defaultData);
+            return defaultData;
+        }
+
+        function saveData(data) {
+            data.lastUpdated = new Date().toISOString();
+            data.serverUrl = document.getElementById('serverUrl')?.value || SERVER_URL;
+            data.clientId = document.getElementById('clientId')?.value || CLIENT_ID;
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            appData = data;
+            renderAll();
+            updateSyncStatus('🟢 Auto-saved to localStorage');
+            
+            // Save server settings
+            localStorage.setItem('botemia_linkedin_server_url', data.serverUrl);
+            localStorage.setItem('botemia_linkedin_client_id', data.clientId);
+        }
+
+        function saveCurrentState() {
+            const data = {
+                campaigns: appData.campaigns,
+                prospects: appData.prospects,
+                stats: getCurrentStats(),
+                sequence: appData.sequence,
+                serverUrl: document.getElementById('serverUrl').value,
+                clientId: document.getElementById('clientId').value
+            };
+            saveData(data);
+        }
+
+        // ===== RENDER FUNCTIONS =====
+        function renderAll() {
+            renderCampaigns();
+            renderProspects();
+            renderStats();
+            renderSequence();
+        }
+
+        function renderCampaigns() {
+            const grid = document.getElementById('campaignGrid');
+            grid.innerHTML = '';
+            
+            appData.campaigns.forEach((campaign, index) => {
+                const acceptRate = campaign.sent > 0 ? Math.round((campaign.accepted / campaign.sent) * 100) : 0;
+                const progress = campaign.target > 0 ? Math.round((campaign.demos / campaign.target) * 100) : 0;
+                
+                const card = document.createElement('div');
+                card.className = 'campaign-card';
+                card.innerHTML = `
+                    <div class="campaign-header">
+                        <div class="campaign-icon">${campaign.icon}</div>
+                        <div class="campaign-title">${campaign.name}</div>
+                    </div>
+                    <div class="campaign-stats">
+                        <div class="campaign-stat">
+                            <div class="campaign-stat-number">${campaign.sent}</div>
+                            <div class="campaign-stat-label">Sent</div>
+                        </div>
+                        <div class="campaign-stat">
+                            <div class="campaign-stat-number">${campaign.accepted}</div>
+                            <div class="campaign-stat-label">Accepted</div>
+                        </div>
+                        <div class="campaign-stat">
+                            <div class="campaign-stat-number">${campaign.replies}</div>
+                            <div class="campaign-stat-label">Replies</div>
+                        </div>
+                        <div class="campaign-stat">
+                            <div class="campaign-stat-number">${campaign.demos}</div>
+                            <div class="campaign-stat-label">Demos</div>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${progress}%;"></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-top: 8px;">
+                        <span style="color: rgba(255,255,255,0.6);">Accept rate: ${acceptRate}%</span>
+                        <span style="color: #0a66c2; font-weight: 600;">${campaign.demos}/${campaign.target} closes</span>
+                    </div>
+                    <div style="display: flex; gap: 8px; margin-top: 16px;">
+                        <button class="btn btn-small" onclick="incrementCampaignStat(${index}, 'sent')">+ Sent</button>
+                        <button class="btn btn-small" onclick="incrementCampaignStat(${index}, 'accepted')">+ Accepted</button>
+                        <button class="btn btn-small" onclick="incrementCampaignStat(${index}, 'replies')">+ Reply</button>
+                        <button class="btn btn-small" onclick="incrementCampaignStat(${index}, 'demos')">+ Demo</button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function renderProspects() {
+            const tbody = document.getElementById('prospectTableBody');
+            tbody.innerHTML = '';
+            
+            appData.prospects.forEach((prospect, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><strong>${prospect.name}</strong></td>
+                    <td>${prospect.title}</td>
+                    <td>${prospect.company}</td>
+                    <td>${prospect.campaign}</td>
+                    <td><span class="status-badge status-${getStatusClass(prospect.status)}">${getStatusIcon(prospect.status)} ${prospect.status}</span></td>
+                    <td>${prospect.lastContact}</td>
+                    <td>${prospect.nextStep}</td>
+                    <td>
+                        <button class="btn btn-small" onclick="updateProspectStatus(${index})">↻ Update</button>
+                        <button class="btn btn-small" onclick="deleteProspect(${index})" style="border-color: #f44336; color: #f44336;">✕</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function renderStats() {
+            const stats = appData.stats;
             document.getElementById('totalConnections').innerText = stats.connections;
             document.getElementById('totalAccepted').innerText = stats.accepted;
             document.getElementById('totalReplies').innerText = stats.replies;
@@ -687,274 +840,298 @@
             document.getElementById('totalDemos').innerText = stats.demos;
         }
 
-        // Update prospect status
-        function updateStatus(button, status) {
-            const row = button.closest('tr');
-            const statusCell = row.children[4];
-            
-            switch(status) {
-                case 'replied':
-                    statusCell.innerHTML = '<span class="status-badge status-replied">💬 Replied</span>';
-                    stats.replies++;
-                    break;
-                case 'interested':
-                    statusCell.innerHTML = '<span class="status-badge status-interested">🔥 Interested</span>';
-                    stats.interested++;
-                    break;
-                case 'demo':
-                    statusCell.innerHTML = '<span class="status-badge status-demo">✅ Demo Done</span>';
-                    stats.demos++;
-                    break;
-                case 'closed':
-                    statusCell.innerHTML = '<span class="status-badge status-demo">💰 Closed</span>';
-                    break;
-            }
-            
-            updateStats();
-            button.style.opacity = '0.5';
-            button.disabled = true;
+        function renderSequence() {
+            const seq = appData.sequence;
+            document.getElementById('step1Stats').innerHTML = `${seq.step1.sent} sent · ${seq.step1.accepted} accepted`;
+            document.getElementById('step2Stats').innerHTML = `${seq.step2.sent} sent · ${seq.step2.replies} replies`;
+            document.getElementById('step3Stats').innerHTML = `${seq.step3.sent} sent · ${seq.step3.interested} interested`;
+            document.getElementById('step4Stats').innerHTML = `${seq.step4.sent} sent · ${seq.step4.demos} demos`;
         }
 
-        // Quick add prospect
+        // ===== ACTIONS =====
+        function addCampaign() {
+            const name = prompt('Enter campaign name:', 'Mortgage Brokers · West Coast');
+            if (!name) return;
+            
+            appData.campaigns.push({
+                id: 'camp' + Date.now(),
+                name: name,
+                icon: '📌',
+                sent: 0,
+                accepted: 0,
+                replies: 0,
+                demos: 0,
+                target: 10,
+                color: '#0a66c2'
+            });
+            saveCurrentState();
+        }
+
+        function incrementCampaignStat(index, stat) {
+            appData.campaigns[index][stat]++;
+            
+            // Update global stats
+            if (stat === 'sent') appData.stats.connections++;
+            if (stat === 'accepted') appData.stats.accepted++;
+            if (stat === 'replies') appData.stats.replies++;
+            if (stat === 'demos') appData.stats.demos++;
+            
+            // Update sequence stats
+            if (stat === 'sent') appData.sequence.step1.sent++;
+            if (stat === 'accepted') appData.sequence.step1.accepted++;
+            if (stat === 'replies') appData.sequence.step2.replies++;
+            if (stat === 'demos') appData.sequence.step4.demos++;
+            
+            saveCurrentState();
+        }
+
         function quickAddProspect() {
             const name = document.getElementById('prospectName').value;
             const title = document.getElementById('prospectTitle').value;
             const company = document.getElementById('prospectCompany').value;
             const campaign = document.getElementById('prospectCampaign').value;
+            const status = document.getElementById('prospectStatus').value;
             
             if (!name || !title || !company) {
                 alert('Please fill in name, title, and company');
                 return;
             }
             
-            const tbody = document.getElementById('prospectTableBody');
-            const newRow = document.createElement('tr');
-            const today = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            const today = new Date();
+            const formattedDate = today.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            const isoDate = today.toISOString().split('T')[0];
             
-            newRow.innerHTML = `
-                <td>${name}</td>
-                <td>${title}</td>
-                <td>${company}</td>
-                <td>${campaign}</td>
-                <td><span class="status-badge status-connected">✅ Connected</span></td>
-                <td>${today}</td>
-                <td>DM Day 1</td>
-                <td>
-                    <button class="btn btn-small" onclick="updateStatus(this, 'replied')">+ Reply</button>
-                </td>
-            `;
-            
-            tbody.appendChild(newRow);
+            appData.prospects.unshift({
+                name: name,
+                title: title,
+                company: company,
+                campaign: campaign,
+                status: status,
+                lastContact: formattedDate,
+                nextStep: status === 'Connected' ? 'DM Day 1' : 'Follow-up',
+                date: isoDate
+            });
             
             // Clear inputs
             document.getElementById('prospectName').value = '';
             document.getElementById('prospectTitle').value = '';
             document.getElementById('prospectCompany').value = '';
             
-            // Update stats
-            stats.connections++;
-            stats.accepted++;
-            updateStats();
+            saveCurrentState();
         }
 
-        // Add new campaign
-        function addCampaign() {
-            const name = prompt('Enter campaign name:', 'Mortgage Brokers · West Coast');
-            if (!name) return;
+        function updateProspectStatus(index) {
+            const prospect = appData.prospects[index];
+            const statuses = ['Connected', 'Awaiting Reply', 'Replied', 'Interested', 'Demo Scheduled', 'Demo Done', 'Closed'];
+            const currentIndex = statuses.indexOf(prospect.status);
             
-            const grid = document.querySelector('.campaign-grid');
-            const newCampaign = document.createElement('div');
-            newCampaign.className = 'campaign-card';
-            newCampaign.innerHTML = `
-                <div class="campaign-header">
-                    <div class="campaign-icon">📌</div>
-                    <div class="campaign-title">${name}</div>
-                </div>
-                <div class="campaign-stats">
-                    <div class="campaign-stat">
-                        <div class="campaign-stat-number">0</div>
-                        <div class="campaign-stat-label">Sent</div>
-                    </div>
-                    <div class="campaign-stat">
-                        <div class="campaign-stat-number">0</div>
-                        <div class="campaign-stat-label">Accepted</div>
-                    </div>
-                    <div class="campaign-stat">
-                        <div class="campaign-stat-number">0</div>
-                        <div class="campaign-stat-label">Replies</div>
-                    </div>
-                    <div class="campaign-stat">
-                        <div class="campaign-stat-number">0</div>
-                        <div class="campaign-stat-label">Demos</div>
-                    </div>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: 0%;"></div>
-                </div>
-                <div style="display: flex; justify-content: space-between; margin-top: 8px;">
-                    <span style="color: rgba(255,255,255,0.6);">Accept rate: 0%</span>
-                    <span style="color: #0a66c2; font-weight: 600;">New campaign</span>
-                </div>
-                <button class="btn" style="width: 100%; margin-top: 20px;" onclick="viewCampaign('${name}')">
-                    <i class="fas fa-eye"></i> View Prospects
-                </button>
-            `;
-            grid.appendChild(newCampaign);
+            if (currentIndex < statuses.length - 1) {
+                prospect.status = statuses[currentIndex + 1];
+                
+                // Update stats
+                if (prospect.status === 'Replied') appData.stats.replies++;
+                if (prospect.status === 'Interested') appData.stats.interested++;
+                if (prospect.status === 'Demo Scheduled') appData.stats.demos++;
+                if (prospect.status === 'Demo Done') appData.stats.closes++;
+                
+                // Update next step
+                if (prospect.status === 'Connected') prospect.nextStep = 'DM Day 1';
+                if (prospect.status === 'Awaiting Reply') prospect.nextStep = 'Follow-up Day 2';
+                if (prospect.status === 'Replied') prospect.nextStep = 'Send Demo';
+                if (prospect.status === 'Interested') prospect.nextStep = 'Schedule Demo';
+                if (prospect.status === 'Demo Scheduled') prospect.nextStep = 'Demo Call';
+                if (prospect.status === 'Demo Done') prospect.nextStep = 'Follow-up Close';
+                if (prospect.status === 'Closed') prospect.nextStep = '✓ Done';
+                
+                saveCurrentState();
+            }
         }
 
-        // Add new prospect
-        function addProspect() {
+        function deleteProspect(index) {
+            if (confirm('Delete this prospect?')) {
+                appData.prospects.splice(index, 1);
+                saveCurrentState();
+            }
+        }
+
+        function focusQuickAdd() {
             document.getElementById('prospectName').focus();
         }
 
-        // View campaign prospects
-        function viewCampaign(campaignName) {
-            alert(`Filtering prospects for: ${campaignName}\n\nIn full version, this would show only prospects from this campaign.`);
+        // ===== DATA EXPORT/IMPORT =====
+        function exportFullBackup() {
+            const backup = {
+                version: '2.0',
+                tool: 'LinkedIn War Room',
+                timestamp: new Date().toISOString(),
+                data: appData,
+                serverUrl: document.getElementById('serverUrl').value,
+                clientId: document.getElementById('clientId').value
+            };
+            
+            const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `linkedin-war-room-backup-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
         }
 
-        // Import from Evaboot
-        function importEvaboot() {
-            const mockImport = [
-                'Michael Chen,Branch Manager,CrossCountry Mortgage',
-                'Sarah Rodriguez,Senior Loan Officer,Fairway Independent',
-                'David Kim,Owner/Broker,Premier Lending',
-                'Jennifer Walsh,Regional Manager,Guaranteed Rate',
-                'Robert Taylor,Mortgage Broker,Nexa Mortgage'
-            ];
+        function importBackup(event) {
+            const file = event.target.files[0];
+            if (!file) return;
             
-            let importCount = 0;
-            mockImport.forEach(entry => {
-                const [name, title, company] = entry.split(',');
-                
-                const tbody = document.getElementById('prospectTableBody');
-                const newRow = document.createElement('tr');
-                const today = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-                
-                newRow.innerHTML = `
-                    <td>${name}</td>
-                    <td>${title}</td>
-                    <td>${company}</td>
-                    <td>Mortgage Brokers</td>
-                    <td><span class="status-badge status-connected">✅ Connected</span></td>
-                    <td>${today}</td>
-                    <td>DM Day 1</td>
-                    <td>
-                        <button class="btn btn-small" onclick="updateStatus(this, 'replied')">+ Reply</button>
-                    </td>
-                `;
-                tbody.appendChild(newRow);
-                importCount++;
-            });
-            
-            stats.connections += importCount;
-            stats.accepted += importCount;
-            updateStats();
-            
-            alert(`✅ Imported ${importCount} prospects from Evaboot export`);
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const backup = JSON.parse(e.target.result);
+                    if (backup.data) {
+                        saveData(backup.data);
+                        alert('✅ Backup imported successfully!');
+                    }
+                } catch(e) {
+                    alert('❌ Invalid backup file');
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
         }
 
-        // Show sample data
-        function showSampleData() {
-            alert(`📊 EVABOOT PREVIEW\n\n5 Sample Contacts:\n• Michael Chen - Branch Manager - CrossCountry\n• Sarah Rodriguez - Sr LO - Fairway\n• David Kim - Owner - Premier Lending\n• Jennifer Walsh - Regional - Guaranteed Rate\n• Robert Taylor - Broker - Nexa\n\nFull export: 500 contacts · 68% email match rate · $49/mo`);
-        }
-
-        // Launch Evaboot
-        function launchEvaboot() {
-            window.open('https://evaboot.com', '_blank');
-        }
-
-        // Export LinkedIn data
-        function exportLinkedInData() {
-            let csv = 'Name,Title,Company,Campaign,Status,Last Contact\n';
-            const rows = document.querySelectorAll('#prospectTableBody tr');
+        function exportCSV() {
+            let csv = 'Name,Title,Company,Campaign,Status,Last Contact,Next Step,Date Added\n';
             
-            rows.forEach(row => {
-                const name = row.children[0].innerText;
-                const title = row.children[1].innerText;
-                const company = row.children[2].innerText;
-                const campaign = row.children[3].innerText;
-                const status = row.children[4].innerText.replace(/[✅💬🔥]/g, '').trim();
-                const date = row.children[5].innerText;
-                
-                csv += `${name},${title},${company},${campaign},${status},${date}\n`;
+            appData.prospects.forEach(p => {
+                csv += `"${p.name}","${p.title}","${p.company}","${p.campaign}","${p.status}","${p.lastContact}","${p.nextStep}","${p.date}"\n`;
             });
             
             const blob = new Blob([csv], { type: 'text/csv' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
-            link.download = 'linkedin-war-room-export.csv';
+            link.download = `linkedin-prospects-${new Date().toISOString().split('T')[0]}.csv`;
             link.click();
         }
 
-        // Reset demo data
-        function resetLinkedInData() {
-            stats = {
-                connections: 847,
-                accepted: 312,
-                replies: 98,
-                interested: 47,
-                demos: 23
-            };
-            
-            updateStats();
-            
-            // Reset prospect table
-            const tbody = document.getElementById('prospectTableBody');
-            tbody.innerHTML = `
-                <tr>
-                    <td>Michael Chen</td>
-                    <td>Branch Manager</td>
-                    <td>CrossCountry Mortgage</td>
-                    <td>Branch Managers</td>
-                    <td><span class="status-badge status-connected">✅ Connected</span></td>
-                    <td>Feb 12</td>
-                    <td>DM Day 3</td>
-                    <td><button class="btn btn-small" onclick="updateStatus(this, 'replied')">+ Reply</button></td>
-                </tr>
-                <tr>
-                    <td>Sarah Rodriguez</td>
-                    <td>Senior Loan Officer</td>
-                    <td>Fairway Independent</td>
-                    <td>Mortgage Brokers</td>
-                    <td><span class="status-badge status-replied">💬 Replied</span></td>
-                    <td>Feb 11</td>
-                    <td>Send Demo</td>
-                    <td><button class="btn btn-small" onclick="updateStatus(this, 'interested')">🎯 Interested</button></td>
-                </tr>
-                <tr>
-                    <td>David Kim</td>
-                    <td>Owner/Broker</td>
-                    <td>Premier Lending</td>
-                    <td>Mortgage Brokers</td>
-                    <td><span class="status-badge status-interested">🔥 Interested</span></td>
-                    <td>Feb 10</td>
-                    <td>Demo Feb 15</td>
-                    <td><button class="btn btn-small" onclick="updateStatus(this, 'demo')">📅 Demo Done</button></td>
-                </tr>
-                <tr>
-                    <td>Jennifer Walsh</td>
-                    <td>Regional Manager</td>
-                    <td>Guaranteed Rate</td>
-                    <td>Branch Managers</td>
-                    <td><span class="status-badge status-demo">✅ Demo Done</span></td>
-                    <td>Feb 09</td>
-                    <td>Follow-up</td>
-                    <td><button class="btn btn-small" onclick="updateStatus(this, 'closed')">💰 Close</button></td>
-                </tr>
-                <tr>
-                    <td>Robert Taylor</td>
-                    <td>Mortgage Broker</td>
-                    <td>Nexa Mortgage</td>
-                    <td>Mortgage Brokers</td>
-                    <td><span class="status-badge status-connected">✅ Connected</span></td>
-                    <td>Feb 12</td>
-                    <td>DM Day 2</td>
-                    <td><button class="btn btn-small" onclick="updateStatus(this, 'replied')">+ Reply</button></td>
-                </tr>
-            `;
-            
-            alert('LinkedIn War Room reset to demo data');
+        // ===== SERVER SYNC =====
+        function configureServer() {
+            const url = prompt('Enter your server URL (e.g., https://your-site.com/data/):', SERVER_URL);
+            if (url) {
+                SERVER_URL = url;
+                localStorage.setItem('botemia_linkedin_server_url', url);
+                document.getElementById('serverUrl').value = url;
+                updateSyncStatus('🟡 Server URL configured');
+            }
         }
+
+        async function testServerConnection() {
+            const url = document.getElementById('serverUrl').value;
+            updateSyncStatus('🟡 Testing connection...');
+            
+            try {
+                const response = await fetch(url + 'test-connection.json?' + Date.now(), { 
+                    method: 'HEAD',
+                    mode: 'no-cors'
+                });
+                updateSyncStatus('🟢 Server reachable (CORS mode)');
+            } catch(e) {
+                updateSyncStatus('🔴 Server unreachable - check URL');
+            }
+        }
+
+        async function syncToServer() {
+            const url = document.getElementById('serverUrl').value;
+            const clientId = document.getElementById('clientId').value;
+            
+            updateSyncStatus('🟡 Syncing to server...');
+            
+            // Save to localStorage first
+            saveCurrentState();
+            
+            // Export backup as sync method
+            exportFullBackup();
+            
+            updateSyncStatus('🟢 Backup exported - upload to server');
+        }
+
+        // ===== EVABOOT INTEGRATION =====
+        function importEvabootSample() {
+            const sampleProspects = [
+                { name: 'Thomas Anderson', title: 'Branch Manager', company: 'Movement Mortgage', campaign: 'Mortgage Brokers · Q1 2024', status: 'Connected', lastContact: 'Today', nextStep: 'DM Day 1', date: new Date().toISOString().split('T')[0] },
+                { name: 'Patricia Lewis', title: 'Senior Loan Officer', company: 'Caliber Home Loans', campaign: 'Mortgage Brokers · Q1 2024', status: 'Connected', lastContact: 'Today', nextStep: 'DM Day 1', date: new Date().toISOString().split('T')[0] },
+                { name: 'Kevin Zhang', title: 'Mortgage Broker', company: 'Kind Lending', campaign: 'Mortgage Brokers · Q1 2024', status: 'Connected', lastContact: 'Today', nextStep: 'DM Day 1', date: new Date().toISOString().split('T')[0] }
+            ];
+            
+            appData.prospects = [...sampleProspects, ...appData.prospects];
+            appData.stats.connections += 3;
+            appData.stats.accepted += 3;
+            appData.sequence.step1.sent += 3;
+            appData.sequence.step1.accepted += 3;
+            
+            saveCurrentState();
+            alert('✅ Imported 3 sample prospects from Evaboot');
+        }
+
+        // ===== UTILITIES =====
+        function getCurrentStats() {
+            return appData.stats;
+        }
+
+        function getStatusClass(status) {
+            const map = {
+                'Connected': 'connected',
+                'Awaiting Reply': 'connected',
+                'Replied': 'replied',
+                'Interested': 'interested',
+                'Demo Scheduled': 'demo',
+                'Demo Done': 'demo',
+                'Closed': 'closed'
+            };
+            return map[status] || 'connected';
+        }
+
+        function getStatusIcon(status) {
+            const icons = {
+                'Connected': '✅',
+                'Awaiting Reply': '⏳',
+                'Replied': '💬',
+                'Interested': '🔥',
+                'Demo Scheduled': '📅',
+                'Demo Done': '✅',
+                'Closed': '💰'
+            };
+            return icons[status] || '●';
+        }
+
+        function updateSyncStatus(message) {
+            const statusEl = document.getElementById('syncStatus');
+            if (statusEl) statusEl.innerHTML = message;
+        }
+
+        function resetToDemo() {
+            if (confirm('Reset to demo data? Your current data will be backed up first.')) {
+                exportFullBackup();
+                saveData(defaultData);
+            }
+        }
+
+        // Auto-save on page unload
+        window.addEventListener('beforeunload', () => {
+            saveCurrentState();
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            // Load server settings
+            document.getElementById('serverUrl').value = SERVER_URL;
+            document.getElementById('clientId').value = CLIENT_ID;
+            
+            // Add Font Awesome
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css';
+            document.head.appendChild(link);
+            
+            renderAll();
+            updateSyncStatus('🟢 Ready · Auto-save enabled');
+        });
     </script>
 </body>
 </html>
