@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MobileWise · Sales Boost Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(145deg, #0a1428 0%, #0f1a35 100%);
+            color: #e0e0e0;
+            line-height: 1.5;
+            min-height: 100vh;
+            padding: 24px;
+        }
+
+        .dashboard {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header Section */
+        .header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid rgba(74, 144, 226, 0.3);
+        }
+
+        .title-area h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ffffff, #90caf9);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .slogan {
+            color: #90caf9;
+            font-size: 1rem;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+        }
+
+        .date-time {
+            background: rgba(18, 28, 46, 0.8);
+            border: 1px solid #4a90e2;
+            border-radius: 40px;
+            padding: 12px 28px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        #currentDate {
+            color: #90caf9;
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        #currentTime {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: rgba(18, 28, 46, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(74, 144, 226, 0.2);
+            border-radius: 20px;
+            padding: 24px 20px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #90caf9;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Tools Grid */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .tool-card {
+            background: rgba(18, 28, 46, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(74, 144, 226, 0.2);
+            border-radius: 24px;
+            padding: 28px;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-6px);
+            border-color: #4a90e2;
+            box-shadow: 0 15px 30px rgba(74, 144, 226, 0.2);
+        }
+
+        .tool-icon {
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+        }
+
+        .tool-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 12px;
+        }
+
+        .tool-description {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.95rem;
+            margin-bottom: 24px;
+            flex-grow: 1;
+            line-height: 1.6;
+        }
+
+        .tool-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 0.85rem;
+            color: #90caf9;
+            padding: 8px 0;
+            border-top: 1px solid rgba(74, 144, 226, 0.2);
+            border-bottom: 1px solid rgba(74, 144, 226, 0.2);
+        }
+
+        .tool-link {
+            display: inline-block;
+            background: #4a90e2;
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .tool-link:hover {
+            background: #6ba5e8;
+            box-shadow: 0 5px 15px rgba(74, 144, 226, 0.4);
+        }
+
+        /* Motivational Footer */
+        .motivation-footer {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 60px;
+            padding: 32px 40px;
+            margin-top: 40px;
+            border: 1px solid rgba(74, 144, 226, 0.2);
+            text-align: center;
+        }
+
+        .quote {
+            font-size: 1.4rem;
+            color: white;
+            font-weight: 400;
+            margin-bottom: 12px;
+            font-style: italic;
+        }
+
+        .quote-author {
+            color: #90caf9;
+            font-size: 1rem;
+            letter-spacing: 1px;
+        }
+
+        .footer-note {
+            margin-top: 30px;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Header with Date/Time -->
+        <div class="header">
+            <div class="title-area">
+                <h1>⚡ MobileWise Sales Boost Dashboard</h1>
+                <div class="slogan">Your Command Center for predictable revenue growth</div>
+            </div>
+            <div class="date-time">
+                <span id="currentDate"></span>
+                <span id="currentTime"></span>
+            </div>
+        </div>
+
+        <!-- Quick Stats Row (Pulled from War Rooms) -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value">847</div>
+                <div class="stat-label">LinkedIn Connections</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">312</div>
+                <div class="stat-label">Accepted (36.8%)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">98</div>
+                <div class="stat-label">Active Replies</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">23</div>
+                <div class="stat-label">Demos Scheduled</div>
+            </div>
+        </div>
+
+        <!-- Sales Tools Grid -->
+        <h2 style="color: #90caf9; margin-bottom: 20px; font-size: 1.6rem;">🎯 Your Core Sales Weapons</h2>
+        <div class="tools-grid">
+            <!-- Tool 1: Sales 101 -->
+            <div class="tool-card">
+                <div class="tool-icon">📚</div>
+                <div class="tool-name">Sales 101 · Core Training</div>
+                <div class="tool-description">Master the fundamentals of consultative selling. Learn to identify pain points, deliver value, and close with confidence. Essential reading for every rep.</div>
+                <div class="tool-meta">
+                    <span>📖 12 modules</span>
+                    <span>⏱️ 2 hours</span>
+                </div>
+                <a href="https://vidguide-ai-4mortgage.netlify.app/sales101" target="_blank" class="tool-link">Launch Training →</a>
+            </div>
+
+            <!-- Tool 2: Google Maps War Room -->
+            <div class="tool-card">
+                <div class="tool-icon">🗺️</div>
+                <div class="tool-name">Google Maps War Room</div>
+                <div class="tool-description">Find local businesses, extract contacts, and run hyper-local outreach campaigns. Turn maps into a lead generation machine.</div>
+                <div class="tool-meta">
+                    <span>📍 Local leads</span>
+                    <span>⚡ Auto-extract</span>
+                </div>
+                <a href="https://vidguide-ai-4mortgage.netlify.app/google-maps-war-room" target="_blank" class="tool-link">Enter War Room →</a>
+            </div>
+
+            <!-- Tool 3: LinkedIn War Room -->
+            <div class="tool-card">
+                <div class="tool-icon">🔗</div>
+                <div class="tool-name">LinkedIn War Room</div>
+                <div class="tool-description">Execute the 7-day outreach sequence. Track connections, replies, and demos. 36.8% acceptance rate proven to work.</div>
+                <div class="tool-meta">
+                    <span>📊 847 sent</span>
+                    <span>🎯 23 demos</span>
+                </div>
+                <a href="https://vidguide-ai-4mortgage.netlify.app/linkedin-war-room" target="_blank" class="tool-link">Enter War Room →</a>
+            </div>
+
+            <!-- Tool 4: Facebook War Room -->
+            <div class="tool-card">
+                <div class="tool-icon">📘</div>
+                <div class="tool-name">FB Group Domination</div>
+                <div class="tool-description">Leverage Facebook groups to find ideal clients. Non-salesy approach that builds know-like-trust and moves conversations to DMs.</div>
+                <div class="tool-meta">
+                    <span>👥 2.8B users</span>
+                    <span>🎯 90-day system</span>
+                </div>
+                <a href="https://vidguide-ai-4mortgage.netlify.app/fb-group-domination" target="_blank" class="tool-link">Enter War Room →</a>
+            </div>
+        </div>
+
+        <!-- Motivational Footer -->
+        <div class="motivation-footer">
+            <div class="quote">"The only way to do great work is to love what you do. The only way to have great sales is to serve before you sell."</div>
+            <div class="quote-author">— MobileWise Sales Philosophy</div>
+            <div class="footer-note">⚡ Complete 5 activities daily · Track everything · Close more · v1.0</div>
+        </div>
+    </div>
+
+    <script>
+        // Live Date and Time Update
+        function updateDateTime() {
+            const now = new Date();
+            
+            // Format: Saturday, February 14, 2025
+            const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('en-US', dateOptions);
+            
+            // Format: 3:45:22 PM ET
+            const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZoneName: 'short' };
+            document.getElementById('currentTime').textContent = now.toLocaleTimeString('en-US', timeOptions);
+        }
+        
+        updateDateTime();
+        setInterval(updateDateTime, 1000); // Update every second
+
+        // Optional: Add click tracking for tools
+        document.querySelectorAll('.tool-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                console.log(`Tool launched: ${this.closest('.tool-card').querySelector('.tool-name').textContent}`);
+                // In a real system, you could log this to analytics
+            });
+        });
+    </script>
+</body>
+</html>
