@@ -88,15 +88,15 @@
 
         .market-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 16px;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
         }
 
         .market-card {
             background: rgba(0, 0, 0, 0.3);
             border: 2px solid transparent;
             border-radius: 12px;
-            padding: 20px;
+            padding: 16px 8px;
             cursor: pointer;
             transition: all 0.2s;
             text-align: center;
@@ -115,18 +115,18 @@
         }
 
         .market-icon {
-            font-size: 2.5rem;
-            margin-bottom: 12px;
+            font-size: 2rem;
+            margin-bottom: 8px;
         }
 
         .market-name {
             font-weight: 700;
-            font-size: 1.1rem;
+            font-size: 0.9rem;
             margin-bottom: 4px;
         }
 
         .market-value {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: #90caf9;
             font-weight: 600;
             text-transform: uppercase;
@@ -202,6 +202,8 @@
             border-radius: 16px;
             padding: 24px;
             min-height: 500px;
+            max-height: 600px;
+            overflow-y: auto;
             border: 1px solid rgba(74, 144, 226, 0.1);
         }
 
@@ -242,6 +244,7 @@
             border-radius: 8px;
             font-family: monospace;
             white-space: pre-wrap;
+            font-size: 0.9rem;
         }
 
         .copy-btn {
@@ -271,13 +274,13 @@
         }
 
         .template-category {
-            margin-bottom: 28px;
+            margin-bottom: 24px;
         }
 
         .template-category h3 {
             color: #90caf9;
-            margin-bottom: 16px;
-            font-size: 1.2rem;
+            margin-bottom: 12px;
+            font-size: 1.1rem;
             border-bottom: 1px solid rgba(74, 144, 226, 0.2);
             padding-bottom: 8px;
         }
@@ -303,968 +306,7 @@
         }
 
         .template-preview {
-            font-size: 0.9rem;
-            color: rgba(255,255,255,0.7);
-            margin: 8px 0;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        /* Tracker */
-        .tracker-panel {
-            background: rgba(18, 28, 46, 0.8);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(74, 144, 226, 0.2);
-            border-radius: 24px;
-            padding: 28px;
-            margin-top: 30px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-        }
-
-        .tracker-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .tracker-card {
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(74, 144, 226, 0.2);
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-        }
-
-        .tracker-number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #90caf9;
-            margin: 10px 0;
-        }
-
-        .tracker-label {
-            color: rgba(255,255,255,0.7);
-            font-size: 0.9rem;
-        }
-
-        .tracker-btn {
-            background: #4a90e2;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 12px;
-            width: 100%;
-            transition: all 0.2s;
-        }
-
-        .tracker-btn:hover {
-            background: #6ba5e8;
-            box-shadow: 0 0 15px rgba(74, 144, 226, 0.5);
-        }
-
-        .footer {
-            margin-top: 40px;
-            color: rgba(255,255,255,0.4);
-            font-size: 0.8rem;
-            text-align: center;
-            padding-top: 30px;
-            border-top: 1px solid rgba(74, 144, 226, 0.2);
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <div class="logo-area">
-                <div class="logo-icon">⚡</div>
-                <h1>Sales Procedure System</h1>
-            </div>
-            <div class="badge">
-                <span>🏆 HIGH-VALUE INDUSTRIES</span>
-                <span style="margin-left: 8px;">v3.0</span>
-            </div>
-        </div>
-
-        <!-- Market Selector -->
-        <div class="market-selector">
-            <div class="selector-title">
-                <span style="font-size: 1.8rem;">🎯</span>
-                <h2 style="color: white;">Select Your Market</h2>
-            </div>
-            <div class="market-grid" id="marketGrid">
-                <!-- Populated by JS -->
-            </div>
-        </div>
-
-        <!-- Main Grid -->
-        <div class="main-grid">
-            <!-- Left: Procedures -->
-            <div class="procedure-panel">
-                <div class="panel-header">
-                    <span style="font-size: 1.8rem;">📋</span>
-                    <h2>Procedures</h2>
-                </div>
-
-                <div class="procedure-tabs" id="procedureTabs">
-                    <button class="tab-btn active" onclick="switchProcedureTab('facebook')">📘 Facebook Groups</button>
-                    <button class="tab-btn" onclick="switchProcedureTab('linkedin')">🔗 LinkedIn</button>
-                    <button class="tab-btn" onclick="switchProcedureTab('followup')">📞 Follow-Up</button>
-                </div>
-
-                <div class="procedure-content" id="procedureContent">
-                    <!-- Populated by JS -->
-                </div>
-            </div>
-
-            <!-- Right: Templates -->
-            <div class="templates-panel">
-                <div class="panel-header">
-                    <span style="font-size: 1.8rem;">📝</span>
-                    <h2>Message Templates</h2>
-                </div>
-
-                <div id="templatesContainer">
-                    <!-- Populated by JS -->
-                </div>
-            </div>
-        </div>
-
-        <!-- Tracker -->
-        <div class="tracker-panel">
-            <div class="panel-header">
-                <span style="font-size: 1.8rem;">📊</span>
-                <h2>Daily Activity Tracker</h2>
-            </div>
-
-            <div class="tracker-grid" id="trackerGrid">
-                <div class="tracker-card">
-                    <div>👥 Facebook</div>
-                    <div class="tracker-number" id="fbConnections">0</div>
-                    <div class="tracker-label">New Connections</div>
-                    <button class="tracker-btn" onclick="incrementTracker('fb')">+1</button>
-                </div>
-                <div class="tracker-card">
-                    <div>💼 LinkedIn</div>
-                    <div class="tracker-number" id="liConnections">0</div>
-                    <div class="tracker-label">New Connections</div>
-                    <button class="tracker-btn" onclick="incrementTracker('li')">+1</button>
-                </div>
-                <div class="tracker-card">
-                    <div>💬 Conversations</div>
-                    <div class="tracker-number" id="conversations">0</div>
-                    <div class="tracker-label">Started</div>
-                    <button class="tracker-btn" onclick="incrementTracker('convos')">+1</button>
-                </div>
-                <div class="tracker-card">
-                    <div>📅 Consultations</div>
-                    <div class="tracker-number" id="consultations">0</div>
-                    <div class="tracker-label">Booked</div>
-                    <button class="tracker-btn" onclick="incrementTracker('consults')">+1</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="footer">
-            <p>⚡ High-Value Industries · Legal · Medical · Personal Injury · Tax Resolution · Dental · SaaS</p>
-        </div>
-    </div>
-
-    <script>
-        // ============================================
-        // SALES PROCEDURE SYSTEM - HIGH-VALUE INDUSTRIES
-        // ============================================
-
-        // Market Data - Added all requested industries + SaaS (high ad spend)
-        const markets = {
-            legal: {
-                name: 'Legal',
-                icon: '⚖️',
-                value: 'HIGH TICKET',
-                keywords: ['attorney', 'lawsuit', 'settlement', 'legal advice', 'case evaluation', 'class action'],
-                painPoints: ['case value', 'settlement timeline', 'legal fees', 'negligence', 'wrongful death'],
-                groups: ['personal injury support', 'legal advice', 'accident victims', 'class action lawsuits'],
-                templates: {
-                    intro: "Hi [Name]! Noticed you're in [Group]. If you or someone you know is dealing with [legal issue], I connect people with experienced attorneys for free case evaluations. Happy to share info!",
-                    video: "Quick video about [legal topic] - many people don't know they might qualify for compensation. [Video Link] No pressure, just educational!",
-                    consultation: "Free 15-min legal case evaluation - no obligation. Happy to review your situation and connect you with the right attorney if appropriate."
-                }
-            },
-            personalInjury: {
-                name: 'Personal Injury',
-                icon: '🚑',
-                value: 'HIGH TICKET',
-                keywords: ['accident', 'injury', 'car crash', 'slip and fall', 'medical malpractice', 'wrongful death'],
-                painPoints: ['medical bills', 'lost wages', 'pain and suffering', 'insurance claims', 'settlement amount'],
-                groups: ['car accident support', 'injury recovery', 'accident victims', 'medical trauma support'],
-                templates: {
-                    intro: "Hi [Name]! Saw you're in [Group]. If you've been in an accident, you might be entitled to compensation. I help connect victims with top personal injury attorneys. Free case review available!",
-                    video: "Important info about [injury type] claims - most people don't know their rights. [Video Link] Just sharing to help!",
-                    consultation: "Free consultation with a personal injury attorney - no cost unless they win your case. Want me to connect you?"
-                }
-            },
-            taxResolution: {
-                name: 'Tax Resolution',
-                icon: '📊',
-                value: 'HIGH TICKET',
-                keywords: ['IRS', 'tax debt', 'audit', 'back taxes', 'tax lien', 'offer in compromise'],
-                painPoints: ['IRS notices', 'wage garnishment', 'bank levy', 'penalties', 'interest'],
-                groups: ['tax help', 'small business taxes', 'IRS problems', 'tax debt support'],
-                templates: {
-                    intro: "Hi [Name]! Noticed you're in [Group]. If you're dealing with IRS issues, tax debt, or audits, I can connect you with tax resolution specialists. Free consultation available.",
-                    video: "Quick overview of [tax topic] - the IRS has programs that can help. [Video Link] Hope this helps!",
-                    consultation: "Free 15-min tax resolution strategy call. We'll review your situation and options. No obligation - just want to help."
-                }
-            },
-            dental: {
-                name: 'Dental',
-                icon: '🦷',
-                value: 'RECURRING',
-                keywords: ['dentist', 'dental implant', 'cosmetic dentistry', 'teeth whitening', 'braces', 'emergency dentist'],
-                painPoints: ['dental anxiety', 'cost of implants', 'insurance coverage', 'missing teeth', 'pain'],
-                groups: ['dental health', 'cosmetic dentistry', 'implants support', 'dental anxiety help'],
-                templates: {
-                    intro: "Hi [Name]! Saw you're in [Group]. I help connect people with quality dentists for [specific procedure]. Free consultation available - no pressure!",
-                    video: "Quick video about [dental procedure] - what to expect and how to find the right dentist. [Video Link] Just sharing!",
-                    consultation: "Free dental consultation - we'll help you understand your options and find the right specialist. Want to learn more?"
-                }
-            },
-            saas: {
-                name: 'SaaS',
-                icon: '☁️',
-                value: 'HIGH AD SPEND',
-                keywords: ['software', 'CRM', 'automation', 'analytics', 'platform', 'enterprise'],
-                painPoints: ['efficiency', 'scaling', 'integration', 'ROI', 'implementation'],
-                groups: ['SaaS founders', 'software sales', 'tech startups', 'B2B software'],
-                templates: {
-                    intro: "Hi [Name]! Noticed you're in [Group]. Our [software type] helps companies like yours [achieve result]. Would love to connect and share how!",
-                    video: "Quick demo of how we help [industry] companies solve [problem]. [Video Link] Curious what you think!",
-                    consultation: "Free strategy call - we'll analyze your current setup and show how we can help. 15 mins, no pitch, just value."
-                }
-            },
-            mortgage: {
-                name: 'Mortgage',
-                icon: '🏠',
-                value: 'HIGH VOLUME',
-                keywords: ['rates', 'pre-approval', 'refinance', 'first-time buyer', 'credit score'],
-                painPoints: ['credit issues', 'self-employed', 'down payment', 'closing costs'],
-                groups: ['home buyers', 'real estate investors', 'first-time home buyers', 'mortgage advice'],
-                templates: {
-                    intro: "Hi [Name]! Noticed you're in [Group]. I help [type] with [specific mortgage need]. Would love to connect!",
-                    video: "Quick video about [mortgage topic] - might help with your situation. [Video Link] Let me know your thoughts!",
-                    consultation: "Free 15-min mortgage consultation - we'll review your options and find the best fit. When works for you?"
-                }
-            },
-            insurance: {
-                name: 'Insurance',
-                icon: '🛡️',
-                value: 'PROTECTION',
-                keywords: ['coverage', 'premiums', 'life insurance', 'health insurance', 'protect'],
-                painPoints: ['affordable rates', 'family protection', 'business coverage', 'term vs whole'],
-                groups: ['insurance professionals', 'financial planning', 'family protection', 'small business owners'],
-                templates: {
-                    intro: "Hi [Name]! Saw you're in [Group]. I help [type] find the right coverage without overpaying. Would love to connect!",
-                    video: "Quick video about [insurance topic] that might help with [their concern]. [Video Link] Curious what you think!",
-                    consultation: "Would you be open to a 15-min chat about your [insurance need]? I can share some options and answer any questions."
-                }
-            },
-            realestate: {
-                name: 'Real Estate',
-                icon: '🏡',
-                value: 'INVESTMENT',
-                keywords: ['buying', 'selling', 'market', 'home', 'investment'],
-                painPoints: ['first-time buyer', 'pricing', 'market conditions', 'investment property'],
-                groups: ['real estate investors', 'home sellers', 'first-time buyers', 'property management'],
-                templates: {
-                    intro: "Hi [Name]! Noticed you're in [Group] and interested in [topic]. I specialize in [specific area/market]. Connect?",
-                    video: "Quick market update video about [topic] - thought you might find it helpful. [Video Link] What are your thoughts?",
-                    consultation: "Based on what you shared, a quick call could help clarify your options. I do free 15-min consultations - want to grab time this week?"
-                }
-            },
-            coaching: {
-                name: 'Business Coaching',
-                icon: '🚀',
-                value: 'SCALING',
-                keywords: ['growth', 'marketing', 'leads', 'sales', 'business'],
-                painPoints: ['getting clients', 'scaling', 'time management', 'consistency'],
-                groups: ['business owners', 'entrepreneurs', 'startup founders', 'small business growth'],
-                templates: {
-                    intro: "Hi [Name]! Saw you in [Group] working on [topic]. I help [type] achieve [result] without burnout. Would love to connect!",
-                    video: "Hey [Name]! Here's a strategy video about [topic] that's been working for my clients. [Video Link] Would this help with your [challenge]?",
-                    consultation: "Would you be open to a strategy call? 20 mins, no pitch - just help you clarify your next steps. When works?"
-                }
-            },
-            health: {
-                name: 'Health & Wellness',
-                icon: '🌿',
-                value: 'WELLNESS',
-                keywords: ['wellness', 'health', 'fitness', 'nutrition', 'supplements'],
-                painPoints: ['energy', 'weight loss', 'stress', 'healthy habits'],
-                groups: ['healthy living', 'fitness motivation', 'nutrition tips', 'wellness journey'],
-                templates: {
-                    intro: "Hi [Name]! Noticed we're both in [Group] interested in [topic]. I help [type] achieve [result] naturally. Connect?",
-                    video: "Quick video about [topic] that might help with [their goal]. [Video Link] Would love your thoughts!",
-                    consultation: "I offer free 15-min wellness consultations where we can chat about your goals. Interested in finding a time?"
-                }
-            }
-        };
-
-        // Procedures Data (same structure, just with blue styling)
-        const procedures = {
-            facebook: {
-                title: '📘 Facebook Groups Procedure',
-                steps: [
-                    {
-                        title: 'Find Your Groups',
-                        description: 'Search for 3-5 groups where your ideal clients hang out. Use keywords related to your market.',
-                        template: 'Search terms: [market keywords] + "support", "community", "advice", "professionals"'
-                    },
-                    {
-                        title: 'Audit & Select',
-                        description: 'Use the audit scorecard to evaluate each group. Select your top 2-3 to focus on.',
-                        template: 'Criteria: 500+ members, active daily, admin engaged, members ask questions'
-                    },
-                    {
-                        title: 'Connect with Admin',
-                        description: 'Message the admin before posting. Build relationship first.',
-                        template: 'Hi [Admin]! Just joined [Group] and love the community you\'ve built here. Looking forward to being part of it!'
-                    },
-                    {
-                        title: 'Introduction Post',
-                        description: 'Post a genuine intro WITHOUT pitching. Focus on connection.',
-                        template: 'Hi everyone! 👋 Just joined. I\'m [Name] and I help [ideal client] with [result]. Excited to learn from this group!'
-                    },
-                    {
-                        title: 'Daily Engagement',
-                        description: '15-20 mins daily: comment on 5 posts, reply to comments, accept friend requests.',
-                        template: 'ACE Framework: Add value, Clarify with questions, Encourage others'
-                    },
-                    {
-                        title: 'Move to Profile',
-                        description: 'When someone engages consistently, they\'ll visit your profile. Make sure it sells!',
-                        template: 'Profile must have: Clear bio, recent posts about your work, pinned offer/lead magnet'
-                    },
-                    {
-                        title: 'Send Video',
-                        description: 'After genuine conversation, send a non-intrusive video addressing their specific situation.',
-                        template: 'Hey [Name]! Been thinking about our chat about [topic]. Made a quick 2-min video with some thoughts: [Link] No pressure, just wanted to share!'
-                    },
-                    {
-                        title: 'Offer Consultation',
-                        description: 'If they engage with video, offer a free consultation to explore helping them.',
-                        template: 'Glad the video was helpful! Would you be open to a quick 15-min call to discuss your [specific situation] further? No obligation - just happy to help!'
-                    }
-                ]
-            },
-            linkedin: {
-                title: '🔗 LinkedIn Procedure',
-                steps: [
-                    {
-                        title: 'Optimize Profile',
-                        description: 'Your profile is your storefront. Make it compelling.',
-                        template: 'Headline: [Your Title] helping [ideal client] achieve [result]\nAbout: First 3 lines must hook them\nFeatured: Pin your best content'
-                    },
-                    {
-                        title: 'Find Your Audience',
-                        description: 'Search for your ideal clients using filters.',
-                        template: 'Search: [Job titles] + [Industry] + [Location]\nExample: "Personal Injury Attorney" + "Legal" + "Your City"'
-                    },
-                    {
-                        title: 'Send Connection Request',
-                        description: 'Personalize every request. No selling yet.',
-                        template: 'Hi [Name], I came across your profile and noticed we both work in [industry]. Would love to connect and follow your work!'
-                    },
-                    {
-                        title: 'Engage With Content',
-                        description: 'Like and comment on their posts for 3-5 days before messaging.',
-                        template: 'Comment examples: "Great insight on [topic]!" or "This really resonates. [Add thoughtful question]"'
-                    },
-                    {
-                        title: 'Send Video',
-                        description: 'After engagement, send a non-intrusive video message.',
-                        template: 'Hi [Name]! Been following your content about [topic] - really valuable stuff. Made a quick video about [related topic] that might interest you: [Video Link] Just sharing in case helpful!'
-                    },
-                    {
-                        title: 'Nurture Conversation',
-                        description: 'If they respond, ask about their goals/challenges.',
-                        template: 'Glad you liked the video! What\'s your biggest challenge with [topic] right now? Always curious to learn from others in the space.'
-                    },
-                    {
-                        title: 'Offer Consultation',
-                        description: 'After genuine conversation, offer a call to explore helping them.',
-                        template: 'Based on what you\'ve shared, I think a quick chat could be valuable. I do free 15-min strategy calls - want to grab time this week?'
-                    }
-                ]
-            },
-            followup: {
-                title: '📞 Follow-Up Procedure',
-                steps: [
-                    {
-                        title: 'Day 1 - Initial Contact',
-                        description: 'After connecting, send a warm thank you message.',
-                        template: 'Hey [Name]! Thanks for connecting. Really enjoyed our chat about [topic]. Looking forward to staying in touch!'
-                    },
-                    {
-                        title: 'Day 3 - Value Share',
-                        description: 'Share something valuable related to your conversation.',
-                        template: 'Saw this article about [topic] and thought of you: [Link] Hope it\'s helpful!'
-                    },
-                    {
-                        title: 'Day 7 - Check In',
-                        description: 'Light check-in, no agenda.',
-                        template: 'Hey [Name]! How\'s [their project/goal] coming along? Hope you\'re crushing it!'
-                    },
-                    {
-                        title: 'Day 14 - Video Follow-Up',
-                        description: 'Send a short video addressing their specific situation.',
-                        template: 'Hey [Name]! Quick video check-in about [their challenge]. [Video Link] No response needed - just wanted to share some thoughts!'
-                    },
-                    {
-                        title: 'Day 21 - Offer Consultation',
-                        description: 'If they\'ve engaged, offer a call.',
-                        template: 'Been thinking about your situation with [challenge]. Would you be open to a 15-min strategy session? Happy to share some ideas.'
-                    },
-                    {
-                        title: 'Day 30 - Final Check',
-                        description: 'One last touch before moving to long-term nurture.',
-                        template: 'Hey [Name]! Just checking in one more time. If you ever want to chat about [topic], my door\'s always open. No pressure, just wanted to stay on your radar!'
-                    },
-                    {
-                        title: 'Ongoing Nurture',
-                        description: 'Stay on their radar without being pushy.',
-                        template: 'Weekly: Like/comment on their posts\nMonthly: Share valuable content\nQuarterly: Personal check-in'
-                    }
-                ]
-            }
-        };
-
-        // Templates Data
-        const templateCategories = {
-            connection: [
-                { name: 'Facebook Intro Post', content: 'Hi everyone! 👋 Just joined this group. I\'m [Name] and I help [ideal client] with [result]. Really excited to learn from all of you! What\'s everyone working on this week?' },
-                { name: 'LinkedIn Connection', content: 'Hi [Name], I came across your profile and was impressed by your work in [industry]. Would love to connect and follow your journey!' },
-                { name: 'Admin Message', content: 'Hi [Admin]! Just joined [Group] and wanted to say thanks for creating this space. The community you\'ve built is exactly what I was looking for.' }
-            ],
-            video: [
-                { name: 'Value Video - Facebook', content: 'Hey [Name]! 👋 Quick video about [topic] based on our chat. Hope it helps with [their challenge]! [Video Link] No pressure, just wanted to share!' },
-                { name: 'Value Video - LinkedIn', content: 'Hi [Name]! Been following your content about [topic] - really valuable stuff. Made a quick video about [related topic] that might interest you: [Video Link] Just sharing in case helpful!' },
-                { name: 'Follow-Up Video', content: 'Hey [Name]! Quick check-in video about [topic]. Thinking of you and wanted to share some thoughts that might help with [their goal]. [Video Link] Chat soon!' }
-            ],
-            consultation: [
-                { name: 'Soft Offer', content: 'Based on what you\'ve shared about [their challenge], I think a quick chat could be valuable. No pitch, just happy to share some insights. When works for you?' },
-                { name: 'Direct Offer', content: 'Would you be open to a 15-min consultation? We can discuss [their situation] and I can share how I\'ve helped others in similar situations. No obligation!' },
-                { name: 'Follow-Up Offer', content: 'Been thinking about our conversation. If you\'re still navigating [challenge], I\'d love to hop on a quick call and share some ideas that might help. Interested?' }
-            ],
-            nurture: [
-                { name: 'Value Share', content: 'Hey [Name]! Came across this [article/tool/resource] about [topic] and thought of you. Hope it\'s helpful! [Link]' },
-                { name: 'Check-In', content: 'Hey [Name]! Just checking in - how\'s [their project/goal] coming along? Hope you\'re making great progress!' },
-                { name: 'Final Touch', content: 'Hey [Name]! Wanted to stay on your radar. If you ever need help with [topic], I\'m always here. No pressure, just want to be a resource!' }
-            ]
-        };
-
-        // State
-        let selectedMarket = 'legal';
-        let activeTab = 'facebook';
-        let selectedTemplate = null;
-
-        // Initialize
-        function init() {
-            renderMarkets();
-            renderProcedures();
-            renderTemplates();
-            loadTracker();
-        }
-
-        // Render Markets
-        function renderMarkets() {
-            const grid = document.getElementById('marketGrid');
-            grid.innerHTML = Object.entries(markets).map(([key, market]) => `
-                <div class="market-card ${selectedMarket === key ? 'selected' : ''}" onclick="selectMarket('${key}')">
-                    <div class="market-icon">${market.icon}</div>
-                    <div class="market-name">${market.name}</div>
-                    <div class="market-value">${market.value}</div>
-                </div>
-            `).join('');
-        }
-
-        // Select Market
-        window.selectMarket = function(marketKey) {
-            selectedMarket = marketKey;
-            renderMarkets();
-            renderProcedures();
-            renderTemplates();
-        };
-
-        // Switch Procedure Tab
-        window.switchProcedureTab = function(tab) {
-            activeTab = tab;
-            renderProcedures();
-            
-            // Update tab buttons
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-        };
-
-        // Render Procedures
-        function renderProcedures() {
-            const procedure = procedures[activeTab];
-            const market = markets[selectedMarket];
-            
-            let html = `<h3 style="margin-bottom: 20px; color: #90caf9;">${procedure.title}</h3>`;
-            html += `<div style="margin-bottom: 20px; padding: 12px; background: rgba(74,144,226,0.1); border-radius: 8px; border-left: 4px solid #4a90e2;">
-                <strong>🎯 Market:</strong> ${market.icon} ${market.name} · ${market.value}<br>
-                <strong>🔑 Keywords:</strong> ${market.keywords.slice(0, 5).join(' · ')}<br>
-                <strong>👥 Groups:</strong> ${market.groups.slice(0, 3).join(' · ')}
-            </div>`;
-            
-            html += '<div class="step-list">';
-            
-            procedure.steps.forEach((step, index) => {
-                // Replace placeholders with market-specific data
-                let stepTemplate = step.template;
-                stepTemplate = stepTemplate.replace(/\[market keywords\]/g, market.keywords.slice(0, 3).join(', '));
-                stepTemplate = stepTemplate.replace(/\[ideal client\]/g, market.name === 'Legal' ? 'accident victims' : 
-                                                        market.name === 'Personal Injury' ? 'injury victims' :
-                                                        market.name === 'Tax Resolution' ? 'tax debt clients' :
-                                                        market.name === 'Dental' ? 'dental patients' :
-                                                        market.name === 'SaaS' ? 'businesses' : 'clients');
-                
-                html += `
-                    <div class="step-item">
-                        <div class="step-title">
-                            <span class="step-number">${index + 1}</span>
-                            ${step.title}
-                        </div>
-                        <p style="margin-bottom: 12px; color: rgba(255,255,255,0.8);">${step.description}</p>
-                        <div class="template-box">
-                            ${stepTemplate}
-                        </div>
-                        <button class="copy-btn" onclick="copyToClipboard(\`${stepTemplate.replace(/`/g, '\\`')}\`)">
-                            📋 Copy Template
-                        </button>
-                    </div>
-                `;
-            });
-            
-            html += '</div>';
-            
-            document.getElementById('procedureContent').innerHTML = html;
-        }
-
-        // Render Templates
-        function renderTemplates() {
-            const market = markets[selectedMarket];
-            const container = document.getElementById('templatesContainer');
-            
-            let html = '';
-            
-            for (const [category, templates] of Object.entries(templateCategories)) {
-                html += `<div class="template-category">
-                    <h3>${category === 'connection' ? '🤝 Connection' : 
-                           category === 'video' ? '🎥 Video Messages' : 
-                           category === 'consultation' ? '📞 Consultation' : '🌱 Nurture'}</h3>`;
-                
-                templates.forEach(template => {
-                    // Replace placeholders
-                    let content = template.content;
-                    content = content.replace(/\[ideal client\]/g, market.name === 'Legal' ? 'accident victims' : 
-                                                    market.name === 'Personal Injury' ? 'injury victims' :
-                                                    market.name === 'Tax Resolution' ? 'tax debt clients' :
-                                                    market.name === 'Dental' ? 'dental patients' :
-                                                    market.name === 'SaaS' ? 'businesses' : 'clients');
-                    
-                    html += `
-                        <div class="template-card ${selectedTemplate === template.name ? 'active' : ''}" 
-                             onclick="selectTemplate('${template.name}')">
-                            <div style="font-weight: 700; margin-bottom: 4px; color: #90caf9;">${template.name}</div>
-                            <div class="template-preview">${content.substring(0, 80)}...</div>
-                            <button class="copy-btn" onclick="copyToClipboard(\`${content.replace(/`/g, '\\`')}\`); event.stopPropagation();">
-                                📋 Copy
-                            </button>
-                        </div>
-                    `;
-                });
-                
-                html += '</div>';
-            }
-            
-            container.innerHTML = html;
-        }
-
-        // Select Template
-        window.selectTemplate = function(templateName) {
-            selectedTemplate = templateName;
-            renderTemplates();
-        };
-
-        // Copy to Clipboard
-        window.copyToClipboard = function(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                alert('✅ Template copied to clipboard!');
-            });
-        };
-
-        // Tracker
-        let tracker = {
-            fb: 0,
-            li: 0,
-            convos: 0,
-            consults: 0
-        };
-
-        function loadTracker() {
-            const saved = localStorage.getItem('salesTracker');
-            if (saved) {
-                tracker = JSON.parse(saved);
-                updateTrackerDisplay();
-            }
-        }
-
-        function saveTracker() {
-            localStorage.setItem('salesTracker', JSON.stringify(tracker));
-        }
-
-        function updateTrackerDisplay() {
-            document.getElementById('fbConnections').textContent = tracker.fb;
-            document.getElementById('liConnections').textContent = tracker.li;
-            document.getElementById('conversations').textContent = tracker.convos;
-            document.getElementById('consultations').textContent = tracker.consults;
-        }
-
-        window.incrementTracker = function(type) {
-            switch(type) {
-                case 'fb':
-                    tracker.fb++;
-                    break;
-                case 'li':
-                    tracker.li++;
-                    break;
-                case 'convos':
-                    tracker.convos++;
-                    break;
-                case 'consults':
-                    tracker.consults++;
-                    break;
-            }
-            updateTrackerDisplay();
-            saveTracker();
-        };
-
-        // Initialize on load
-        document.addEventListener('DOMContentLoaded', init);
-    </script>
-</body>
-</html><!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Botemia · Sales Procedure System</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(145deg, #0a1428 0%, #0f1a35 100%);
-            color: white;
-            line-height: 1.6;
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 24px;
-        }
-
-        /* Header */
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .logo-area {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .logo-icon {
-            font-size: 2.8rem;
-            filter: drop-shadow(0 0 10px #4a90e2);
-        }
-
-        .logo-area h1 {
-            font-size: 2.2rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #ffffff, #90caf9);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .badge {
-            background: rgba(74, 144, 226, 0.15);
-            border: 1px solid #4a90e2;
-            color: #90caf9;
-            padding: 8px 20px;
-            border-radius: 40px;
-            font-weight: 600;
             font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        /* Market Selector */
-        .market-selector {
-            background: rgba(18, 28, 46, 0.8);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(74, 144, 226, 0.2);
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 30px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-        }
-
-        .selector-title {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .market-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 16px;
-        }
-
-        .market-card {
-            background: rgba(0, 0, 0, 0.3);
-            border: 2px solid transparent;
-            border-radius: 12px;
-            padding: 20px;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-align: center;
-        }
-
-        .market-card:hover {
-            border-color: #4a90e2;
-            transform: translateY(-2px);
-            background: rgba(74, 144, 226, 0.1);
-        }
-
-        .market-card.selected {
-            border-color: #4a90e2;
-            background: rgba(74, 144, 226, 0.15);
-            box-shadow: 0 0 20px rgba(74, 144, 226, 0.3);
-        }
-
-        .market-icon {
-            font-size: 2.5rem;
-            margin-bottom: 12px;
-        }
-
-        .market-name {
-            font-weight: 700;
-            font-size: 1.1rem;
-            margin-bottom: 4px;
-        }
-
-        .market-value {
-            font-size: 0.75rem;
-            color: #90caf9;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        /* Main Grid */
-        .main-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 28px;
-            margin-bottom: 30px;
-        }
-
-        @media (max-width: 1000px) {
-            .main-grid { grid-template-columns: 1fr; }
-        }
-
-        /* Procedure Panel */
-        .procedure-panel {
-            background: rgba(18, 28, 46, 0.8);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(74, 144, 226, 0.2);
-            border-radius: 24px;
-            padding: 28px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-        }
-
-        .panel-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 24px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid rgba(74, 144, 226, 0.2);
-        }
-
-        .panel-header h2 {
-            font-size: 1.4rem;
-            font-weight: 600;
-            color: #90caf9;
-        }
-
-        .procedure-tabs {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 24px;
-            flex-wrap: wrap;
-        }
-
-        .tab-btn {
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid #4a90e2;
-            color: #90caf9;
-            padding: 10px 20px;
-            border-radius: 30px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            flex: 1;
-            min-width: 120px;
-        }
-
-        .tab-btn.active {
-            background: #4a90e2;
-            color: white;
-            border-color: #4a90e2;
-            box-shadow: 0 0 15px rgba(74, 144, 226, 0.5);
-        }
-
-        .procedure-content {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 16px;
-            padding: 24px;
-            min-height: 500px;
-            border: 1px solid rgba(74, 144, 226, 0.1);
-        }
-
-        .step-list {
-            list-style: none;
-        }
-
-        .step-item {
-            margin-bottom: 20px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(74, 144, 226, 0.1);
-        }
-
-        .step-number {
-            display: inline-block;
-            background: #4a90e2;
-            color: white;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            text-align: center;
-            line-height: 28px;
-            font-weight: 700;
-            margin-right: 12px;
-        }
-
-        .step-title {
-            font-weight: 700;
-            color: #90caf9;
-            margin-bottom: 8px;
-        }
-
-        .template-box {
-            background: rgba(74, 144, 226, 0.1);
-            border-left: 4px solid #4a90e2;
-            padding: 16px;
-            margin: 16px 0;
-            border-radius: 8px;
-            font-family: monospace;
-            white-space: pre-wrap;
-        }
-
-        .copy-btn {
-            background: rgba(74, 144, 226, 0.2);
-            border: 1px solid #4a90e2;
-            color: #90caf9;
-            padding: 6px 12px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            cursor: pointer;
-            margin-top: 8px;
-        }
-
-        .copy-btn:hover {
-            background: #4a90e2;
-            color: white;
-        }
-
-        /* Templates Panel */
-        .templates-panel {
-            background: rgba(18, 28, 46, 0.8);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(74, 144, 226, 0.2);
-            border-radius: 24px;
-            padding: 28px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-        }
-
-        .template-category {
-            margin-bottom: 28px;
-        }
-
-        .template-category h3 {
-            color: #90caf9;
-            margin-bottom: 16px;
-            font-size: 1.2rem;
-            border-bottom: 1px solid rgba(74, 144, 226, 0.2);
-            padding-bottom: 8px;
-        }
-
-        .template-card {
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(74, 144, 226, 0.2);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .template-card:hover {
-            border-color: #4a90e2;
-            background: rgba(74, 144, 226, 0.1);
-        }
-
-        .template-card.active {
-            border: 2px solid #4a90e2;
-            background: rgba(74, 144, 226, 0.15);
-        }
-
-        .template-preview {
-            font-size: 0.9rem;
             color: rgba(255,255,255,0.7);
             margin: 8px 0;
             white-space: nowrap;
@@ -1285,7 +327,7 @@
 
         .tracker-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 20px;
             margin-top: 20px;
         }
@@ -1347,7 +389,7 @@
                 <h1>Sales Procedure System</h1>
             </div>
             <div class="badge">
-                <span>🏆 HIGH-VALUE INDUSTRIES</span>
+                <span>🏆 PAIN POINT FOCUSED</span>
                 <span style="margin-left: 8px;">v3.0</span>
             </div>
         </div>
@@ -1358,9 +400,7 @@
                 <span style="font-size: 1.8rem;">🎯</span>
                 <h2 style="color: white;">Select Your Market</h2>
             </div>
-            <div class="market-grid" id="marketGrid">
-                <!-- Populated by JS -->
-            </div>
+            <div class="market-grid" id="marketGrid"></div>
         </div>
 
         <!-- Main Grid -->
@@ -1373,26 +413,22 @@
                 </div>
 
                 <div class="procedure-tabs" id="procedureTabs">
-                    <button class="tab-btn active" onclick="switchProcedureTab('facebook')">📘 Facebook Groups</button>
-                    <button class="tab-btn" onclick="switchProcedureTab('linkedin')">🔗 LinkedIn</button>
-                    <button class="tab-btn" onclick="switchProcedureTab('followup')">📞 Follow-Up</button>
+                    <button class="tab-btn active" data-tab="facebook">📘 Facebook Groups</button>
+                    <button class="tab-btn" data-tab="linkedin">🔗 LinkedIn</button>
+                    <button class="tab-btn" data-tab="followup">📞 Follow-Up</button>
                 </div>
 
-                <div class="procedure-content" id="procedureContent">
-                    <!-- Populated by JS -->
-                </div>
+                <div class="procedure-content" id="procedureContent"></div>
             </div>
 
             <!-- Right: Templates -->
             <div class="templates-panel">
                 <div class="panel-header">
                     <span style="font-size: 1.8rem;">📝</span>
-                    <h2>Message Templates</h2>
+                    <h2>Pain Point Templates</h2>
                 </div>
 
-                <div id="templatesContainer">
-                    <!-- Populated by JS -->
-                </div>
+                <div id="templatesContainer"></div>
             </div>
         </div>
 
@@ -1408,516 +444,533 @@
                     <div>👥 Facebook</div>
                     <div class="tracker-number" id="fbConnections">0</div>
                     <div class="tracker-label">New Connections</div>
-                    <button class="tracker-btn" onclick="incrementTracker('fb')">+1</button>
+                    <button class="tracker-btn" data-tracker="fb">+1</button>
                 </div>
                 <div class="tracker-card">
                     <div>💼 LinkedIn</div>
                     <div class="tracker-number" id="liConnections">0</div>
                     <div class="tracker-label">New Connections</div>
-                    <button class="tracker-btn" onclick="incrementTracker('li')">+1</button>
+                    <button class="tracker-btn" data-tracker="li">+1</button>
                 </div>
                 <div class="tracker-card">
                     <div>💬 Conversations</div>
                     <div class="tracker-number" id="conversations">0</div>
                     <div class="tracker-label">Started</div>
-                    <button class="tracker-btn" onclick="incrementTracker('convos')">+1</button>
+                    <button class="tracker-btn" data-tracker="convos">+1</button>
                 </div>
                 <div class="tracker-card">
                     <div>📅 Consultations</div>
                     <div class="tracker-number" id="consultations">0</div>
                     <div class="tracker-label">Booked</div>
-                    <button class="tracker-btn" onclick="incrementTracker('consults')">+1</button>
+                    <button class="tracker-btn" data-tracker="consults">+1</button>
                 </div>
             </div>
         </div>
 
         <div class="footer">
-            <p>⚡ High-Value Industries · Legal · Medical · Personal Injury · Tax Resolution · Dental · SaaS</p>
+            <p>⚡ High-Value Industries · Pain Point Focused · Legal · Medical · Personal Injury · Tax · Dental · SaaS</p>
         </div>
     </div>
 
     <script>
-        // ============================================
-        // SALES PROCEDURE SYSTEM - HIGH-VALUE INDUSTRIES
-        // ============================================
+        (function() {
+            // ============================================
+            // MARKET DATA - SINGLE DECLARATION
+            // ============================================
+            
+            const marketData = {
+                legal: {
+                    name: 'Legal',
+                    icon: '⚖️',
+                    value: 'HIGH TICKET',
+                    painPoints: [
+                        { pain: 'Case value too low', trigger: 'settlement offer', response: 'Most attorneys offer free case evaluation - worth getting a second opinion.' },
+                        { pain: 'Can\'t afford attorney', trigger: 'legal fees', response: 'Many firms work on contingency - you pay nothing unless you win.' },
+                        { pain: 'Statute of limitations', trigger: 'running out of time', response: 'Time limits vary by case type - don\'t wait to explore options.' },
+                        { pain: 'Insurance denial', trigger: 'claim denied', response: 'Insurance companies often deny valid claims - legal help can fight back.' }
+                    ],
+                    keywords: ['attorney', 'lawsuit', 'settlement', 'legal advice', 'case evaluation'],
+                    groups: ['legal advice', 'accident victims', 'class action lawsuits']
+                },
+                personalInjury: {
+                    name: 'Personal Injury',
+                    icon: '🚑',
+                    value: 'HIGH TICKET',
+                    painPoints: [
+                        { pain: 'Mounting medical bills', trigger: 'hospital bills', response: 'Medical bills shouldn\'t bankrupt you - compensation can cover all medical costs.' },
+                        { pain: 'Lost wages', trigger: 'can\'t work', response: 'Lost income from injuries can be claimed in your settlement.' },
+                        { pain: 'Insurance lowball', trigger: 'settlement offer too low', response: 'First offers are always low - attorneys know how to negotiate.' },
+                        { pain: 'Pain and suffering', trigger: 'emotional distress', response: 'You deserve compensation for more than just medical bills.' }
+                    ],
+                    keywords: ['accident', 'injury', 'car crash', 'slip and fall', 'medical malpractice'],
+                    groups: ['car accident support', 'injury recovery', 'accident victims']
+                },
+                taxResolution: {
+                    name: 'Tax Resolution',
+                    icon: '📊',
+                    value: 'HIGH TICKET',
+                    painPoints: [
+                        { pain: 'IRS garnishing wages', trigger: 'wage garnishment', response: 'IRS wage levies can be stopped with proper representation.' },
+                        { pain: 'Can\'t pay tax debt', trigger: 'owe taxes', response: 'Offer in Compromise can settle tax debt for pennies on the dollar.' },
+                        { pain: 'Audit notice', trigger: 'audit letter', response: 'Don\'t face IRS audits alone - professionals can represent you.' },
+                        { pain: 'Bank account levied', trigger: 'bank account frozen', response: 'IRS bank levies can be released - time is critical.' }
+                    ],
+                    keywords: ['IRS', 'tax debt', 'audit', 'back taxes', 'tax lien'],
+                    groups: ['tax help', 'small business taxes', 'IRS problems']
+                },
+                dental: {
+                    name: 'Dental',
+                    icon: '🦷',
+                    value: 'RECURRING',
+                    painPoints: [
+                        { pain: 'Dental anxiety', trigger: 'afraid of dentist', response: 'Sedation dentistry makes treatment comfortable and stress-free.' },
+                        { pain: 'Cost of implants', trigger: 'too expensive', response: 'Many offices offer payment plans and financing options.' },
+                        { pain: 'Missing teeth', trigger: 'embarrassed to smile', response: 'Modern implants look and feel exactly like natural teeth.' },
+                        { pain: 'Insurance doesn\'t cover', trigger: 'no coverage', response: 'Dental savings plans can save 20-50% on procedures.' }
+                    ],
+                    keywords: ['dentist', 'dental implant', 'cosmetic dentistry', 'teeth whitening', 'braces'],
+                    groups: ['dental health', 'cosmetic dentistry', 'implants support']
+                },
+                saas: {
+                    name: 'SaaS',
+                    icon: '☁️',
+                    value: 'HIGH AD SPEND',
+                    painPoints: [
+                        { pain: 'Wasting time on manual tasks', trigger: 'too much manual work', response: 'Automation saves hours every day - focus on growth, not data entry.' },
+                        { pain: 'Can\'t scale operations', trigger: 'hitting ceiling', response: 'The right software grows with you - no more switching platforms.' },
+                        { pain: 'Poor team collaboration', trigger: 'communication issues', response: 'Centralized platforms keep everyone aligned and productive.' },
+                        { pain: 'No visibility into metrics', trigger: 'can\'t track performance', response: 'Real-time analytics show you exactly where to improve.' }
+                    ],
+                    keywords: ['software', 'CRM', 'automation', 'analytics', 'platform'],
+                    groups: ['SaaS founders', 'software sales', 'tech startups']
+                },
+                mortgage: {
+                    name: 'Mortgage',
+                    icon: '🏠',
+                    value: 'HIGH VOLUME',
+                    painPoints: [
+                        { pain: 'Bad credit', trigger: 'credit issues', response: 'FHA loans allow scores as low as 580 - you have options.' },
+                        { pain: 'Self-employed', trigger: '1099 income', response: 'Bank statement loans use your deposits, not tax returns.' },
+                        { pain: 'No down payment', trigger: 'can\'t save', response: 'USDA and VA loans offer 0% down options.' },
+                        { pain: 'High interest rates', trigger: 'rates too high', response: 'Shopping multiple lenders can save thousands over the loan.' }
+                    ],
+                    keywords: ['rates', 'pre-approval', 'refinance', 'first-time buyer', 'credit score'],
+                    groups: ['home buyers', 'real estate investors', 'first-time home buyers']
+                },
+                insurance: {
+                    name: 'Insurance',
+                    icon: '🛡️',
+                    value: 'PROTECTION',
+                    painPoints: [
+                        { pain: 'Rates too high', trigger: 'expensive premiums', response: 'Shopping around annually can save 30-40% on coverage.' },
+                        { pain: 'Family unprotected', trigger: 'worry about family', response: 'Life insurance ensures your family is taken care of no matter what.' },
+                        { pain: 'Claim denied', trigger: 'claim rejected', response: 'Don\'t accept denial - many claims are approved on appeal.' },
+                        { pain: 'Confused by options', trigger: 'too many choices', response: 'An independent agent can compare options and find your best fit.' }
+                    ],
+                    keywords: ['coverage', 'premiums', 'life insurance', 'health insurance', 'protect'],
+                    groups: ['insurance professionals', 'financial planning', 'family protection']
+                },
+                realestate: {
+                    name: 'Real Estate',
+                    icon: '🏡',
+                    value: 'INVESTMENT',
+                    painPoints: [
+                        { pain: 'Can\'t find right home', trigger: 'no inventory', response: 'Off-market properties exist - the right agent has connections.' },
+                        { pain: 'Worried about overpaying', trigger: 'market too hot', response: 'CMA reports show exactly what homes are worth in today\'s market.' },
+                        { pain: 'Investment property cash flow', trigger: 'negative cash flow', response: 'Analysis tools ensure you buy properties that actually make money.' },
+                        { pain: 'Selling for top dollar', trigger: 'want highest price', response: 'Staging and marketing make a huge difference in final sale price.' }
+                    ],
+                    keywords: ['buying', 'selling', 'market', 'home', 'investment'],
+                    groups: ['real estate investors', 'home sellers', 'first-time buyers']
+                },
+                coaching: {
+                    name: 'Business Coaching',
+                    icon: '🚀',
+                    value: 'SCALING',
+                    painPoints: [
+                        { pain: 'Not enough clients', trigger: 'slow growth', response: 'Proven systems consistently bring in qualified leads.' },
+                        { pain: 'Hitting revenue plateau', trigger: 'stuck at same income', response: 'New strategies break through ceilings and unlock growth.' },
+                        { pain: 'Overwhelmed and burned out', trigger: 'working too much', response: 'Systems and delegation free up your time and energy.' },
+                        { pain: 'Unclear next steps', trigger: 'don\'t know what\'s next', response: 'Strategic planning clarifies exactly what to focus on.' }
+                    ],
+                    keywords: ['growth', 'marketing', 'leads', 'sales', 'business'],
+                    groups: ['business owners', 'entrepreneurs', 'startup founders']
+                },
+                health: {
+                    name: 'Health & Wellness',
+                    icon: '🌿',
+                    value: 'WELLNESS',
+                    painPoints: [
+                        { pain: 'No energy', trigger: 'always tired', response: 'Targeted nutrition and supplements restore natural energy.' },
+                        { pain: 'Can\'t lose weight', trigger: 'tried everything', response: 'Personalized plans work with your body, not against it.' },
+                        { pain: 'Chronic stress', trigger: 'always stressed', response: 'Natural approaches reduce stress without medication.' },
+                        { pain: 'Digestive issues', trigger: 'stomach problems', response: 'Gut health affects everything - the right protocol transforms wellness.' }
+                    ],
+                    keywords: ['wellness', 'health', 'fitness', 'nutrition', 'supplements'],
+                    groups: ['healthy living', 'fitness motivation', 'nutrition tips']
+                }
+            };
 
-        // Market Data - Added all requested industries + SaaS (high ad spend)
-        const markets = {
-            legal: {
-                name: 'Legal',
-                icon: '⚖️',
-                value: 'HIGH TICKET',
-                keywords: ['attorney', 'lawsuit', 'settlement', 'legal advice', 'case evaluation', 'class action'],
-                painPoints: ['case value', 'settlement timeline', 'legal fees', 'negligence', 'wrongful death'],
-                groups: ['personal injury support', 'legal advice', 'accident victims', 'class action lawsuits'],
-                templates: {
-                    intro: "Hi [Name]! Noticed you're in [Group]. If you or someone you know is dealing with [legal issue], I connect people with experienced attorneys for free case evaluations. Happy to share info!",
-                    video: "Quick video about [legal topic] - many people don't know they might qualify for compensation. [Video Link] No pressure, just educational!",
-                    consultation: "Free 15-min legal case evaluation - no obligation. Happy to review your situation and connect you with the right attorney if appropriate."
+            // ============================================
+            // PROCEDURE DATA - SINGLE DECLARATION
+            // ============================================
+            
+            const procedureData = {
+                facebook: {
+                    title: '📘 Facebook Groups Procedure',
+                    steps: [
+                        {
+                            title: 'Find Your Groups',
+                            description: 'Search for 3-5 groups where your ideal clients hang out.',
+                            template: 'Search: [market keywords] + "support", "community", "advice"'
+                        },
+                        {
+                            title: 'Audit Groups',
+                            description: 'Evaluate each group before committing.',
+                            template: 'Look for: 500+ members, active daily, engaged admin, real conversations'
+                        },
+                        {
+                            title: 'Connect with Admin',
+                            description: 'Message the admin first. Build relationship.',
+                            template: 'Hi [Admin]! Just joined [Group] - love what you\'ve built here. Excited to be part of the community!'
+                        },
+                        {
+                            title: 'Introduction Post',
+                            description: 'Genuine intro. No pitching. Focus on connection.',
+                            template: 'Hi everyone! 👋 I\'m [Name]. I help [ideal clients] with [result]. Looking forward to connecting with you all!'
+                        },
+                        {
+                            title: 'Daily Engagement',
+                            description: '15 mins daily: comment, reply, connect.',
+                            template: 'Comment on 5 posts, reply to comments, accept friend requests.'
+                        },
+                        {
+                            title: 'Identify Pain Points',
+                            description: 'Listen for their specific struggles.',
+                            template: 'When someone mentions [pain point], engage genuinely and offer value.'
+                        },
+                        {
+                            title: 'Send Video',
+                            description: 'Address their specific pain point in a short video.',
+                            template: 'Hey [Name]! Heard you mention [pain point]. Made a quick video about that: [Link] Hope it helps!'
+                        },
+                        {
+                            title: 'Offer Consultation',
+                            description: 'When they engage, offer to help further.',
+                            template: 'Glad the video helped! Would you be open to a quick chat about your situation? No pressure - just want to help.'
+                        }
+                    ]
+                },
+                linkedin: {
+                    title: '🔗 LinkedIn Procedure',
+                    steps: [
+                        {
+                            title: 'Optimize Profile',
+                            description: 'Your profile is your storefront.',
+                            template: 'Headline: I help [ideal clients] with [result]\nAbout: First 3 lines hook them\nFeatured: Pin best content'
+                        },
+                        {
+                            title: 'Find Ideal Clients',
+                            description: 'Search for your target audience.',
+                            template: 'Search: [Job titles] + [Industry] + [Location]'
+                        },
+                        {
+                            title: 'Send Connection Request',
+                            description: 'Personalize every request.',
+                            template: 'Hi [Name], impressed by your work in [industry]. Would love to connect!'
+                        },
+                        {
+                            title: 'Engage With Content',
+                            description: 'Like and comment for 3-5 days.',
+                            template: 'Great insight on [topic]! [Add thoughtful question]'
+                        },
+                        {
+                            title: 'Send Value Video',
+                            description: 'Address their industry challenges.',
+                            template: 'Hi [Name]! Been following your content. Made a quick video about [topic] you might find valuable: [Link]'
+                        },
+                        {
+                            title: 'Nurture Conversation',
+                            description: 'Ask about their challenges.',
+                            template: 'What\'s your biggest challenge with [topic] right now? Always curious to learn from others.'
+                        },
+                        {
+                            title: 'Offer Strategy Call',
+                            description: 'When trust is built, offer help.',
+                            template: 'Based on what you shared, I think a 15-min chat could be valuable. Free strategy call - when works?'
+                        }
+                    ]
+                },
+                followup: {
+                    title: '📞 Follow-Up Procedure',
+                    steps: [
+                        {
+                            title: 'Day 1 - Thank You',
+                            description: 'Warm thank you after connecting.',
+                            template: 'Hey [Name]! Great connecting about [topic]. Looking forward to staying in touch!'
+                        },
+                        {
+                            title: 'Day 3 - Value Share',
+                            description: 'Share something relevant to their pain point.',
+                            template: 'Saw this about [pain point] and thought of you: [Link] Hope it\'s helpful!'
+                        },
+                        {
+                            title: 'Day 7 - Check In',
+                            description: 'Light check-in, no agenda.',
+                            template: 'Hey [Name]! How\'s [their situation] coming along? Hope you\'re making progress!'
+                        },
+                        {
+                            title: 'Day 14 - Video Follow-Up',
+                            description: 'Short video addressing their specific pain.',
+                            template: 'Quick video about [pain point] - thought of you. [Link] No response needed!'
+                        },
+                        {
+                            title: 'Day 21 - Offer Call',
+                            description: 'If engaged, offer consultation.',
+                            template: 'Been thinking about your situation. Open to a quick strategy call? Happy to share ideas.'
+                        },
+                        {
+                            title: 'Day 30 - Final Touch',
+                            description: 'One last check before nurture mode.',
+                            template: 'Last check-in! If you ever want to chat about [topic], I\'m always here for you.'
+                        },
+                        {
+                            title: 'Ongoing Nurture',
+                            description: 'Stay on radar without being pushy.',
+                            template: 'Weekly: engage with posts\nMonthly: share value\nQuarterly: personal check'
+                        }
+                    ]
                 }
-            },
-            personalInjury: {
-                name: 'Personal Injury',
-                icon: '🚑',
-                value: 'HIGH TICKET',
-                keywords: ['accident', 'injury', 'car crash', 'slip and fall', 'medical malpractice', 'wrongful death'],
-                painPoints: ['medical bills', 'lost wages', 'pain and suffering', 'insurance claims', 'settlement amount'],
-                groups: ['car accident support', 'injury recovery', 'accident victims', 'medical trauma support'],
-                templates: {
-                    intro: "Hi [Name]! Saw you're in [Group]. If you've been in an accident, you might be entitled to compensation. I help connect victims with top personal injury attorneys. Free case review available!",
-                    video: "Important info about [injury type] claims - most people don't know their rights. [Video Link] Just sharing to help!",
-                    consultation: "Free consultation with a personal injury attorney - no cost unless they win your case. Want me to connect you?"
-                }
-            },
-            taxResolution: {
-                name: 'Tax Resolution',
-                icon: '📊',
-                value: 'HIGH TICKET',
-                keywords: ['IRS', 'tax debt', 'audit', 'back taxes', 'tax lien', 'offer in compromise'],
-                painPoints: ['IRS notices', 'wage garnishment', 'bank levy', 'penalties', 'interest'],
-                groups: ['tax help', 'small business taxes', 'IRS problems', 'tax debt support'],
-                templates: {
-                    intro: "Hi [Name]! Noticed you're in [Group]. If you're dealing with IRS issues, tax debt, or audits, I can connect you with tax resolution specialists. Free consultation available.",
-                    video: "Quick overview of [tax topic] - the IRS has programs that can help. [Video Link] Hope this helps!",
-                    consultation: "Free 15-min tax resolution strategy call. We'll review your situation and options. No obligation - just want to help."
-                }
-            },
-            dental: {
-                name: 'Dental',
-                icon: '🦷',
-                value: 'RECURRING',
-                keywords: ['dentist', 'dental implant', 'cosmetic dentistry', 'teeth whitening', 'braces', 'emergency dentist'],
-                painPoints: ['dental anxiety', 'cost of implants', 'insurance coverage', 'missing teeth', 'pain'],
-                groups: ['dental health', 'cosmetic dentistry', 'implants support', 'dental anxiety help'],
-                templates: {
-                    intro: "Hi [Name]! Saw you're in [Group]. I help connect people with quality dentists for [specific procedure]. Free consultation available - no pressure!",
-                    video: "Quick video about [dental procedure] - what to expect and how to find the right dentist. [Video Link] Just sharing!",
-                    consultation: "Free dental consultation - we'll help you understand your options and find the right specialist. Want to learn more?"
-                }
-            },
-            saas: {
-                name: 'SaaS',
-                icon: '☁️',
-                value: 'HIGH AD SPEND',
-                keywords: ['software', 'CRM', 'automation', 'analytics', 'platform', 'enterprise'],
-                painPoints: ['efficiency', 'scaling', 'integration', 'ROI', 'implementation'],
-                groups: ['SaaS founders', 'software sales', 'tech startups', 'B2B software'],
-                templates: {
-                    intro: "Hi [Name]! Noticed you're in [Group]. Our [software type] helps companies like yours [achieve result]. Would love to connect and share how!",
-                    video: "Quick demo of how we help [industry] companies solve [problem]. [Video Link] Curious what you think!",
-                    consultation: "Free strategy call - we'll analyze your current setup and show how we can help. 15 mins, no pitch, just value."
-                }
-            },
-            mortgage: {
-                name: 'Mortgage',
-                icon: '🏠',
-                value: 'HIGH VOLUME',
-                keywords: ['rates', 'pre-approval', 'refinance', 'first-time buyer', 'credit score'],
-                painPoints: ['credit issues', 'self-employed', 'down payment', 'closing costs'],
-                groups: ['home buyers', 'real estate investors', 'first-time home buyers', 'mortgage advice'],
-                templates: {
-                    intro: "Hi [Name]! Noticed you're in [Group]. I help [type] with [specific mortgage need]. Would love to connect!",
-                    video: "Quick video about [mortgage topic] - might help with your situation. [Video Link] Let me know your thoughts!",
-                    consultation: "Free 15-min mortgage consultation - we'll review your options and find the best fit. When works for you?"
-                }
-            },
-            insurance: {
-                name: 'Insurance',
-                icon: '🛡️',
-                value: 'PROTECTION',
-                keywords: ['coverage', 'premiums', 'life insurance', 'health insurance', 'protect'],
-                painPoints: ['affordable rates', 'family protection', 'business coverage', 'term vs whole'],
-                groups: ['insurance professionals', 'financial planning', 'family protection', 'small business owners'],
-                templates: {
-                    intro: "Hi [Name]! Saw you're in [Group]. I help [type] find the right coverage without overpaying. Would love to connect!",
-                    video: "Quick video about [insurance topic] that might help with [their concern]. [Video Link] Curious what you think!",
-                    consultation: "Would you be open to a 15-min chat about your [insurance need]? I can share some options and answer any questions."
-                }
-            },
-            realestate: {
-                name: 'Real Estate',
-                icon: '🏡',
-                value: 'INVESTMENT',
-                keywords: ['buying', 'selling', 'market', 'home', 'investment'],
-                painPoints: ['first-time buyer', 'pricing', 'market conditions', 'investment property'],
-                groups: ['real estate investors', 'home sellers', 'first-time buyers', 'property management'],
-                templates: {
-                    intro: "Hi [Name]! Noticed you're in [Group] and interested in [topic]. I specialize in [specific area/market]. Connect?",
-                    video: "Quick market update video about [topic] - thought you might find it helpful. [Video Link] What are your thoughts?",
-                    consultation: "Based on what you shared, a quick call could help clarify your options. I do free 15-min consultations - want to grab time this week?"
-                }
-            },
-            coaching: {
-                name: 'Business Coaching',
-                icon: '🚀',
-                value: 'SCALING',
-                keywords: ['growth', 'marketing', 'leads', 'sales', 'business'],
-                painPoints: ['getting clients', 'scaling', 'time management', 'consistency'],
-                groups: ['business owners', 'entrepreneurs', 'startup founders', 'small business growth'],
-                templates: {
-                    intro: "Hi [Name]! Saw you in [Group] working on [topic]. I help [type] achieve [result] without burnout. Would love to connect!",
-                    video: "Hey [Name]! Here's a strategy video about [topic] that's been working for my clients. [Video Link] Would this help with your [challenge]?",
-                    consultation: "Would you be open to a strategy call? 20 mins, no pitch - just help you clarify your next steps. When works?"
-                }
-            },
-            health: {
-                name: 'Health & Wellness',
-                icon: '🌿',
-                value: 'WELLNESS',
-                keywords: ['wellness', 'health', 'fitness', 'nutrition', 'supplements'],
-                painPoints: ['energy', 'weight loss', 'stress', 'healthy habits'],
-                groups: ['healthy living', 'fitness motivation', 'nutrition tips', 'wellness journey'],
-                templates: {
-                    intro: "Hi [Name]! Noticed we're both in [Group] interested in [topic]. I help [type] achieve [result] naturally. Connect?",
-                    video: "Quick video about [topic] that might help with [their goal]. [Video Link] Would love your thoughts!",
-                    consultation: "I offer free 15-min wellness consultations where we can chat about your goals. Interested in finding a time?"
-                }
+            };
+
+            // ============================================
+            // TEMPLATE DATA - SINGLE DECLARATION
+            // ============================================
+            
+            const templateData = {
+                painPoint: [
+                    { name: 'Initial Pain Point Response', content: 'I hear you on [pain point]. Many of my clients felt the same way. The key is [solution approach]. Happy to share more if you\'re interested!' },
+                    { name: 'Deep Dive Question', content: 'When you say [pain point], what\'s the biggest part of that struggle for you? Trying to understand better so I can help.' },
+                    { name: 'Empathy + Solution', content: 'That sounds really frustrating. [Pain point] is tough because [reason]. I\'ve helped others navigate this by [approach].' }
+                ],
+                video: [
+                    { name: 'Pain Point Video', content: 'Quick video about [pain point] and how to handle it. [Link] Hope this speaks to your situation!' },
+                    { name: 'Case Study Video', content: 'Here\'s how a client overcame [pain point] using [solution]. [Link] Thought you might find it encouraging!' },
+                    { name: 'Educational Video', content: 'Breaking down [pain point] and what actually works. [Link] No pitch - just wanted to share value!' }
+                ],
+                consultation: [
+                    { name: 'Soft Offer', content: 'Based on your [pain point], I think a quick chat could help clarify things. No pitch, just want to share what\'s worked for others.' },
+                    { name: 'Direct Offer', content: 'Open to a 15-min consultation about [pain point]? I can share some strategies that might help. No obligation!' },
+                    { name: 'Follow-Up Offer', content: 'Still thinking about your situation with [pain point]. If you want to explore solutions, I\'m here. Free strategy call available.' }
+                ],
+                nurture: [
+                    { name: 'Value Share', content: 'Came across this resource about [pain point] - thought of you! [Link] Hope it helps!' },
+                    { name: 'Check-In', content: 'Hey! Just checking in - how are things going with [pain point]? Hope progress is happening!' },
+                    { name: 'Encouragement', content: 'I know [pain point] can feel overwhelming, but you\'ve got this! Let me know if you ever want to chat about strategies.' }
+                ]
+            };
+
+            // ============================================
+            // STATE MANAGEMENT - SINGLE DECLARATIONS
+            // ============================================
+            
+            let currentMarket = 'legal';
+            let currentTab = 'facebook';
+            let activeTemplate = null;
+            
+            let dailyTracker = {
+                fb: 0,
+                li: 0,
+                convos: 0,
+                consults: 0
+            };
+
+            // ============================================
+            // INITIALIZATION
+            // ============================================
+            
+            function init() {
+                renderMarkets();
+                renderProcedures();
+                renderTemplates();
+                loadTracker();
+                attachEventListeners();
             }
-        };
 
-        // Procedures Data (same structure, just with blue styling)
-        const procedures = {
-            facebook: {
-                title: '📘 Facebook Groups Procedure',
-                steps: [
-                    {
-                        title: 'Find Your Groups',
-                        description: 'Search for 3-5 groups where your ideal clients hang out. Use keywords related to your market.',
-                        template: 'Search terms: [market keywords] + "support", "community", "advice", "professionals"'
-                    },
-                    {
-                        title: 'Audit & Select',
-                        description: 'Use the audit scorecard to evaluate each group. Select your top 2-3 to focus on.',
-                        template: 'Criteria: 500+ members, active daily, admin engaged, members ask questions'
-                    },
-                    {
-                        title: 'Connect with Admin',
-                        description: 'Message the admin before posting. Build relationship first.',
-                        template: 'Hi [Admin]! Just joined [Group] and love the community you\'ve built here. Looking forward to being part of it!'
-                    },
-                    {
-                        title: 'Introduction Post',
-                        description: 'Post a genuine intro WITHOUT pitching. Focus on connection.',
-                        template: 'Hi everyone! 👋 Just joined. I\'m [Name] and I help [ideal client] with [result]. Excited to learn from this group!'
-                    },
-                    {
-                        title: 'Daily Engagement',
-                        description: '15-20 mins daily: comment on 5 posts, reply to comments, accept friend requests.',
-                        template: 'ACE Framework: Add value, Clarify with questions, Encourage others'
-                    },
-                    {
-                        title: 'Move to Profile',
-                        description: 'When someone engages consistently, they\'ll visit your profile. Make sure it sells!',
-                        template: 'Profile must have: Clear bio, recent posts about your work, pinned offer/lead magnet'
-                    },
-                    {
-                        title: 'Send Video',
-                        description: 'After genuine conversation, send a non-intrusive video addressing their specific situation.',
-                        template: 'Hey [Name]! Been thinking about our chat about [topic]. Made a quick 2-min video with some thoughts: [Link] No pressure, just wanted to share!'
-                    },
-                    {
-                        title: 'Offer Consultation',
-                        description: 'If they engage with video, offer a free consultation to explore helping them.',
-                        template: 'Glad the video was helpful! Would you be open to a quick 15-min call to discuss your [specific situation] further? No obligation - just happy to help!'
-                    }
-                ]
-            },
-            linkedin: {
-                title: '🔗 LinkedIn Procedure',
-                steps: [
-                    {
-                        title: 'Optimize Profile',
-                        description: 'Your profile is your storefront. Make it compelling.',
-                        template: 'Headline: [Your Title] helping [ideal client] achieve [result]\nAbout: First 3 lines must hook them\nFeatured: Pin your best content'
-                    },
-                    {
-                        title: 'Find Your Audience',
-                        description: 'Search for your ideal clients using filters.',
-                        template: 'Search: [Job titles] + [Industry] + [Location]\nExample: "Personal Injury Attorney" + "Legal" + "Your City"'
-                    },
-                    {
-                        title: 'Send Connection Request',
-                        description: 'Personalize every request. No selling yet.',
-                        template: 'Hi [Name], I came across your profile and noticed we both work in [industry]. Would love to connect and follow your work!'
-                    },
-                    {
-                        title: 'Engage With Content',
-                        description: 'Like and comment on their posts for 3-5 days before messaging.',
-                        template: 'Comment examples: "Great insight on [topic]!" or "This really resonates. [Add thoughtful question]"'
-                    },
-                    {
-                        title: 'Send Video',
-                        description: 'After engagement, send a non-intrusive video message.',
-                        template: 'Hi [Name]! Been following your content about [topic] - really valuable stuff. Made a quick video about [related topic] that might interest you: [Video Link] Just sharing in case helpful!'
-                    },
-                    {
-                        title: 'Nurture Conversation',
-                        description: 'If they respond, ask about their goals/challenges.',
-                        template: 'Glad you liked the video! What\'s your biggest challenge with [topic] right now? Always curious to learn from others in the space.'
-                    },
-                    {
-                        title: 'Offer Consultation',
-                        description: 'After genuine conversation, offer a call to explore helping them.',
-                        template: 'Based on what you\'ve shared, I think a quick chat could be valuable. I do free 15-min strategy calls - want to grab time this week?'
-                    }
-                ]
-            },
-            followup: {
-                title: '📞 Follow-Up Procedure',
-                steps: [
-                    {
-                        title: 'Day 1 - Initial Contact',
-                        description: 'After connecting, send a warm thank you message.',
-                        template: 'Hey [Name]! Thanks for connecting. Really enjoyed our chat about [topic]. Looking forward to staying in touch!'
-                    },
-                    {
-                        title: 'Day 3 - Value Share',
-                        description: 'Share something valuable related to your conversation.',
-                        template: 'Saw this article about [topic] and thought of you: [Link] Hope it\'s helpful!'
-                    },
-                    {
-                        title: 'Day 7 - Check In',
-                        description: 'Light check-in, no agenda.',
-                        template: 'Hey [Name]! How\'s [their project/goal] coming along? Hope you\'re crushing it!'
-                    },
-                    {
-                        title: 'Day 14 - Video Follow-Up',
-                        description: 'Send a short video addressing their specific situation.',
-                        template: 'Hey [Name]! Quick video check-in about [their challenge]. [Video Link] No response needed - just wanted to share some thoughts!'
-                    },
-                    {
-                        title: 'Day 21 - Offer Consultation',
-                        description: 'If they\'ve engaged, offer a call.',
-                        template: 'Been thinking about your situation with [challenge]. Would you be open to a 15-min strategy session? Happy to share some ideas.'
-                    },
-                    {
-                        title: 'Day 30 - Final Check',
-                        description: 'One last touch before moving to long-term nurture.',
-                        template: 'Hey [Name]! Just checking in one more time. If you ever want to chat about [topic], my door\'s always open. No pressure, just wanted to stay on your radar!'
-                    },
-                    {
-                        title: 'Ongoing Nurture',
-                        description: 'Stay on their radar without being pushy.',
-                        template: 'Weekly: Like/comment on their posts\nMonthly: Share valuable content\nQuarterly: Personal check-in'
-                    }
-                ]
-            }
-        };
-
-        // Templates Data
-        const templateCategories = {
-            connection: [
-                { name: 'Facebook Intro Post', content: 'Hi everyone! 👋 Just joined this group. I\'m [Name] and I help [ideal client] with [result]. Really excited to learn from all of you! What\'s everyone working on this week?' },
-                { name: 'LinkedIn Connection', content: 'Hi [Name], I came across your profile and was impressed by your work in [industry]. Would love to connect and follow your journey!' },
-                { name: 'Admin Message', content: 'Hi [Admin]! Just joined [Group] and wanted to say thanks for creating this space. The community you\'ve built is exactly what I was looking for.' }
-            ],
-            video: [
-                { name: 'Value Video - Facebook', content: 'Hey [Name]! 👋 Quick video about [topic] based on our chat. Hope it helps with [their challenge]! [Video Link] No pressure, just wanted to share!' },
-                { name: 'Value Video - LinkedIn', content: 'Hi [Name]! Been following your content about [topic] - really valuable stuff. Made a quick video about [related topic] that might interest you: [Video Link] Just sharing in case helpful!' },
-                { name: 'Follow-Up Video', content: 'Hey [Name]! Quick check-in video about [topic]. Thinking of you and wanted to share some thoughts that might help with [their goal]. [Video Link] Chat soon!' }
-            ],
-            consultation: [
-                { name: 'Soft Offer', content: 'Based on what you\'ve shared about [their challenge], I think a quick chat could be valuable. No pitch, just happy to share some insights. When works for you?' },
-                { name: 'Direct Offer', content: 'Would you be open to a 15-min consultation? We can discuss [their situation] and I can share how I\'ve helped others in similar situations. No obligation!' },
-                { name: 'Follow-Up Offer', content: 'Been thinking about our conversation. If you\'re still navigating [challenge], I\'d love to hop on a quick call and share some ideas that might help. Interested?' }
-            ],
-            nurture: [
-                { name: 'Value Share', content: 'Hey [Name]! Came across this [article/tool/resource] about [topic] and thought of you. Hope it\'s helpful! [Link]' },
-                { name: 'Check-In', content: 'Hey [Name]! Just checking in - how\'s [their project/goal] coming along? Hope you\'re making great progress!' },
-                { name: 'Final Touch', content: 'Hey [Name]! Wanted to stay on your radar. If you ever need help with [topic], I\'m always here. No pressure, just want to be a resource!' }
-            ]
-        };
-
-        // State
-        let selectedMarket = 'legal';
-        let activeTab = 'facebook';
-        let selectedTemplate = null;
-
-        // Initialize
-        function init() {
-            renderMarkets();
-            renderProcedures();
-            renderTemplates();
-            loadTracker();
-        }
-
-        // Render Markets
-        function renderMarkets() {
-            const grid = document.getElementById('marketGrid');
-            grid.innerHTML = Object.entries(markets).map(([key, market]) => `
-                <div class="market-card ${selectedMarket === key ? 'selected' : ''}" onclick="selectMarket('${key}')">
-                    <div class="market-icon">${market.icon}</div>
-                    <div class="market-name">${market.name}</div>
-                    <div class="market-value">${market.value}</div>
-                </div>
-            `).join('');
-        }
-
-        // Select Market
-        window.selectMarket = function(marketKey) {
-            selectedMarket = marketKey;
-            renderMarkets();
-            renderProcedures();
-            renderTemplates();
-        };
-
-        // Switch Procedure Tab
-        window.switchProcedureTab = function(tab) {
-            activeTab = tab;
-            renderProcedures();
-            
-            // Update tab buttons
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-        };
-
-        // Render Procedures
-        function renderProcedures() {
-            const procedure = procedures[activeTab];
-            const market = markets[selectedMarket];
-            
-            let html = `<h3 style="margin-bottom: 20px; color: #90caf9;">${procedure.title}</h3>`;
-            html += `<div style="margin-bottom: 20px; padding: 12px; background: rgba(74,144,226,0.1); border-radius: 8px; border-left: 4px solid #4a90e2;">
-                <strong>🎯 Market:</strong> ${market.icon} ${market.name} · ${market.value}<br>
-                <strong>🔑 Keywords:</strong> ${market.keywords.slice(0, 5).join(' · ')}<br>
-                <strong>👥 Groups:</strong> ${market.groups.slice(0, 3).join(' · ')}
-            </div>`;
-            
-            html += '<div class="step-list">';
-            
-            procedure.steps.forEach((step, index) => {
-                // Replace placeholders with market-specific data
-                let stepTemplate = step.template;
-                stepTemplate = stepTemplate.replace(/\[market keywords\]/g, market.keywords.slice(0, 3).join(', '));
-                stepTemplate = stepTemplate.replace(/\[ideal client\]/g, market.name === 'Legal' ? 'accident victims' : 
-                                                        market.name === 'Personal Injury' ? 'injury victims' :
-                                                        market.name === 'Tax Resolution' ? 'tax debt clients' :
-                                                        market.name === 'Dental' ? 'dental patients' :
-                                                        market.name === 'SaaS' ? 'businesses' : 'clients');
-                
-                html += `
-                    <div class="step-item">
-                        <div class="step-title">
-                            <span class="step-number">${index + 1}</span>
-                            ${step.title}
-                        </div>
-                        <p style="margin-bottom: 12px; color: rgba(255,255,255,0.8);">${step.description}</p>
-                        <div class="template-box">
-                            ${stepTemplate}
-                        </div>
-                        <button class="copy-btn" onclick="copyToClipboard(\`${stepTemplate.replace(/`/g, '\\`')}\`)">
-                            📋 Copy Template
-                        </button>
+            function renderMarkets() {
+                const grid = document.getElementById('marketGrid');
+                grid.innerHTML = Object.entries(marketData).map(([key, market]) => `
+                    <div class="market-card ${currentMarket === key ? 'selected' : ''}" data-market="${key}">
+                        <div class="market-icon">${market.icon}</div>
+                        <div class="market-name">${market.name}</div>
+                        <div class="market-value">${market.value}</div>
                     </div>
-                `;
-            });
-            
-            html += '</div>';
-            
-            document.getElementById('procedureContent').innerHTML = html;
-        }
+                `).join('');
+            }
 
-        // Render Templates
-        function renderTemplates() {
-            const market = markets[selectedMarket];
-            const container = document.getElementById('templatesContainer');
-            
-            let html = '';
-            
-            for (const [category, templates] of Object.entries(templateCategories)) {
-                html += `<div class="template-category">
-                    <h3>${category === 'connection' ? '🤝 Connection' : 
-                           category === 'video' ? '🎥 Video Messages' : 
-                           category === 'consultation' ? '📞 Consultation' : '🌱 Nurture'}</h3>`;
+            function renderProcedures() {
+                const procedure = procedureData[currentTab];
+                const market = marketData[currentMarket];
                 
-                templates.forEach(template => {
-                    // Replace placeholders
-                    let content = template.content;
-                    content = content.replace(/\[ideal client\]/g, market.name === 'Legal' ? 'accident victims' : 
-                                                    market.name === 'Personal Injury' ? 'injury victims' :
-                                                    market.name === 'Tax Resolution' ? 'tax debt clients' :
-                                                    market.name === 'Dental' ? 'dental patients' :
-                                                    market.name === 'SaaS' ? 'businesses' : 'clients');
-                    
+                let html = `<h3 style="margin-bottom: 20px; color: #90caf9;">${procedure.title}</h3>`;
+                
+                // Market context bar
+                html += `<div style="margin-bottom: 20px; padding: 12px; background: rgba(74,144,226,0.1); border-radius: 8px; border-left: 4px solid #4a90e2;">
+                    <strong>🎯 Market:</strong> ${market.icon} ${market.name} · ${market.value}<br>
+                    <strong>🔑 Keywords:</strong> ${market.keywords.slice(0, 4).join(' · ')}<br>
+                    <strong>🔥 Pain Points:</strong> ${market.painPoints.map(p => p.pain).slice(0, 3).join(' · ')}
+                </div>`;
+                
+                html += '<div class="step-list">';
+                
+                procedure.steps.forEach((step, index) => {
                     html += `
-                        <div class="template-card ${selectedTemplate === template.name ? 'active' : ''}" 
-                             onclick="selectTemplate('${template.name}')">
-                            <div style="font-weight: 700; margin-bottom: 4px; color: #90caf9;">${template.name}</div>
-                            <div class="template-preview">${content.substring(0, 80)}...</div>
-                            <button class="copy-btn" onclick="copyToClipboard(\`${content.replace(/`/g, '\\`')}\`); event.stopPropagation();">
-                                📋 Copy
+                        <div class="step-item">
+                            <div class="step-title">
+                                <span class="step-number">${index + 1}</span>
+                                ${step.title}
+                            </div>
+                            <p style="margin-bottom: 12px; color: rgba(255,255,255,0.8);">${step.description}</p>
+                            <div class="template-box">
+                                ${step.template}
+                            </div>
+                            <button class="copy-btn" data-copy="${step.template.replace(/"/g, '&quot;')}">
+                                📋 Copy Template
                             </button>
                         </div>
                     `;
                 });
                 
                 html += '</div>';
+                
+                document.getElementById('procedureContent').innerHTML = html;
             }
-            
-            container.innerHTML = html;
-        }
 
-        // Select Template
-        window.selectTemplate = function(templateName) {
-            selectedTemplate = templateName;
-            renderTemplates();
-        };
+            function renderTemplates() {
+                const market = marketData[currentMarket];
+                const container = document.getElementById('templatesContainer');
+                
+                let html = '<div class="template-category"><h3>🔥 Market Pain Points</h3>';
+                
+                // Show market-specific pain points first
+                market.painPoints.forEach((pp, index) => {
+                    html += `
+                        <div class="template-card" data-template="pain-${index}">
+                            <div style="font-weight: 700; margin-bottom: 4px; color: #90caf9;">${pp.pain}</div>
+                            <div class="template-preview">${pp.response.substring(0, 70)}...</div>
+                            <button class="copy-btn" data-copy="${pp.response.replace(/"/g, '&quot;')}">
+                                📋 Copy Response
+                            </button>
+                        </div>
+                    `;
+                });
+                
+                html += '</div>';
+                
+                // Add general template categories
+                for (const [category, templates] of Object.entries(templateData)) {
+                    html += `<div class="template-category">
+                        <h3>${category === 'painPoint' ? '🎯 General Pain Point' : 
+                               category === 'video' ? '🎥 Video Scripts' : 
+                               category === 'consultation' ? '📞 Consultation' : '🌱 Nurture'}</h3>`;
+                    
+                    templates.forEach((template, index) => {
+                        html += `
+                            <div class="template-card" data-template="${category}-${index}">
+                                <div style="font-weight: 700; margin-bottom: 4px; color: #90caf9;">${template.name}</div>
+                                <div class="template-preview">${template.content.substring(0, 70)}...</div>
+                                <button class="copy-btn" data-copy="${template.content.replace(/"/g, '&quot;')}">
+                                    📋 Copy
+                                </button>
+                            </div>
+                        `;
+                    });
+                    
+                    html += '</div>';
+                }
+                
+                container.innerHTML = html;
+            }
 
-        // Copy to Clipboard
-        window.copyToClipboard = function(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                alert('✅ Template copied to clipboard!');
-            });
-        };
-
-        // Tracker
-        let tracker = {
-            fb: 0,
-            li: 0,
-            convos: 0,
-            consults: 0
-        };
-
-        function loadTracker() {
-            const saved = localStorage.getItem('salesTracker');
-            if (saved) {
-                tracker = JSON.parse(saved);
+            function loadTracker() {
+                const saved = localStorage.getItem('salesTracker');
+                if (saved) {
+                    try {
+                        dailyTracker = JSON.parse(saved);
+                    } catch(e) {
+                        console.log('Error loading tracker');
+                    }
+                }
                 updateTrackerDisplay();
             }
-        }
 
-        function saveTracker() {
-            localStorage.setItem('salesTracker', JSON.stringify(tracker));
-        }
-
-        function updateTrackerDisplay() {
-            document.getElementById('fbConnections').textContent = tracker.fb;
-            document.getElementById('liConnections').textContent = tracker.li;
-            document.getElementById('conversations').textContent = tracker.convos;
-            document.getElementById('consultations').textContent = tracker.consults;
-        }
-
-        window.incrementTracker = function(type) {
-            switch(type) {
-                case 'fb':
-                    tracker.fb++;
-                    break;
-                case 'li':
-                    tracker.li++;
-                    break;
-                case 'convos':
-                    tracker.convos++;
-                    break;
-                case 'consults':
-                    tracker.consults++;
-                    break;
+            function saveTracker() {
+                localStorage.setItem('salesTracker', JSON.stringify(dailyTracker));
             }
-            updateTrackerDisplay();
-            saveTracker();
-        };
 
-        // Initialize on load
-        document.addEventListener('DOMContentLoaded', init);
+            function updateTrackerDisplay() {
+                document.getElementById('fbConnections').textContent = dailyTracker.fb;
+                document.getElementById('liConnections').textContent = dailyTracker.li;
+                document.getElementById('conversations').textContent = dailyTracker.convos;
+                document.getElementById('consultations').textContent = dailyTracker.consults;
+            }
+
+            function attachEventListeners() {
+                // Market selection
+                document.querySelectorAll('.market-card').forEach(card => {
+                    card.addEventListener('click', (e) => {
+                        const market = card.dataset.market;
+                        if (market) {
+                            currentMarket = market;
+                            renderMarkets();
+                            renderProcedures();
+                            renderTemplates();
+                        }
+                    });
+                });
+
+                // Tab switching
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        
+                        const tab = btn.dataset.tab;
+                        if (tab) {
+                            currentTab = tab;
+                            renderProcedures();
+                        }
+                    });
+                });
+
+                // Copy buttons (event delegation)
+                document.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('copy-btn')) {
+                        const text = e.target.dataset.copy;
+                        if (text) {
+                            navigator.clipboard.writeText(text).then(() => {
+                                alert('✅ Copied to clipboard!');
+                            });
+                        }
+                    }
+                });
+
+                // Tracker buttons
+                document.querySelectorAll('[data-tracker]').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const type = btn.dataset.tracker;
+                        if (type && dailyTracker.hasOwnProperty(type)) {
+                            dailyTracker[type]++;
+                            updateTrackerDisplay();
+                            saveTracker();
+                        }
+                    });
+                });
+            }
+
+            // Start everything
+            document.addEventListener('DOMContentLoaded', init);
+        })();
     </script>
 </body>
 </html>
