@@ -308,9 +308,30 @@ document.addEventListener('DOMContentLoaded', () => {
     window.mortgageBotemia = new MortgageBotemia();
 });
 
-// Manual test functions
+// Manual test functions - ADD THESE AT THE BOTTOM OF bridge.js
 window.testModule = function(moduleName = 'testimonial') {
     if (window.mortgageBotemia) {
         window.mortgageBotemia.showModule(moduleName);
+    } else {
+        console.log('⏳ MortgageBotemia not ready yet, retrying in 1 second...');
+        setTimeout(() => window.testModule(moduleName), 1000);
     }
+};
+
+window.testAllModules = function() {
+    const modules = ['testimonial', 'prequalify', 'call', 'leadmagnet', 'consultation'];
+    let i = 0;
+    
+    console.log('🎬 Testing all modules...');
+    
+    const interval = setInterval(() => {
+        if (i < modules.length) {
+            console.log(`Testing: ${modules[i]}`);
+            window.testModule(modules[i]);
+            i++;
+        } else {
+            clearInterval(interval);
+            console.log('✅ Test complete');
+        }
+    }, 2000);
 };
