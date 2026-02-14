@@ -1,12 +1,21 @@
-// bridge.js - SINGLE FILE - Handles Botemia + Smart Display System
+// bridge.js - SINGLE FILE - Handles Botemia + Smart Display System with Supabase Config
 class MortgageBotemia {
     constructor() {
         this.widget = null;
         this.activeModule = null;
+        this.config = null;
+        this.supabase = null;
+        this.clientId = 'mortgage-assist-demo'; // You can make this dynamic
         this.init();
     }
 
     async init() {
+        // Initialize Supabase
+        this.initSupabase();
+        
+        // Load config first
+        await this.loadConfig();
+        
         this.widget = document.querySelector('lemon-slice-widget');
         
         if (!this.widget) {
@@ -18,9 +27,149 @@ class MortgageBotemia {
         this.initSmartDisplay();
         this.setupTriggerListeners();
         
-        console.log('✅ Botemia + Smart Display ready');
+        console.log('✅ Botemia + Smart Display ready with config');
     }
-    
+
+    initSupabase() {
+        // Initialize Supabase client
+        this.supabase = window.supabase?.createClient 
+            ? window.supabase.createClient(
+                'https://fcgbusobfdwnpoqyuzoe.supabase.co',
+                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjZ2J1c29iZmR3bnBvcXl1em9lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAzNDA2MjMsImV4cCI6MjA4NTkxNjYyM30.FHEZnxuGHSn_Z3gw9d_Txtfz5Jn55J6qonl8rnA3gPk'
+            )
+            : null;
+            
+        if (!this.supabase) {
+            console.warn('Supabase not available, using fallback config');
+        }
+    }
+
+    async loadConfig() {
+        try {
+            // Try to fetch from Supabase first
+            if (this.supabase) {
+                const { data, error } = await this.supabase
+                    .from('clients')
+                    .select('metadata')
+                    .eq('name', 'Mortgage Assist Demo')
+                    .single();
+
+                if (!error && data?.metadata?.config) {
+                    this.config = data.metadata.config;
+                    console.log('✅ Config loaded from Supabase:', this.config.name);
+                    return;
+                }
+            }
+            
+            // Fallback to hardcoded config for testing
+            console.log('Using fallback config');
+            this.config = this.getDefaultConfig();
+            
+        } catch (error) {
+            console.error('Error loading config:', error);
+            this.config = this.getDefaultConfig();
+        }
+    }
+
+    getDefaultConfig() {
+        return {
+            "id": "mortgage-assist-demo",
+            "name": "Mortgage Assist Demo",
+            "modules": {
+                "testimonial": {
+                    "triggers": [
+                        "success story",
+                        "what others say",
+                        "show me proof",
+                        "results",
+                        "testimonial"
+                    ],
+                    "action": "showTestimonialPlayer",
+                    "displayType": "video"
+                },
+                "videoVault": {
+                    "triggers": [
+                        "how it works",
+                        "show me a demo",
+                        "explain the process",
+                        "how does it work"
+                    ],
+                    "action": "showVideoGallery",
+                    "displayType": "video"
+                },
+                "visualProof": {
+                    "triggers": [
+                        "show me an example",
+                        "before after",
+                        "success story",
+                        "credit repair example"
+                    ],
+                    "action": "showBestMatch",
+                    "displayType": "image",
+                    "images": [
+                        {
+                            "name": "Sarah's Success",
+                            "url": "https://xyz.supabase.co/storage/v1/object/public/botemia/sarah-580.jpg",
+                            "caption": "580 credit → closed FHA 3.5% down",
+                            "triggerMatch": ["sarah", "580", "bad credit"]
+                        }
+                    ]
+                },
+                "smartScreen": {
+                    "triggers": [
+                        "prequalify",
+                        "get pre-qualified",
+                        "call",
+                        "phone",
+                        "talk to someone",
+                        "free guide",
+                        "download",
+                        "consultation",
+                        "schedule"
+                    ],
+                    "displayType": "image",
+                    "images": [
+                        {
+                            "name": "prequalify",
+                            "url": "/images/prequalify.jpg",
+                            "caption": "Get Pre-Qualified Today",
+                            "triggers": ["prequalify", "qualify"]
+                        },
+                        {
+                            "name": "call",
+                            "url": "/images/phone-icon.jpg",
+                            "caption": "Talk to a Specialist",
+                            "triggers": ["call", "phone", "talk"]
+                        },
+                        {
+                            "name": "leadMagnet",
+                            "url": "/images/download-guide.jpg",
+                            "caption": "Free Home Buyer Guide",
+                            "triggers": ["free guide", "download"]
+                        },
+                        {
+                            "name": "consultation",
+                            "url": "/images/calendar.jpg",
+                            "caption": "Schedule Your Consultation",
+                            "triggers": ["consultation", "schedule"]
+                        }
+                    ]
+                },
+                "websiteInfo": {
+                    "triggers": [
+                        "rates page",
+                        "loan programs",
+                        "about us",
+                        "contact",
+                        "FAQs",
+                        "learn more"
+                    ],
+                    "displayType": "web"
+                }
+            }
+        };
+    }
+
     setupButton() {
         const btn = document.getElementById('hero-botemia-btn');
         const status = document.getElementById('botemia-status');
@@ -30,26 +179,16 @@ class MortgageBotemia {
         btn.addEventListener('click', async (e) => {
             e.preventDefault();
             
-            // Show status
             if (status) {
                 status.style.display = 'block';
                 status.textContent = 'Starting mortgage assistant...';
             }
             
             try {
-                // 1. Open widget
                 this.widget.setAttribute('controlled-widget-state', 'active');
-                
-                // 2. Unmute audio FIRST
                 await this.widget.unmute?.();
-                
-                // 3. Activate mic
                 await this.widget.micOn?.();
                 
-                // 4. DO NOT send message - let Botemia's default audio play
-                // (Her default greeting will play automatically when mic activates)
-                
-                // 5. Update status
                 if (status) {
                     status.textContent = '✅ Ready! Speak your question.';
                     setTimeout(() => {
@@ -57,7 +196,7 @@ class MortgageBotemia {
                     }, 2000);
                 }
                 
-                console.log('✅ Botemia activated - audio only, no text');
+                console.log('✅ Botemia activated');
                 
             } catch (error) {
                 console.log('Error:', error);
@@ -72,7 +211,6 @@ class MortgageBotemia {
     // ===== SMART DISPLAY SYSTEM =====
     
     initSmartDisplay() {
-        // Create container if it doesn't exist
         if (!document.getElementById('smart-display-container')) {
             const container = document.createElement('div');
             container.id = 'smart-display-container';
@@ -96,21 +234,17 @@ class MortgageBotemia {
     }
 
     setupTriggerListeners() {
-        // Listen for messages from Botemia
         window.addEventListener('message', (event) => {
             if (event.data?.source === 'lemon-slice') {
                 this.handleBotemiaMessage(event.data);
             }
         });
 
-        // Monitor conversation for keywords (fallback)
         this.monitorConversation();
     }
 
     monitorConversation() {
-        // Simple keyword checking without MutationObserver to avoid overhead
         setInterval(() => {
-            // Look for Botemia's messages in the DOM
             const messages = document.querySelectorAll('[class*="message"], [class*="chat-bubble"]');
             messages.forEach((msg) => {
                 if (msg.textContent && !msg.hasAttribute('data-checked')) {
@@ -122,21 +256,15 @@ class MortgageBotemia {
     }
 
     checkMessageForTriggers(text) {
-        if (!text) return;
+        if (!text || !this.config) return;
         
         const lowerText = text.toLowerCase();
         
-        const triggers = {
-            'testimonial': ['testimonial', 'success story', 'what others say', 'proof', 'results'],
-            'prequalify': ['prequalify', 'get pre-qualified', 'loan approval', 'qualify'],
-            'call': ['call', 'phone', 'talk to someone', 'speak with'],
-            'leadmagnet': ['free guide', 'download', 'resource', 'ebook', 'report'],
-            'consultation': ['consultation', 'schedule', 'appointment', 'meeting']
-        };
-
-        for (const [module, keywords] of Object.entries(triggers)) {
-            if (keywords.some(keyword => lowerText.includes(keyword))) {
-                this.showModule(module);
+        // Check each module's triggers
+        for (const [moduleName, moduleConfig] of Object.entries(this.config.modules)) {
+            const triggers = moduleConfig.triggers || [];
+            if (triggers.some(trigger => lowerText.includes(trigger.toLowerCase()))) {
+                this.showModule(moduleName, moduleConfig);
                 break;
             }
         }
@@ -144,35 +272,29 @@ class MortgageBotemia {
 
     handleBotemiaMessage(data) {
         console.log('Botemia message:', data);
-        
-        const commandMap = {
-            'show_testimonial': 'testimonial',
-            'show_prequalify': 'prequalify',
-            'show_call': 'call',
-            'show_lead_magnet': 'leadmagnet',
-            'show_consultation': 'consultation'
-        };
-
-        const moduleName = commandMap[data.command] || data.command;
-        if (moduleName) {
-            this.showModule(moduleName, data.data);
-        }
+        // Handle direct commands if needed
     }
 
-    showModule(moduleName, data = {}) {
+    showModule(moduleName, moduleConfig) {
         console.log(`🎯 Showing module: ${moduleName}`);
         
         const container = document.getElementById('smart-display-container');
-        if (!container) return;
-        
         container.innerHTML = '';
         
         let content = '';
         
-        if (moduleName === 'testimonial') {
-            content = this.buildTestimonialModule();
-        } else {
-            content = this.buildImageModule(moduleName);
+        switch(moduleConfig.displayType) {
+            case 'video':
+                content = this.buildVideoModule(moduleConfig);
+                break;
+            case 'image':
+                content = this.buildImageModule(moduleConfig, moduleName);
+                break;
+            case 'web':
+                content = this.buildWebModule(moduleConfig);
+                break;
+            default:
+                content = this.buildFallbackModule(moduleName);
         }
         
         container.innerHTML = content;
@@ -182,11 +304,9 @@ class MortgageBotemia {
         if (closeBtn) {
             closeBtn.addEventListener('click', () => this.hideModule());
         }
-
-        this.activeModule = moduleName;
     }
 
-    buildTestimonialModule() {
+    buildVideoModule(config) {
         return `
             <div style="position: relative; height: 100%;">
                 <button class="close-module" style="
@@ -210,8 +330,7 @@ class MortgageBotemia {
                 ">✕</button>
                 
                 <div style="padding: 30px;">
-                    <h2 style="margin-top: 0; color: #333;">Success Stories</h2>
-                    
+                    <h2 style="margin-top: 0; color: #333;">Video Content</h2>
                     <div style="
                         background: #000;
                         border-radius: 8px;
@@ -232,7 +351,7 @@ class MortgageBotemia {
                             background: #1a1a1a;
                             color: white;
                         ">
-                            <p>🎥 Testimonial video player coming soon</p>
+                            <p>🎥 Video player coming soon</p>
                         </div>
                     </div>
                 </div>
@@ -240,15 +359,13 @@ class MortgageBotemia {
         `;
     }
 
-    buildImageModule(moduleName) {
-        const config = {
-            'prequalify': { title: 'Get Pre-Qualified', image: '/images/prequalify.jpg' },
-            'call': { title: 'Talk to a Specialist', image: '/images/phone-icon.jpg' },
-            'leadmagnet': { title: 'Free Mortgage Guide', image: '/images/download-guide.jpg' },
-            'consultation': { title: 'Schedule a Consultation', image: '/images/calendar.jpg' }
+    buildImageModule(config, moduleName) {
+        // Find the right image based on trigger or use first
+        const image = config.images?.[0] || { 
+            name: moduleName,
+            url: '/images/placeholder.jpg',
+            caption: moduleName
         };
-
-        const moduleConfig = config[moduleName] || { title: moduleName, image: '/images/default.jpg' };
 
         return `
             <div style="position: relative;">
@@ -273,7 +390,7 @@ class MortgageBotemia {
                 ">✕</button>
                 
                 <div style="padding: 30px; text-align: center;">
-                    <h2 style="margin-top: 0; color: #333;">${moduleConfig.title}</h2>
+                    <h2 style="margin-top: 0; color: #333;">${image.caption || image.name}</h2>
                     
                     <div style="
                         margin: 20px 0;
@@ -284,11 +401,73 @@ class MortgageBotemia {
                         align-items: center;
                         justify-content: center;
                     ">
-                        <img src="${moduleConfig.image}" 
-                             alt="${moduleConfig.title}"
+                        <img src="${image.url}" 
+                             alt="${image.name}"
                              style="max-width: 100%; max-height: 300px; border-radius: 4px;"
-                             onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'200\\' height=\\'200\\' viewBox=\\'0 0 200 200\\'><rect width=\\'200\\' height=\\'200\\' fill=\\'%23e0e0e0\\'/><text x=\\'50%\\' y=\\'50%\\' dominant-baseline=\\'middle\\' text-anchor=\\'middle\\' fill=\\'%23999\\' font-family=\\'Arial\\' font-size=\\'16\\'>${moduleConfig.title}</text></svg>'">
+                             onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'200\\' height=\\'200\\' viewBox=\\'0 0 200 200\\'><rect width=\\'200\\' height=\\'200\\' fill=\\'%23e0e0e0\\'/><text x=\\'50%\\' y=\\'50%\\' dominant-baseline=\\'middle\\' text-anchor=\\'middle\\' fill=\\'%23999\\' font-family=\\'Arial\\' font-size=\\'16\\'>${image.name}</text></svg>'">
                     </div>
+                </div>
+            </div>
+        `;
+    }
+
+    buildWebModule(config) {
+        return `
+            <div style="position: relative; height: 100%;">
+                <button class="close-module" style="
+                    position: absolute;
+                    top: 15px;
+                    right: 15px;
+                    z-index: 10;
+                    background: #ff4444;
+                    color: white;
+                    border: none;
+                    border-radius: 50%;
+                    width: 35px;
+                    height: 35px;
+                    font-size: 20px;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+                    border: none;
+                ">✕</button>
+                
+                <div style="padding: 30px; text-align: center;">
+                    <h2 style="margin-top: 0; color: #333;">Website Information</h2>
+                    <p style="color: #666;">Web navigation module coming soon</p>
+                </div>
+            </div>
+        `;
+    }
+
+    buildFallbackModule(moduleName) {
+        return `
+            <div style="position: relative;">
+                <button class="close-module" style="
+                    position: absolute;
+                    top: 15px;
+                    right: 15px;
+                    z-index: 10;
+                    background: #ff4444;
+                    color: white;
+                    border: none;
+                    border-radius: 50%;
+                    width: 35px;
+                    height: 35px;
+                    font-size: 20px;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+                    border: none;
+                ">✕</button>
+                
+                <div style="padding: 30px; text-align: center;">
+                    <h2 style="margin-top: 0; color: #333;">${moduleName}</h2>
+                    <p>Module under construction</p>
                 </div>
             </div>
         `;
@@ -308,26 +487,38 @@ document.addEventListener('DOMContentLoaded', () => {
     window.mortgageBotemia = new MortgageBotemia();
 });
 
-// Manual test functions - ADD THESE AT THE BOTTOM OF bridge.js
+// Manual test functions
 window.testModule = function(moduleName = 'testimonial') {
-    if (window.mortgageBotemia) {
-        window.mortgageBotemia.showModule(moduleName);
+    if (window.mortgageBotemia?.config) {
+        const moduleConfig = window.mortgageBotemia.config.modules[moduleName];
+        if (moduleConfig) {
+            window.mortgageBotemia.showModule(moduleName, moduleConfig);
+        } else {
+            console.log(`Module ${moduleName} not found in config`);
+        }
     } else {
-        console.log('⏳ MortgageBotemia not ready yet, retrying in 1 second...');
+        console.log('⏳ MortgageBotemia not ready yet, retrying...');
         setTimeout(() => window.testModule(moduleName), 1000);
     }
 };
 
 window.testAllModules = function() {
-    const modules = ['testimonial', 'prequalify', 'call', 'leadmagnet', 'consultation'];
+    if (!window.mortgageBotemia?.config) {
+        console.log('⏳ Waiting for config...');
+        setTimeout(testAllModules, 1000);
+        return;
+    }
+    
+    const modules = Object.keys(window.mortgageBotemia.config.modules);
     let i = 0;
     
-    console.log('🎬 Testing all modules...');
+    console.log('🎬 Testing all modules:', modules);
     
     const interval = setInterval(() => {
         if (i < modules.length) {
-            console.log(`Testing: ${modules[i]}`);
-            window.testModule(modules[i]);
+            const moduleName = modules[i];
+            console.log(`Testing: ${moduleName}`);
+            window.testModule(moduleName);
             i++;
         } else {
             clearInterval(interval);
