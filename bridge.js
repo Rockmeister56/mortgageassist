@@ -30,16 +30,26 @@ class MortgageBotemia {
         btn.addEventListener('click', async (e) => {
             e.preventDefault();
             
+            // Show status
             if (status) {
                 status.style.display = 'block';
                 status.textContent = 'Starting mortgage assistant...';
             }
             
             try {
+                // 1. Open widget
                 this.widget.setAttribute('controlled-widget-state', 'active');
+                
+                // 2. Unmute audio FIRST
                 await this.widget.unmute?.();
+                
+                // 3. Activate mic
                 await this.widget.micOn?.();
                 
+                // 4. DO NOT send message - let Botemia's default audio play
+                // (Her default greeting will play automatically when mic activates)
+                
+                // 5. Update status
                 if (status) {
                     status.textContent = '✅ Ready! Speak your question.';
                     setTimeout(() => {
@@ -47,7 +57,7 @@ class MortgageBotemia {
                     }, 2000);
                 }
                 
-                console.log('✅ Botemia activated');
+                console.log('✅ Botemia activated - audio only, no text');
                 
             } catch (error) {
                 console.log('Error:', error);
@@ -93,26 +103,22 @@ class MortgageBotemia {
             }
         });
 
-        // Monitor conversation for keywords
+        // Monitor conversation for keywords (fallback)
         this.monitorConversation();
     }
 
     monitorConversation() {
-        const observer = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                if (mutation.type === 'childList') {
-                    const messages = document.querySelectorAll('.lemon-slice-message, [class*="message"]');
-                    messages.forEach((msg) => {
-                        this.checkMessageForTriggers(msg.textContent);
-                    });
+        // Simple keyword checking without MutationObserver to avoid overhead
+        setInterval(() => {
+            // Look for Botemia's messages in the DOM
+            const messages = document.querySelectorAll('[class*="message"], [class*="chat-bubble"]');
+            messages.forEach((msg) => {
+                if (msg.textContent && !msg.hasAttribute('data-checked')) {
+                    msg.setAttribute('data-checked', 'true');
+                    this.checkMessageForTriggers(msg.textContent);
                 }
             });
-        });
-
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true
-        });
+        }, 1000);
     }
 
     checkMessageForTriggers(text) {
@@ -157,6 +163,8 @@ class MortgageBotemia {
         console.log(`🎯 Showing module: ${moduleName}`);
         
         const container = document.getElementById('smart-display-container');
+        if (!container) return;
+        
         container.innerHTML = '';
         
         let content = '';
@@ -176,7 +184,6 @@ class MortgageBotemia {
         }
 
         this.activeModule = moduleName;
-        this.signalToBotemia('module_opened', { module: moduleName });
     }
 
     buildTestimonialModule() {
@@ -199,6 +206,7 @@ class MortgageBotemia {
                     align-items: center;
                     justify-content: center;
                     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+                    border: none;
                 ">✕</button>
                 
                 <div style="padding: 30px;">
@@ -224,13 +232,8 @@ class MortgageBotemia {
                             background: #1a1a1a;
                             color: white;
                         ">
-                            <p>🎥 Testimonial video player will go here</p>
+                            <p>🎥 Testimonial video player coming soon</p>
                         </div>
-                    </div>
-                    
-                    <div style="display: flex; gap: 10px; justify-content: center;">
-                        <button style="padding: 8px 16px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">Previous</button>
-                        <button style="padding: 8px 16px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">Next</button>
                     </div>
                 </div>
             </div>
@@ -266,6 +269,7 @@ class MortgageBotemia {
                     align-items: center;
                     justify-content: center;
                     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+                    border: none;
                 ">✕</button>
                 
                 <div style="padding: 30px; text-align: center;">
@@ -279,26 +283,12 @@ class MortgageBotemia {
                         display: flex;
                         align-items: center;
                         justify-content: center;
-                        border: 2px dashed #ccc;
                     ">
                         <img src="${moduleConfig.image}" 
                              alt="${moduleConfig.title}"
                              style="max-width: 100%; max-height: 300px; border-radius: 4px;"
                              onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'200\\' height=\\'200\\' viewBox=\\'0 0 200 200\\'><rect width=\\'200\\' height=\\'200\\' fill=\\'%23e0e0e0\\'/><text x=\\'50%\\' y=\\'50%\\' dominant-baseline=\\'middle\\' text-anchor=\\'middle\\' fill=\\'%23999\\' font-family=\\'Arial\\' font-size=\\'16\\'>${moduleConfig.title}</text></svg>'">
                     </div>
-                    
-                    <button style="
-                        padding: 12px 30px;
-                        background: linear-gradient(135deg, #667eea, #764ba2);
-                        color: white;
-                        border: none;
-                        border-radius: 25px;
-                        font-size: 16px;
-                        cursor: pointer;
-                        margin-top: 10px;
-                    " onclick="this.innerText='Coming Soon!'">
-                        Get Started
-                    </button>
                 </div>
             </div>
         `;
@@ -306,23 +296,14 @@ class MortgageBotemia {
 
     hideModule() {
         const container = document.getElementById('smart-display-container');
-        container.style.display = 'none';
-        this.activeModule = null;
-        this.signalToBotemia('module_closed', {});
-    }
-
-    signalToBotemia(command, data) {
-        if (this.widget?.contentWindow) {
-            this.widget.contentWindow.postMessage({
-                source: 'mortgage-botemia',
-                command: command,
-                data: data
-            }, '*');
+        if (container) {
+            container.style.display = 'none';
         }
+        this.activeModule = null;
     }
 }
 
-// Initialize
+// Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
     window.mortgageBotemia = new MortgageBotemia();
 });
@@ -332,19 +313,4 @@ window.testModule = function(moduleName = 'testimonial') {
     if (window.mortgageBotemia) {
         window.mortgageBotemia.showModule(moduleName);
     }
-};
-
-window.testAllModules = function() {
-    const modules = ['testimonial', 'prequalify', 'call', 'leadmagnet', 'consultation'];
-    let i = 0;
-    
-    const interval = setInterval(() => {
-        if (i < modules.length) {
-            console.log(`Testing: ${modules[i]}`);
-            window.mortgageBotemia.showModule(modules[i]);
-            i++;
-        } else {
-            clearInterval(interval);
-        }
-    }, 2000);
 };
