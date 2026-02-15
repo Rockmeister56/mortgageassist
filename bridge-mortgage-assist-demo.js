@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 2/15/2026, 2:12:14 AM
+// Generated: 2/15/2026, 3:01:16 PM
 // Client ID: mortgage-assist-demo
 // Version: 4.0 - EMBEDDED CONFIG
 
@@ -10,7 +10,7 @@
     window.BotemiaConfig = {
     "id": "mortgage-assist-demo",
     "name": "Mortgage Assist Demo",
-    "agentId": "agent_1db77d60ec132469",
+    "agentId": "agent_7b0776ef6b855de5",
     "widgetId": "",
     "apiKey": "",
     "environment": "production",
@@ -108,53 +108,31 @@
             "action": "showSmartNavigation"
         }
     },
-    "updatedAt": "2026-02-15T10:12:14.340Z"
+    "updatedAt": "2026-02-15T23:01:16.056Z"
 };
 
-// ===== LISTEN FOR TRIGGERS FROM CONTROL SYSTEM =====
-window.addEventListener('message', function(event) {
-    if (event.data.type === 'MODULE_TRIGGERED') {
-        console.log('🎯 Module triggered:', event.data.module);
-        
-        // Find the widget
-        const widget = document.querySelector('lemon-slice-widget');
-        if (!widget) return;
-        
-        // Show something on the page to prove it works
-        const div = document.createElement('div');
-        div.style.cssText = 'position:fixed; bottom:20px; right:20px; background:#f8c400; color:black; padding:20px; border-radius:12px; z-index:9999;';
-        div.innerHTML = `Module ${event.data.module} triggered!<br>Phrase: "${event.data.triggerPhrase}"`;
-        document.body.appendChild(div);
-        
-        // Auto-remove after 3 seconds
-        setTimeout(() => div.remove(), 3000);
-    }
-});
-
-// ===== LISTEN FOR TRIGGER COMMANDS =====
-window.addEventListener('message', function(event) {
-    // Only accept messages from your trigger system
-    if (event.data.type === 'BOTEMIA_TRIGGER') {
-        console.log('🎯 Trigger received:', event.data.module, event.data.triggerPhrase);
-        
-        // Find the widget
-        const widget = document.querySelector('lemon-slice-widget');
-        if (!widget) {
-            console.log('Widget not found yet');
-            return;
-        }
-        
-        // Pass the config to widget if needed
-        if (!widget.botemiaConfig) {
+    // ===== LISTEN FOR TRIGGERS FROM CONTROL SYSTEM =====
+    window.addEventListener('message', function(event) {
+        if (event.data.type === 'MODULE_TRIGGERED') {
+            console.log('🎯 Module triggered:', event.data.module, event.data.triggerPhrase);
+            
+            // Show popup notification
+            const div = document.createElement('div');
+            div.style.cssText = 'position:fixed; bottom:20px; right:20px; background:#f8c400; color:black; padding:20px; border-radius:12px; z-index:9999; font-family:Arial; box-shadow:0 4px 20px rgba(0,0,0,0.3);';
+            div.innerHTML = `<strong>⚡ ${event.data.module}</strong><br>${event.data.triggerPhrase}`;
+            document.body.appendChild(div);
+            setTimeout(() => div.remove(), 3000);
+            
+            // Find the widget
+            const widget = document.querySelector('lemon-slice-widget');
+            if (!widget) return;
+            
+            // Pass config to widget
             widget.botemiaConfig = window.BotemiaConfig;
-        }
-        
-        // Tell widget to show the module
-        // The widget needs to have these methods - if not, we'll need to create them
-        try {
+            
+            // Handle different module types
             switch(event.data.module) {
                 case 'smartScreen':
-                    // Find matching image and display it
                     const images = window.BotemiaConfig.modules.smartScreen.images;
                     const matchedImage = images.find(img => 
                         img.triggerMatch.some(t => 
@@ -163,46 +141,34 @@ window.addEventListener('message', function(event) {
                     );
                     
                     if (matchedImage) {
-                        // Create and show smart screen
                         const smartScreen = document.createElement('div');
                         smartScreen.className = 'botemia-smart-screen';
+                        smartScreen.style.cssText = 'position:fixed; bottom:80px; right:20px; background:white; border-radius:12px; padding:20px; max-width:300px; box-shadow:0 4px 20px rgba(0,0,0,0.2); z-index:9998;';
                         smartScreen.innerHTML = `
-                            <div style="background: white; border-radius: 12px; padding: 20px; margin: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
-                                <h3>${matchedImage.name}</h3>
-                                <img src="${matchedImage.url}" style="max-width:100%; border-radius:8px;">
-                                <p>${matchedImage.caption}</p>
-                                ${matchedImage.link ? `<a href="${matchedImage.link}" target="_blank" style="color:#f8c400;">Learn More</a>` : ''}
-                            </div>
+                            <h3 style="margin:0 0 10px 0; color:#333;">${matchedImage.name}</h3>
+                            <img src="${matchedImage.url}" style="width:100%; border-radius:8px; margin-bottom:10px;">
+                            <p style="margin:0 0 10px 0; color:#666;">${matchedImage.caption}</p>
+                            ${matchedImage.link ? `<a href="${matchedImage.link}" target="_blank" style="color:#f8c400; text-decoration:none; font-weight:bold;">Learn More →</a>` : ''}
                         `;
-                        widget.appendChild(smartScreen);
+                        document.body.appendChild(smartScreen);
+                        setTimeout(() => smartScreen.remove(), 8000);
                     }
                     break;
                     
                 case 'testimonial':
-                    console.log('Show testimonial module');
-                    // Add testimonial display logic here
+                    console.log('Show testimonial');
                     break;
                     
                 case 'videoVault':
                     console.log('Show video vault');
-                    // Add video display logic here
                     break;
                     
                 case 'websiteInfo':
                     console.log('Show website info');
-                    // Add website info logic here
                     break;
             }
-        } catch (error) {
-            console.error('Error displaying module:', error);
         }
-    }
-});
-
-// Also make config available to widget immediately
-if (document.querySelector('lemon-slice-widget')) {
-    document.querySelector('lemon-slice-widget').botemiaConfig = window.BotemiaConfig;
-}
+    });
 
     // ===== LOAD OR UPDATE WIDGET =====
     function initWidget() {
@@ -211,6 +177,7 @@ if (document.querySelector('lemon-slice-widget')) {
         if (widget) {
             console.log('✅ Updating existing widget');
             widget.setAttribute('agent-id', window.BotemiaConfig.agentId);
+            widget.botemiaConfig = window.BotemiaConfig;
             return;
         }
 
@@ -230,6 +197,7 @@ if (document.querySelector('lemon-slice-widget')) {
         if (document.querySelector('lemon-slice-widget')) return;
         const widget = document.createElement('lemon-slice-widget');
         widget.setAttribute('agent-id', window.BotemiaConfig.agentId);
+        widget.botemiaConfig = window.BotemiaConfig;
         document.body.appendChild(widget);
         console.log('✅ Widget created for', window.BotemiaConfig.name);
     }
