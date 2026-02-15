@@ -111,6 +111,26 @@
     "updatedAt": "2026-02-15T10:12:14.340Z"
 };
 
+// ===== LISTEN FOR TRIGGERS FROM CONTROL SYSTEM =====
+window.addEventListener('message', function(event) {
+    if (event.data.type === 'MODULE_TRIGGERED') {
+        console.log('🎯 Module triggered:', event.data.module);
+        
+        // Find the widget
+        const widget = document.querySelector('lemon-slice-widget');
+        if (!widget) return;
+        
+        // Show something on the page to prove it works
+        const div = document.createElement('div');
+        div.style.cssText = 'position:fixed; bottom:20px; right:20px; background:#f8c400; color:black; padding:20px; border-radius:12px; z-index:9999;';
+        div.innerHTML = `Module ${event.data.module} triggered!<br>Phrase: "${event.data.triggerPhrase}"`;
+        document.body.appendChild(div);
+        
+        // Auto-remove after 3 seconds
+        setTimeout(() => div.remove(), 3000);
+    }
+});
+
 // ===== LISTEN FOR TRIGGER COMMANDS =====
 window.addEventListener('message', function(event) {
     // Only accept messages from your trigger system
