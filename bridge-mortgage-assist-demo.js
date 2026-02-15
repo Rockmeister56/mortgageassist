@@ -111,6 +111,79 @@
     "updatedAt": "2026-02-15T10:12:14.340Z"
 };
 
+// ===== LISTEN FOR TRIGGER COMMANDS =====
+window.addEventListener('message', function(event) {
+    // Only accept messages from your trigger system
+    if (event.data.type === 'BOTEMIA_TRIGGER') {
+        console.log('🎯 Trigger received:', event.data.module, event.data.triggerPhrase);
+        
+        // Find the widget
+        const widget = document.querySelector('lemon-slice-widget');
+        if (!widget) {
+            console.log('Widget not found yet');
+            return;
+        }
+        
+        // Pass the config to widget if needed
+        if (!widget.botemiaConfig) {
+            widget.botemiaConfig = window.BotemiaConfig;
+        }
+        
+        // Tell widget to show the module
+        // The widget needs to have these methods - if not, we'll need to create them
+        try {
+            switch(event.data.module) {
+                case 'smartScreen':
+                    // Find matching image and display it
+                    const images = window.BotemiaConfig.modules.smartScreen.images;
+                    const matchedImage = images.find(img => 
+                        img.triggerMatch.some(t => 
+                            event.data.triggerPhrase.toLowerCase().includes(t.toLowerCase())
+                        )
+                    );
+                    
+                    if (matchedImage) {
+                        // Create and show smart screen
+                        const smartScreen = document.createElement('div');
+                        smartScreen.className = 'botemia-smart-screen';
+                        smartScreen.innerHTML = `
+                            <div style="background: white; border-radius: 12px; padding: 20px; margin: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
+                                <h3>${matchedImage.name}</h3>
+                                <img src="${matchedImage.url}" style="max-width:100%; border-radius:8px;">
+                                <p>${matchedImage.caption}</p>
+                                ${matchedImage.link ? `<a href="${matchedImage.link}" target="_blank" style="color:#f8c400;">Learn More</a>` : ''}
+                            </div>
+                        `;
+                        widget.appendChild(smartScreen);
+                    }
+                    break;
+                    
+                case 'testimonial':
+                    console.log('Show testimonial module');
+                    // Add testimonial display logic here
+                    break;
+                    
+                case 'videoVault':
+                    console.log('Show video vault');
+                    // Add video display logic here
+                    break;
+                    
+                case 'websiteInfo':
+                    console.log('Show website info');
+                    // Add website info logic here
+                    break;
+            }
+        } catch (error) {
+            console.error('Error displaying module:', error);
+        }
+    }
+});
+
+// Also make config available to widget immediately
+if (document.querySelector('lemon-slice-widget')) {
+    document.querySelector('lemon-slice-widget').botemiaConfig = window.BotemiaConfig;
+}
+
     // ===== LOAD OR UPDATE WIDGET =====
     function initWidget() {
         // Check if widget already exists
