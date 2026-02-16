@@ -215,6 +215,110 @@
         }
     }
 
+        // ===== INVISIBLE TRIGGER SYSTEM =====
+    (function initTriggerSystem() {
+        console.log('🎯 Trigger system active for', window.BotemiaConfig.name);
+        
+        let lastTriggerTime = 0;
+        
+        function checkForTriggers(transcript) {
+            const now = Date.now();
+            if (now - lastTriggerTime < 5000) return;
+            
+            const lowerTranscript = transcript.toLowerCase();
+            const modules = window.BotemiaConfig.modules;
+            
+            for (const [moduleName, moduleConfig] of Object.entries(modules)) {
+                if (!moduleConfig.triggers) continue;
+                
+                for (const trigger of moduleConfig.triggers) {
+                    if (lowerTranscript.includes(trigger.toLowerCase())) {
+                        console.log('🎯 TRIGGER:', moduleName, trigger);
+                        lastTriggerTime = now;
+                        
+                        if (moduleName === 'smartScreen') {
+                            showSmartScreen(trigger);
+                        }
+                        return;
+                    }
+                }
+            }
+        }
+        
+        function showSmartScreen(triggerPhrase) {
+            const images = window.BotemiaConfig.modules.smartScreen?.images || [];
+            const matchedImage = images.find(img => 
+                img.triggerMatch?.some(t => 
+                    triggerPhrase.toLowerCase().includes(t.toLowerCase())
+                )
+            );
+            
+            if (matchedImage) {
+                const smartScreen = document.createElement('div');
+                smartScreen.id = 'botemia-smart-screen';
+                smartScreen.style.cssText = `
+                    position: fixed;
+                    bottom: 20px;
+                    right: 20px;
+                    background: white;
+                    border-radius: 12px;
+                    padding: 20px;
+                    max-width: 300px;
+                    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+                    z-index: 9999;
+                    font-family: Arial, sans-serif;
+                `;
+                
+                smartScreen.innerHTML = `
+                    <h3 style="margin:0 0 10px 0; color:#333;">${matchedImage.name}</h3>
+                    <img src="${matchedImage.url}" style="width:100%; border-radius:8px; margin-bottom:10px;">
+                    <p style="margin:0 0 10px 0; color:#666;">${matchedImage.caption}</p>
+                    ${matchedImage.link ? 
+                        `<a href="${matchedImage.link}" target="_blank" 
+                            style="color:#f8c400; text-decoration:none; font-weight:bold;">
+                            Learn More →
+                        </a>` : ''
+                    }
+                `;
+                
+                document.body.appendChild(smartScreen);
+                setTimeout(() => {
+                    const el = document.getElementById('botemia-smart-screen');
+                    if (el) el.remove();
+                }, 8000);
+            }
+        }
+        
+        // Listen for Botania's speech
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'childList') {
+                    document.querySelectorAll('.message-bubble, .botania-transcript, [class*="message"]').forEach(el => {
+                        if (el.textContent && !el.dataset.processed) {
+                            el.dataset.processed = 'true';
+                            checkForTriggers(el.textContent);
+                        }
+                    });
+                }
+            });
+        });
+        
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                observer.observe(document.body, { childList: true, subtree: true });
+            });
+        } else {
+            observer.observe(document.body, { childList: true, subtree: true });
+        }
+    })();
+
+    // Start when DOM is ready (THIS PART ALREADY EXISTS)
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initWidget);
+    } else {
+        initWidget();
+    }
+
     function createWidget() {
         if (document.querySelector('lemon-slice-widget')) return;
         const widget = document.createElement('lemon-slice-widget');
