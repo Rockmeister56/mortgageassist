@@ -215,6 +215,80 @@
         }
     }
 
+    // ===== DISPLAY FUNCTION FOR TRIGGERS =====
+window.showModule = function(moduleName, triggerPhrase) {
+    console.log('🖥️ Showing module:', moduleName, triggerPhrase);
+    
+    if (moduleName === 'smartScreen') {
+        // Show smart screen with image
+        const images = window.BotemiaConfig.modules.smartScreen?.images || [];
+        const matchedImage = images.find(img => 
+            img.triggerMatch?.some(t => 
+                triggerPhrase.toLowerCase().includes(t.toLowerCase())
+            )
+        );
+        
+        if (matchedImage) {
+            const smartScreen = document.createElement('div');
+            smartScreen.id = 'botemia-smart-screen';
+            smartScreen.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: white;
+                border-radius: 12px;
+                padding: 20px;
+                max-width: 300px;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+                z-index: 9999;
+                font-family: Arial, sans-serif;
+                border: 2px solid #f8c400;
+            `;
+            
+            smartScreen.innerHTML = `
+                <h3 style="margin:0 0 10px 0; color:#333;">${matchedImage.name}</h3>
+                <img src="${matchedImage.url}" style="width:100%; border-radius:8px; margin-bottom:10px; border: 1px solid #eee;">
+                <p style="margin:0 0 10px 0; color:#666;">${matchedImage.caption}</p>
+                ${matchedImage.link ? 
+                    `<a href="${matchedImage.link}" target="_blank" 
+                        style="color:#f8c400; text-decoration:none; font-weight:bold; display:inline-block; margin-top:5px;">
+                        🔗 Learn More →
+                    </a>` : ''
+                }
+                <div style="margin-top:10px; font-size:12px; color:#999; text-align:right;">
+                    triggered: "${triggerPhrase}"
+                </div>
+            `;
+            
+            document.body.appendChild(smartScreen);
+            setTimeout(() => {
+                const el = document.getElementById('botemia-smart-screen');
+                if (el) el.remove();
+            }, 8000);
+        }
+    } else {
+        // Show generic popup for other modules
+        const popup = document.createElement('div');
+        popup.style.cssText = `
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #f8c400;
+            color: black;
+            padding: 15px 20px;
+            border-radius: 8px;
+            z-index: 9999;
+            font-family: Arial, sans-serif;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            font-weight: bold;
+            border-left: 5px solid #000;
+        `;
+        popup.innerHTML = `🎯 <strong>${moduleName}</strong> triggered:<br>"${triggerPhrase}"`;
+        document.body.appendChild(popup);
+        setTimeout(() => popup.remove(), 4000);
+    }
+};
+
         // ===== INVISIBLE TRIGGER SYSTEM =====
     (function initTriggerSystem() {
         console.log('🎯 Trigger system active for', window.BotemiaConfig.name);
@@ -237,9 +311,11 @@
                         lastTriggerTime = now;
                         
                         if (moduleName === 'smartScreen') {
-                            showModule(moduleName, trigger);
-                        }
-                        return;
+    window.showModule('smartScreen', trigger);
+} else {
+    window.showModule(moduleName, trigger);
+}
+return;
                     }
                 }
             }
