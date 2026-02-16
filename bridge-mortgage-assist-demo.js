@@ -419,6 +419,13 @@ return;
         initWidget();
     }
 
+    window.addEventListener('message', (event) => {
+    if (event.data.type === 'SET_AUTO_TRIGGER') {
+        window.disableBridgeTriggers = event.data.disabled;
+        console.log(`⚙️ Auto trigger ${event.data.disabled ? 'disabled' : 'enabled'}`);
+    }
+});
+
     function createWidget() {
         if (document.querySelector('lemon-slice-widget')) return;
         const widget = document.createElement('lemon-slice-widget');
