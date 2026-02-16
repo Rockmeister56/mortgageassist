@@ -219,8 +219,87 @@
 window.showModule = function(moduleName, triggerPhrase) {
     console.log('🖥️ Showing module:', moduleName, triggerPhrase);
     
+    // Remove any existing overlay first
+    const existing = document.getElementById('botemia-overlay');
+    if (existing) existing.remove();
+
+    // Create backdrop
+    const backdrop = document.createElement('div');
+    backdrop.id = 'botemia-overlay';
+    backdrop.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(4px);
+        z-index: 99998;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+    `;
+
+    // Create content card
+    const card = document.createElement('div');
+    card.style.cssText = `
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        max-width: 400px;
+        width: 90%;
+        max-height: 80vh;
+        overflow-y: auto;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        z-index: 99999;
+        font-family: Arial, sans-serif;
+        border: 3px solid #f8c400;
+        position: relative;
+        pointer-events: auto;
+        animation: slideUp 0.3s ease;
+    `;
+
+    // Add animation
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    `;
+    document.head.appendChild(style);
+
+    // Close button
+    const closeBtn = document.createElement('button');
+    closeBtn.innerHTML = '✕';
+    closeBtn.style.cssText = `
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: #f0f0f0;
+        border: none;
+        width: 32px;
+        height: 32px;
+        border-radius: 16px;
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+        color: #333;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s;
+        z-index: 100000;
+    `;
+    closeBtn.onmouseover = () => closeBtn.style.background = '#ddd';
+    closeBtn.onmouseout = () => closeBtn.style.background = '#f0f0f0';
+    closeBtn.onclick = () => backdrop.remove();
+
+    // Module-specific content
+    let content = '';
+
     if (moduleName === 'smartScreen') {
-        // Show smart screen with image
         const images = window.BotemiaConfig.modules.smartScreen?.images || [];
         const matchedImage = images.find(img => 
             img.triggerMatch?.some(t => 
@@ -229,64 +308,71 @@ window.showModule = function(moduleName, triggerPhrase) {
         );
         
         if (matchedImage) {
-            const smartScreen = document.createElement('div');
-            smartScreen.id = 'botemia-smart-screen';
-            smartScreen.style.cssText = `
-                position: fixed;
-                bottom: 20px;
-                right: 20px;
-                background: white;
-                border-radius: 12px;
-                padding: 20px;
-                max-width: 300px;
-                box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-                z-index: 9999;
-                font-family: Arial, sans-serif;
-                border: 2px solid #f8c400;
-            `;
-            
-            smartScreen.innerHTML = `
-                <h3 style="margin:0 0 10px 0; color:#333;">${matchedImage.name}</h3>
-                <img src="${matchedImage.url}" style="width:100%; border-radius:8px; margin-bottom:10px; border: 1px solid #eee;">
-                <p style="margin:0 0 10px 0; color:#666;">${matchedImage.caption}</p>
+            content = `
+                <h2 style="margin:0 0 15px 0; color:#333;">${matchedImage.name}</h2>
+                <img src="${matchedImage.url}" style="width:100%; border-radius:12px; margin-bottom:15px; border:1px solid #eee;">
+                <p style="margin:0 0 15px 0; color:#666; line-height:1.5;">${matchedImage.caption}</p>
                 ${matchedImage.link ? 
                     `<a href="${matchedImage.link}" target="_blank" 
-                        style="color:#f8c400; text-decoration:none; font-weight:bold; display:inline-block; margin-top:5px;">
+                        style="display:inline-block; background:#f8c400; color:black; padding:10px 20px; border-radius:30px; text-decoration:none; font-weight:bold;">
                         🔗 Learn More →
                     </a>` : ''
                 }
-                <div style="margin-top:10px; font-size:12px; color:#999; text-align:right;">
+                <div style="margin-top:15px; font-size:12px; color:#999; text-align:right; border-top:1px solid #eee; padding-top:10px;">
                     triggered: "${triggerPhrase}"
                 </div>
             `;
-            
-            document.body.appendChild(smartScreen);
-            setTimeout(() => {
-                const el = document.getElementById('botemia-smart-screen');
-                if (el) el.remove();
-            }, 8000);
+        } else {
+            content = `<p style="color:#999;">No matching image found for "${triggerPhrase}"</p>`;
         }
-    } else {
-        // Show generic popup for other modules
-        const popup = document.createElement('div');
-        popup.style.cssText = `
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #f8c400;
-            color: black;
-            padding: 15px 20px;
-            border-radius: 8px;
-            z-index: 9999;
-            font-family: Arial, sans-serif;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            font-weight: bold;
-            border-left: 5px solid #000;
+
+    } else if (moduleName === 'testimonial') {
+        content = `
+            <h2 style="margin:0 0 15px 0; color:#333;">⭐ Client Testimonial</h2>
+            <div style="background:#f9f9f9; padding:20px; border-radius:12px;">
+                <p style="font-style:italic; color:#555; margin:0;">"Working with this team has been incredible. They exceeded all our expectations."</p>
+                <p style="margin-top:10px; font-weight:bold; color:#333;">— Satisfied Client</p>
+            </div>
+            <p style="margin-top:15px; color:#888; font-size:14px;">Triggered by: "${triggerPhrase}"</p>
         `;
-        popup.innerHTML = `🎯 <strong>${moduleName}</strong> triggered:<br>"${triggerPhrase}"`;
-        document.body.appendChild(popup);
-        setTimeout(() => popup.remove(), 4000);
+
+    } else if (moduleName === 'videoVault') {
+        content = `
+            <h2 style="margin:0 0 15px 0; color:#333;">📹 Video Library</h2>
+            <div style="background:#f9f9f9; padding:20px; border-radius:12px; text-align:center;">
+                <p style="margin-bottom:15px; color:#555;">Watch our latest success stories</p>
+                <button style="background:#f8c400; color:black; border:none; padding:12px 25px; border-radius:30px; font-weight:bold; cursor:pointer;" 
+                        onclick="window.open('https://youtube.com/watch?v=example', '_blank')">
+                    ▶️ Watch Now
+                </button>
+            </div>
+            <p style="margin-top:15px; color:#888; font-size:14px;">Triggered by: "${triggerPhrase}"</p>
+        `;
+
+    } else if (moduleName === 'websiteInfo') {
+        content = `
+            <h2 style="margin:0 0 15px 0; color:#333;">🌐 Quick Links</h2>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                <a href="/rates" style="background:#f8c400; color:black; padding:12px; text-align:center; text-decoration:none; border-radius:8px; font-weight:bold;">Rates</a>
+                <a href="/about" style="background:#f8c400; color:black; padding:12px; text-align:center; text-decoration:none; border-radius:8px; font-weight:bold;">About Us</a>
+                <a href="/contact" style="background:#f8c400; color:black; padding:12px; text-align:center; text-decoration:none; border-radius:8px; font-weight:bold;">Contact</a>
+                <a href="/faq" style="background:#f8c400; color:black; padding:12px; text-align:center; text-decoration:none; border-radius:8px; font-weight:bold;">FAQ</a>
+            </div>
+            <p style="margin-top:15px; color:#888; font-size:14px;">Triggered by: "${triggerPhrase}"</p>
+        `;
     }
+
+    // Assemble
+    card.innerHTML = content;
+    card.appendChild(closeBtn);
+    backdrop.appendChild(card);
+    document.body.appendChild(backdrop);
+
+    // Auto-remove after 8 seconds
+    setTimeout(() => {
+        const el = document.getElementById('botemia-overlay');
+        if (el) el.remove();
+    }, 8000);
 };
 
         // ===== INVISIBLE TRIGGER SYSTEM =====
