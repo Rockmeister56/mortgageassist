@@ -193,6 +193,36 @@
         }
     }
 
+        // ===== LOAD OR UPDATE WIDGET =====
+    function initWidget() {
+        // Check if widget already exists
+        let widget = document.querySelector('lemon-slice-widget');
+        if (widget) {
+            console.log('✅ Updating existing widget');
+            widget.setAttribute('agent-id', window.BotemiaConfig.agentId);
+            return;
+        }
+
+        // Check if script is loaded
+        if (!document.querySelector('script[src*="lemon-slice-widget"]')) {
+            const script = document.createElement('script');
+            script.src = 'https://unpkg.com/@lemonsliceai/lemon-slice-widget';
+            script.type = 'module';
+            script.onload = createWidget;
+            document.head.appendChild(script);
+        } else {
+            createWidget();
+        }
+    }
+
+    function createWidget() {
+        if (document.querySelector('lemon-slice-widget')) return;
+        const widget = document.createElement('lemon-slice-widget');
+        widget.setAttribute('agent-id', window.BotemiaConfig.agentId);
+        document.body.appendChild(widget);
+        console.log('✅ Widget created for', window.BotemiaConfig.name);
+    }
+
     function createWidget() {
         if (document.querySelector('lemon-slice-widget')) return;
         const widget = document.createElement('lemon-slice-widget');
