@@ -1,7 +1,7 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 2/15/2026, 3:01:16 PM
+// Generated: 2/16/2026, 3:54:10 PM
 // Client ID: mortgage-assist-demo
-// Version: 4.0 - EMBEDDED CONFIG
+// Version: 5.0 - FULL SMART SCREEN WITH BACKDROP
 
 (function() {
     "use strict";
@@ -10,7 +10,7 @@
     window.BotemiaConfig = {
     "id": "mortgage-assist-demo",
     "name": "Mortgage Assist Demo",
-    "agentId": "agent_7b0776ef6b855de5",
+    "agentId": "",
     "widgetId": "",
     "apiKey": "",
     "environment": "production",
@@ -53,39 +53,16 @@
             "category": "auto"
         },
         "smartScreen": {
-            "triggers": [
-                "show me an example",
-                "success story",
-                "before after",
-                "what does sarah look like",
-                "credit repair example",
-                "first-time buyer success",
-                "self-employed approval",
-                "bad credit approval"
-            ],
             "action": "showBestMatch",
             "images": [
                 {
-                    "name": "Sarah's Success",
-                    "url": "https://xyz.supabase.co/storage/v1/object/public/botemia/sarah-580.jpg",
-                    "caption": "580 credit → closed FHA 3.5% down",
-                    "link": "https://mortgageassist.com/fha-loans",
-                    "triggerMatch": [
-                        "sarah",
-                        "580",
-                        "bad credit",
-                        "fha"
-                    ]
-                },
-                {
-                    "name": "Marcus Self-Employed",
-                    "url": "https://xyz.supabase.co/storage/v1/object/public/botemia/marcus-se.jpg",
-                    "caption": "Self-employed, 10% down, bank statement loan",
+                    "name": "Botemia Intro",
+                    "url": "https://fcgbusobfdwnpoqyuzoe.supabase.co/storage/v1/object/sign/Smart%20Screens%20Demo/botemia-intro.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wNjJjNGVkZS0wYzRiLTQyMzAtOGE5MC1jMDhmNjhlNDVkNTciLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTbWFydCBTY3JlZW5zIERlbW8vYm90ZW1pYS1pbnRyby5qcGciLCJpYXQiOjE3NzEyNTk2NjgsImV4cCI6MTgwMjc5NTY2OH0.KSQa5TdyL0ZV1sfTEFFzlhom-8WSFlieQtp5crmo6UM",
+                    "caption": "",
                     "link": "",
                     "triggerMatch": [
-                        "self-employed",
-                        "1099",
-                        "business owner"
+                        "Hi",
+                        "I'm Boteemia"
                     ]
                 }
             ]
@@ -108,380 +85,216 @@
             "action": "showSmartNavigation"
         }
     },
-    "updatedAt": "2026-02-15T23:01:16.056Z"
+    "updatedAt": "2026-02-16T23:54:10.047Z"
 };
 
-    // ===== LISTEN FOR TRIGGERS FROM CONTROL SYSTEM =====
+    // ===== AUTO-TRIGGER CONTROL =====
+    window.disableBridgeTriggers = false; // Can be toggled from TCS
+    
+    // ===== LISTEN FOR MESSAGES FROM TCS =====
     window.addEventListener('message', function(event) {
-        if (event.data.type === 'MODULE_TRIGGERED') {
-            console.log('🎯 Module triggered:', event.data.module, event.data.triggerPhrase);
-            
-            // Show popup notification
-            const div = document.createElement('div');
-            div.style.cssText = 'position:fixed; bottom:20px; right:20px; background:#f8c400; color:black; padding:20px; border-radius:12px; z-index:9999; font-family:Arial; box-shadow:0 4px 20px rgba(0,0,0,0.3);';
-            div.innerHTML = `<strong>⚡ ${event.data.module}</strong><br>${event.data.triggerPhrase}`;
-            document.body.appendChild(div);
-            setTimeout(() => div.remove(), 3000);
-            
-            // Find the widget
-            const widget = document.querySelector('lemon-slice-widget');
-            if (!widget) return;
-            
-            // Pass config to widget
-            widget.botemiaConfig = window.BotemiaConfig;
-            
-            // Handle different module types
-            switch(event.data.module) {
-                case 'smartScreen':
-                    const images = window.BotemiaConfig.modules.smartScreen.images;
-                    const matchedImage = images.find(img => 
-                        img.triggerMatch.some(t => 
-                            event.data.triggerPhrase.toLowerCase().includes(t.toLowerCase())
-                        )
-                    );
-                    
-                    if (matchedImage) {
-                        const smartScreen = document.createElement('div');
-                        smartScreen.className = 'botemia-smart-screen';
-                        smartScreen.style.cssText = 'position:fixed; bottom:80px; right:20px; background:white; border-radius:12px; padding:20px; max-width:300px; box-shadow:0 4px 20px rgba(0,0,0,0.2); z-index:9998;';
-                        smartScreen.innerHTML = `
-                            <h3 style="margin:0 0 10px 0; color:#333;">${matchedImage.name}</h3>
-                            <img src="${matchedImage.url}" style="width:100%; border-radius:8px; margin-bottom:10px;">
-                            <p style="margin:0 0 10px 0; color:#666;">${matchedImage.caption}</p>
-                            ${matchedImage.link ? `<a href="${matchedImage.link}" target="_blank" style="color:#f8c400; text-decoration:none; font-weight:bold;">Learn More →</a>` : ''}
-                        `;
-                        document.body.appendChild(smartScreen);
-                        setTimeout(() => smartScreen.remove(), 8000);
-                    }
-                    break;
-                    
-                case 'testimonial':
-                    console.log('Show testimonial');
-                    break;
-                    
-                case 'videoVault':
-                    console.log('Show video vault');
-                    break;
-                    
-                case 'websiteInfo':
-                    console.log('Show website info');
-                    break;
+        // Handle control commands from TCS
+        if (event.data.type === 'DASHBOARD_COMMAND') {
+            if (event.data.command === 'toggleOverlays') {
+                window.disableBridgeTriggers = event.data.disabled;
+                console.log(`🔕 Overlays ${event.data.disabled ? 'disabled' : 'enabled'}`);
             }
+            return;
+        }
+        
+        // Handle module triggers
+        if (event.data.type === 'MODULE_TRIGGERED' && !window.disableBridgeTriggers) {
+            console.log('🎯 Module triggered:', event.data.module, event.data.triggerPhrase);
+            window.showModule(event.data.module, event.data.triggerPhrase);
         }
     });
 
-    // ===== LOAD OR UPDATE WIDGET =====
-    function initWidget() {
-        // Check if widget already exists
-        let widget = document.querySelector('lemon-slice-widget');
-        if (widget) {
-            console.log('✅ Updating existing widget');
-            widget.setAttribute('agent-id', window.BotemiaConfig.agentId);
-            widget.botemiaConfig = window.BotemiaConfig;
-            return;
-        }
-
-        // Check if script is loaded
-        if (!document.querySelector('script[src*="lemon-slice-widget"]')) {
-            const script = document.createElement('script');
-            script.src = 'https://unpkg.com/@lemonsliceai/lemon-slice-widget';
-            script.type = 'module';
-            script.onload = createWidget;
-            document.head.appendChild(script);
-        } else {
-            createWidget();
-        }
-    }
-
-        // ===== LOAD OR UPDATE WIDGET =====
-    function initWidget() {
-        // Check if widget already exists
-        let widget = document.querySelector('lemon-slice-widget');
-        if (widget) {
-            console.log('✅ Updating existing widget');
-            widget.setAttribute('agent-id', window.BotemiaConfig.agentId);
-            return;
-        }
-
-        // Check if script is loaded
-        if (!document.querySelector('script[src*="lemon-slice-widget"]')) {
-            const script = document.createElement('script');
-            script.src = 'https://unpkg.com/@lemonsliceai/lemon-slice-widget';
-            script.type = 'module';
-            script.onload = createWidget;
-            document.head.appendChild(script);
-        } else {
-            createWidget();
-        }
-    }
-
-    // ===== DISPLAY FUNCTION FOR TRIGGERS =====
-window.showModule = function(moduleName, triggerPhrase) {
-    console.log('🖥️ Showing module:', moduleName, triggerPhrase);
-    
-    // Remove any existing overlay first
-    const existing = document.getElementById('botemia-overlay');
-    if (existing) existing.remove();
-
-    // Create backdrop
-    const backdrop = document.createElement('div');
-    backdrop.id = 'botemia-overlay';
-    backdrop.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        backdrop-filter: blur(4px);
-        z-index: 99998;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        pointer-events: none;
-    `;
-
-    // Create content card
-    const card = document.createElement('div');
-    card.style.cssText = `
-        background: white;
-        border-radius: 20px;
-        padding: 30px;
-        max-width: 400px;
-        width: 90%;
-        max-height: 80vh;
-        overflow-y: auto;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        z-index: 99999;
-        font-family: Arial, sans-serif;
-        border: 3px solid #f8c400;
-        position: relative;
-        pointer-events: auto;
-        animation: slideUp 0.3s ease;
-    `;
-
-    // Add animation
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes slideUp {
-            from { transform: translateY(30px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-    `;
-    document.head.appendChild(style);
-
-    // Close button
-    const closeBtn = document.createElement('button');
-    closeBtn.innerHTML = '✕';
-    closeBtn.style.cssText = `
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        background: #f0f0f0;
-        border: none;
-        width: 32px;
-        height: 32px;
-        border-radius: 16px;
-        font-size: 18px;
-        font-weight: bold;
-        cursor: pointer;
-        color: #333;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: background 0.2s;
-        z-index: 100000;
-    `;
-    closeBtn.onmouseover = () => closeBtn.style.background = '#ddd';
-    closeBtn.onmouseout = () => closeBtn.style.background = '#f0f0f0';
-    closeBtn.onclick = () => backdrop.remove();
-
-    // Module-specific content
-    let content = '';
-
-    if (moduleName === 'smartScreen') {
-        const images = window.BotemiaConfig.modules.smartScreen?.images || [];
-        const matchedImage = images.find(img => 
-            img.triggerMatch?.some(t => 
-                triggerPhrase.toLowerCase().includes(t.toLowerCase())
-            )
-        );
+    // ===== SMART SCREEN DISPLAY FUNCTION =====
+    window.showModule = function(moduleName, triggerPhrase) {
+        console.log('🖥️ Showing module:', moduleName, triggerPhrase);
         
-        if (matchedImage) {
-            content = `
-                <h2 style="margin:0 0 15px 0; color:#333;">${matchedImage.name}</h2>
-                <img src="${matchedImage.url}" style="width:100%; border-radius:12px; margin-bottom:15px; border:1px solid #eee;">
-                <p style="margin:0 0 15px 0; color:#666; line-height:1.5;">${matchedImage.caption}</p>
-                ${matchedImage.link ? 
-                    `<a href="${matchedImage.link}" target="_blank" 
-                        style="display:inline-block; background:#f8c400; color:black; padding:10px 20px; border-radius:30px; text-decoration:none; font-weight:bold;">
-                        🔗 Learn More →
-                    </a>` : ''
-                }
-                <div style="margin-top:15px; font-size:12px; color:#999; text-align:right; border-top:1px solid #eee; padding-top:10px;">
-                    triggered: "${triggerPhrase}"
-                </div>
-            `;
+        // Remove any existing overlay first
+        const existing = document.getElementById('botemia-overlay');
+        if (existing) existing.remove();
+
+        // Create backdrop with blur
+        const backdrop = document.createElement('div');
+        backdrop.id = 'botemia-overlay';
+        backdrop.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 999998;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+        `;
+
+        // Create content card
+        const card = document.createElement('div');
+        card.style.cssText = `
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            z-index: 999999;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            border: 3px solid #f8c400;
+            position: relative;
+            pointer-events: auto;
+            animation: slideUp 0.3s ease;
+        `;
+
+        // Add animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideUp {
+                from { transform: translateY(30px); opacity: 0; }
+                to { transform: translateY(0); opacity: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Close button
+        const closeBtn = document.createElement('button');
+        closeBtn.innerHTML = '✕';
+        closeBtn.style.cssText = `
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #f0f0f0;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 16px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+            z-index: 100000;
+        `;
+        closeBtn.onmouseover = () => closeBtn.style.background = '#ddd';
+        closeBtn.onmouseout = () => closeBtn.style.background = '#f0f0f0';
+        closeBtn.onclick = () => backdrop.remove();
+
+        // Module-specific content
+        let content = '';
+
+        if (moduleName === 'smartScreen') {
+            const images = window.BotemiaConfig.modules?.smartScreen?.images || [];
+            const matchedImage = images.find(img => 
+                img.triggerMatch?.some(t => 
+                    triggerPhrase.toLowerCase().includes(t.toLowerCase())
+                )
+            );
+            
+            if (matchedImage) {
+                content = `
+                    <h2 style="margin:0 0 15px 0; color:#333; font-size:24px;">${matchedImage.name}</h2>
+                    <img src="${matchedImage.url}" style="width:100%; border-radius:12px; margin-bottom:15px; border:1px solid #eee;">
+                    <p style="margin:0 0 15px 0; color:#666; line-height:1.5; font-size:16px;">${matchedImage.caption}</p>
+                    ${matchedImage.link ? 
+                        `<a href="${matchedImage.link}" target="_blank" 
+                            style="display:inline-block; background:#f8c400; color:black; padding:12px 24px; border-radius:30px; text-decoration:none; font-weight:bold; margin-top:5px;">
+                            🔗 Learn More →
+                        </a>` : ''
+                    }
+                `;
+            } else {
+                content = `<p style="color:#999;">No matching image found for "${triggerPhrase}"</p>`;
+            }
         } else {
-            content = `<p style="color:#999;">No matching image found for "${triggerPhrase}"</p>`;
+            // Generic display for other modules
+            content = `
+                <h2 style="margin:0 0 15px 0; color:#333;">⚡ ${moduleName} Triggered</h2>
+                <p style="color:#666;">Trigger phrase: "${triggerPhrase}"</p>
+            `;
         }
 
-    } else if (moduleName === 'testimonial') {
-        content = `
-            <h2 style="margin:0 0 15px 0; color:#333;">⭐ Client Testimonial</h2>
-            <div style="background:#f9f9f9; padding:20px; border-radius:12px;">
-                <p style="font-style:italic; color:#555; margin:0;">"Working with this team has been incredible. They exceeded all our expectations."</p>
-                <p style="margin-top:10px; font-weight:bold; color:#333;">— Satisfied Client</p>
-            </div>
-            <p style="margin-top:15px; color:#888; font-size:14px;">Triggered by: "${triggerPhrase}"</p>
-        `;
+        // Assemble
+        card.innerHTML = content;
+        card.appendChild(closeBtn);
+        backdrop.appendChild(card);
+        document.body.appendChild(backdrop);
 
-    } else if (moduleName === 'videoVault') {
-        content = `
-            <h2 style="margin:0 0 15px 0; color:#333;">📹 Video Library</h2>
-            <div style="background:#f9f9f9; padding:20px; border-radius:12px; text-align:center;">
-                <p style="margin-bottom:15px; color:#555;">Watch our latest success stories</p>
-                <button style="background:#f8c400; color:black; border:none; padding:12px 25px; border-radius:30px; font-weight:bold; cursor:pointer;" 
-                        onclick="window.open('https://youtube.com/watch?v=example', '_blank')">
-                    ▶️ Watch Now
-                </button>
-            </div>
-            <p style="margin-top:15px; color:#888; font-size:14px;">Triggered by: "${triggerPhrase}"</p>
-        `;
+        // Auto-remove after 8 seconds
+        setTimeout(() => {
+            const el = document.getElementById('botemia-overlay');
+            if (el) el.remove();
+        }, 8000);
+    };
 
-    } else if (moduleName === 'websiteInfo') {
-        content = `
-            <h2 style="margin:0 0 15px 0; color:#333;">🌐 Quick Links</h2>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                <a href="/rates" style="background:#f8c400; color:black; padding:12px; text-align:center; text-decoration:none; border-radius:8px; font-weight:bold;">Rates</a>
-                <a href="/about" style="background:#f8c400; color:black; padding:12px; text-align:center; text-decoration:none; border-radius:8px; font-weight:bold;">About Us</a>
-                <a href="/contact" style="background:#f8c400; color:black; padding:12px; text-align:center; text-decoration:none; border-radius:8px; font-weight:bold;">Contact</a>
-                <a href="/faq" style="background:#f8c400; color:black; padding:12px; text-align:center; text-decoration:none; border-radius:8px; font-weight:bold;">FAQ</a>
-            </div>
-            <p style="margin-top:15px; color:#888; font-size:14px;">Triggered by: "${triggerPhrase}"</p>
-        `;
-    }
-
-    // Assemble
-    card.innerHTML = content;
-    card.appendChild(closeBtn);
-    backdrop.appendChild(card);
-    document.body.appendChild(backdrop);
-
-    // Auto-remove after 8 seconds
-    setTimeout(() => {
-        const el = document.getElementById('botemia-overlay');
-        if (el) el.remove();
-    }, 8000);
-};
-
-        // ===== INVISIBLE TRIGGER SYSTEM =====
+        // ===== AUTO-TRIGGER SYSTEM - LISTENS FOR BOTANIA'S SPEECH =====
     (function initTriggerSystem() {
-        console.log('🎯 Trigger system active for', window.BotemiaConfig.name);
+        console.log('🎯 Auto-trigger system active for', window.BotemiaConfig.name);
         
         let lastTriggerTime = 0;
+        const TRIGGER_COOLDOWN = 5000; // 5 seconds between triggers
         
         function checkForTriggers(transcript) {
+            if (window.disableBridgeTriggers) return;
+            
             const now = Date.now();
-            if (now - lastTriggerTime < 5000) return;
+            if (now - lastTriggerTime < TRIGGER_COOLDOWN) return;
             
             const lowerTranscript = transcript.toLowerCase();
             const modules = window.BotemiaConfig.modules;
             
+            // Check each module's triggers
             for (const [moduleName, moduleConfig] of Object.entries(modules)) {
-                if (!moduleConfig.triggers) continue;
+                // Skip smartScreen - it uses per-image triggers
+                if (moduleName === 'smartScreen') {
+                    const images = moduleConfig.images || [];
+                    for (const image of images) {
+                        if (image.triggerMatch) {
+                            for (const trigger of image.triggerMatch) {
+                                if (lowerTranscript.includes(trigger.toLowerCase())) {
+                                    console.log('🎯 SMART SCREEN TRIGGER:', image.name, trigger);
+                                    lastTriggerTime = now;
+                                    window.showModule('smartScreen', trigger);
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                    continue;
+                }
                 
-                for (const trigger of moduleConfig.triggers) {
-                    if (lowerTranscript.includes(trigger.toLowerCase())) {
-                        console.log('🎯 TRIGGER:', moduleName, trigger);
-                        lastTriggerTime = now;
-                        
-                        if (moduleName === 'smartScreen') {
-    window.showModule('smartScreen', trigger);
-} else {
-    window.showModule(moduleName, trigger);
-}
-return;
+                // Check regular module triggers
+                if (moduleConfig.triggers) {
+                    for (const trigger of moduleConfig.triggers) {
+                        if (lowerTranscript.includes(trigger.toLowerCase())) {
+                            console.log('🎯 TRIGGER:', moduleName, trigger);
+                            lastTriggerTime = now;
+                            window.showModule(moduleName, trigger);
+                            return;
+                        }
                     }
                 }
             }
         }
         
-        function showModule(moduleName, triggerPhrase) {
-    if (moduleName === 'smartScreen') {
-        // Show smart screen with image
-        const images = window.BotemiaConfig.modules.smartScreen?.images || [];
-        const matchedImage = images.find(img => 
-            img.triggerMatch?.some(t => 
-                triggerPhrase.toLowerCase().includes(t.toLowerCase())
-            )
-        );
-        
-        if (matchedImage) {
-            const smartScreen = document.createElement('div');
-            smartScreen.id = 'botemia-smart-screen';
-            smartScreen.style.cssText = `
-                position: fixed;
-                bottom: 20px;
-                right: 20px;
-                background: white;
-                border-radius: 12px;
-                padding: 20px;
-                max-width: 300px;
-                box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-                z-index: 9999;
-                font-family: Arial, sans-serif;
-                border: 2px solid #f8c400;
-            `;
-            
-            smartScreen.innerHTML = `
-                <h3 style="margin:0 0 10px 0; color:#333;">${matchedImage.name}</h3>
-                <img src="${matchedImage.url}" style="width:100%; border-radius:8px; margin-bottom:10px; border: 1px solid #eee;">
-                <p style="margin:0 0 10px 0; color:#666;">${matchedImage.caption}</p>
-                ${matchedImage.link ? 
-                    `<a href="${matchedImage.link}" target="_blank" 
-                        style="color:#f8c400; text-decoration:none; font-weight:bold; display:inline-block; margin-top:5px;">
-                        🔗 Learn More →
-                    </a>` : ''
-                }
-            `;
-            
-            document.body.appendChild(smartScreen);
-            setTimeout(() => {
-                const el = document.getElementById('botemia-smart-screen');
-                if (el) el.remove();
-            }, 8000);
-        }
-    } else {
-        // Show generic popup for other modules
-        const popup = document.createElement('div');
-        popup.style.cssText = `
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #f8c400;
-            color: black;
-            padding: 15px 20px;
-            border-radius: 8px;
-            z-index: 9999;
-            font-family: Arial, sans-serif;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            font-weight: bold;
-            border-left: 5px solid #000;
-        `;
-        popup.innerHTML = `🎯 <strong>${moduleName}</strong> triggered:<br>"${triggerPhrase}"`;
-        document.body.appendChild(popup);
-        setTimeout(() => popup.remove(), 4000);
-    }
-}
-        
-        // Listen for Botania's speech
+        // Watch for Botania's messages in the DOM
         const observer = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
                 if (mutation.type === 'childList') {
-                    document.querySelectorAll('.message-bubble, .botania-transcript, [class*="message"]').forEach(el => {
-                        if (el.textContent && !el.dataset.processed) {
-                            el.dataset.processed = 'true';
+                    // Look for Botania's message bubbles
+                    document.querySelectorAll('.message-bubble, .botania-message, [class*="message"], [class*="transcript"]').forEach(el => {
+                        if (el.textContent && !el.dataset.botemiaProcessed) {
+                            el.dataset.botemiaProcessed = 'true';
                             checkForTriggers(el.textContent);
                         }
                     });
@@ -489,6 +302,7 @@ return;
             });
         });
         
+        // Start observing when DOM is ready
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => {
                 observer.observe(document.body, { childList: true, subtree: true });
@@ -498,35 +312,26 @@ return;
         }
     })();
 
-    // Start when DOM is ready (THIS PART ALREADY EXISTS)
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initWidget);
-    } else {
-        initWidget();
-    }
+    // ===== LOAD WIDGET =====
+    function initWidget() {
+        // Check if widget already exists
+        if (document.querySelector('lemon-slice-widget')) {
+            console.log('✅ Widget already exists');
+            return;
+        }
 
-    window.addEventListener('message', (event) => {
-    if (event.data.type === 'SET_AUTO_TRIGGER') {
-        window.disableBridgeTriggers = event.data.disabled;
-        console.log(`⚙️ Auto trigger ${event.data.disabled ? 'disabled' : 'enabled'}`);
-    }
-});
-
-    function createWidget() {
-        if (document.querySelector('lemon-slice-widget')) return;
-        const widget = document.createElement('lemon-slice-widget');
-        widget.setAttribute('agent-id', window.BotemiaConfig.agentId);
-        document.body.appendChild(widget);
-        console.log('✅ Widget created for', window.BotemiaConfig.name);
-    }
-
-    function createWidget() {
-        if (document.querySelector('lemon-slice-widget')) return;
-        const widget = document.createElement('lemon-slice-widget');
-        widget.setAttribute('agent-id', window.BotemiaConfig.agentId);
-        widget.botemiaConfig = window.BotemiaConfig;
-        document.body.appendChild(widget);
-        console.log('✅ Widget created for', window.BotemiaConfig.name);
+        // Load widget script
+        const script = document.createElement('script');
+        script.src = 'https://unpkg.com/@lemonsliceai/lemon-slice-widget';
+        script.type = 'module';
+        script.onload = () => {
+            const widget = document.createElement('lemon-slice-widget');
+            widget.setAttribute('agent-id', window.BotemiaConfig.agentId);
+            document.body.appendChild(widget);
+            console.log('✅ Widget created for', window.BotemiaConfig.name);
+        };
+        script.onerror = () => console.error('❌ Failed to load widget');
+        document.head.appendChild(script);
     }
 
     // Start when DOM is ready
@@ -535,4 +340,6 @@ return;
     } else {
         initWidget();
     }
+
+    console.log('✅ Botemia Bridge v5.0 loaded for', window.BotemiaConfig.name);
 })();
