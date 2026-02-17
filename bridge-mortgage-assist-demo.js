@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 2/16/2026, 3:54:10 PM
+// Generated: 2/16/2026, 5:43:08 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.0 - FULL SMART SCREEN WITH BACKDROP
 
@@ -10,7 +10,7 @@
     window.BotemiaConfig = {
     "id": "mortgage-assist-demo",
     "name": "Mortgage Assist Demo",
-    "agentId": "",
+    "agentId": "agent_7b0776ef6b855de5",
     "widgetId": "",
     "apiKey": "",
     "environment": "production",
@@ -85,7 +85,7 @@
             "action": "showSmartNavigation"
         }
     },
-    "updatedAt": "2026-02-16T23:54:10.047Z"
+    "updatedAt": "2026-02-17T01:43:08.340Z"
 };
 
     // ===== AUTO-TRIGGER CONTROL =====
@@ -109,7 +109,7 @@
         }
     });
 
-    // ===== SMART SCREEN DISPLAY FUNCTION =====
+        // ===== SMART SCREEN DISPLAY FUNCTION =====
     window.showModule = function(moduleName, triggerPhrase) {
         console.log('🖥️ Showing module:', moduleName, triggerPhrase);
         
@@ -117,111 +117,120 @@
         const existing = document.getElementById('botemia-overlay');
         if (existing) existing.remove();
 
-        // Create backdrop with blur
-        const backdrop = document.createElement('div');
-        backdrop.id = 'botemia-overlay';
-        backdrop.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(4px);
-            z-index: 999998;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            pointer-events: none;
-        `;
-
-        // Create content card
-        const card = document.createElement('div');
-        card.style.cssText = `
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            max-width: 400px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            z-index: 999999;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            border: 3px solid #f8c400;
-            position: relative;
-            pointer-events: auto;
-            animation: slideUp 0.3s ease;
-        `;
-
-        // Add animation
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideUp {
-                from { transform: translateY(30px); opacity: 0; }
-                to { transform: translateY(0); opacity: 1; }
-            }
-        `;
-        document.head.appendChild(style);
-
-        // Close button
-        const closeBtn = document.createElement('button');
-        closeBtn.innerHTML = '✕';
-        closeBtn.style.cssText = `
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: #f0f0f0;
-            border: none;
-            width: 32px;
-            height: 32px;
-            border-radius: 16px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            color: #333;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.2s;
-            z-index: 100000;
-        `;
-        closeBtn.onmouseover = () => closeBtn.style.background = '#ddd';
-        closeBtn.onmouseout = () => closeBtn.style.background = '#f0f0f0';
-        closeBtn.onclick = () => backdrop.remove();
-
-        // Module-specific content
-        let content = '';
-
+        // Find matched image and get its custom settings
+        let matchedImage = null;
+        let bgColor = 'white';
+        let backdropOpacity = 0.5;
+        let imageSize = '400px';
+        let showTitle = true;
+        
         if (moduleName === 'smartScreen') {
             const images = window.BotemiaConfig.modules?.smartScreen?.images || [];
-            const matchedImage = images.find(img => 
+            matchedImage = images.find(img => 
                 img.triggerMatch?.some(t => 
                     triggerPhrase.toLowerCase().includes(t.toLowerCase())
                 )
             );
             
+            // Get custom settings from the matched image
             if (matchedImage) {
-                content = `
-                    <h2 style="margin:0 0 15px 0; color:#333; font-size:24px;">${matchedImage.name}</h2>
-                    <img src="${matchedImage.url}" style="width:100%; border-radius:12px; margin-bottom:15px; border:1px solid #eee;">
-                    <p style="margin:0 0 15px 0; color:#666; line-height:1.5; font-size:16px;">${matchedImage.caption}</p>
-                    ${matchedImage.link ? 
-                        `<a href="${matchedImage.link}" target="_blank" 
-                            style="display:inline-block; background:#f8c400; color:black; padding:12px 24px; border-radius:30px; text-decoration:none; font-weight:bold; margin-top:5px;">
-                            🔗 Learn More →
-                        </a>` : ''
-                    }
-                `;
-            } else {
-                content = `<p style="color:#999;">No matching image found for "${triggerPhrase}"</p>`;
+                bgColor = matchedImage.bgColor || 'white';
+                backdropOpacity = matchedImage.backdropOpacity || 0.5;
+                imageSize = matchedImage.imageSize || '400px';
+                showTitle = matchedImage.showTitle !== false;
             }
+        }
+
+                // Create backdrop with blur and custom opacity
+        const backdrop = document.createElement('div');
+        backdrop.id = 'botemia-overlay';
+        backdrop.style.cssText = 
+            'position: fixed;' +
+            'top: 0;' +
+            'left: 0;' +
+            'width: 100%;' +
+            'height: 100%;' +
+            'background: rgba(0, 0, 0, ' + backdropOpacity + ');' +
+            'backdrop-filter: blur(4px);' +
+            'z-index: 999998;' +
+            'display: flex;' +
+            'align-items: center;' +
+            'justify-content: center;' +
+            'pointer-events: none;';
+
+        // Determine text color based on background
+        const textColor = bgColor.includes('black') || bgColor.includes('0,0,0') ? '#ffffff' : '#333333';
+        const borderColor = '#f8c400';
+        const closeBtnBg = bgColor.includes('black') ? '#333333' : '#f0f0f0';
+        const closeBtnColor = bgColor.includes('black') ? '#ffffff' : '#333333';
+        const closeBtnHover = bgColor.includes('black') ? '#555555' : '#dddddd';
+
+        // Create content card with custom settings
+                const card = document.createElement('div');
+        card.style.cssText = 
+            'background: ' + bgColor + ';' +
+            'border-radius: 20px;' +
+            'padding: 30px;' +
+            'max-width: ' + (imageSize === 'full' ? '90%' : imageSize) + ';' +
+            'width: ' + (imageSize === 'full' ? '90%' : '100%') + ';' +
+            'max-height: 80vh;' +
+            'overflow-y: auto;' +
+            'box-shadow: 0 20px 60px rgba(0,0,0,0.3);' +
+            'z-index: 999999;' +
+            'font-family: -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, sans-serif;' +
+            'border: 3px solid ' + borderColor + ';' +
+            'position: relative;' +
+            'pointer-events: auto;' +
+            'animation: slideUp 0.3s ease;' +
+            'color: ' + textColor + ';';
+
+        // Add animation
+        const style = document.createElement('style');
+        style.textContent = 
+            '@keyframes slideUp {' +
+            'from { transform: translateY(30px); opacity: 0; }' +
+            'to { transform: translateY(0); opacity: 1; }' +
+            '}';
+        document.head.appendChild(style);
+
+        // Close button with custom colors
+        const closeBtn = document.createElement('button');
+        closeBtn.innerHTML = '✕';
+        closeBtn.style.cssText = 
+            'position: absolute;' +
+            'top: 15px;' +
+            'right: 15px;' +
+            'background: ' + closeBtnBg + ';' +
+            'border: none;' +
+            'width: 32px;' +
+            'height: 32px;' +
+            'border-radius: 16px;' +
+            'font-size: 18px;' +
+            'font-weight: bold;' +
+            'cursor: pointer;' +
+            'color: ' + closeBtnColor + ';' +
+            'display: flex;' +
+            'align-items: center;' +
+            'justify-content: center;' +
+            'transition: background 0.2s;' +
+            'z-index: 100000;';
+        closeBtn.onmouseover = () => closeBtn.style.background = closeBtnHover;
+        closeBtn.onmouseout = () => closeBtn.style.background = closeBtnBg;
+        closeBtn.onclick = () => backdrop.remove();
+
+        // Module-specific content
+        let content = '';
+
+        if (moduleName === 'smartScreen' && matchedImage) {
+            content = (showTitle ? '<h2 style="margin:0 0 15px 0; font-size:24px; color:' + textColor + ';">' + matchedImage.name + '</h2>' : '') +
+                '<img src="' + matchedImage.url + '" style="width:100%; border-radius:12px; margin-bottom:15px; border:1px solid ' + (bgColor.includes('black') ? '#444' : '#eee') + ';">' +
+                '<p style="margin:0 0 15px 0; line-height:1.5; font-size:16px; color:' + textColor + ';">' + matchedImage.caption + '</p>' +
+                (matchedImage.link ? '<a href="' + matchedImage.link + '" target="_blank" style="display:inline-block; background:#f8c400; color:black; padding:12px 24px; border-radius:30px; text-decoration:none; font-weight:bold; margin-top:5px;">🔗 Learn More →</a>' : '');
+        } else if (moduleName === 'smartScreen') {
+            content = '<p style="color:#999;">No matching image found for "' + triggerPhrase + '"</p>';
         } else {
-            // Generic display for other modules
-            content = `
-                <h2 style="margin:0 0 15px 0; color:#333;">⚡ ${moduleName} Triggered</h2>
-                <p style="color:#666;">Trigger phrase: "${triggerPhrase}"</p>
-            `;
+            content = '<h2 style="margin:0 0 15px 0; color:' + textColor + ';">⚡ ' + moduleName + ' Triggered</h2>' +
+                     '<p style="color:' + textColor + ';">Trigger phrase: "' + triggerPhrase + '"</p>';
         }
 
         // Assemble
