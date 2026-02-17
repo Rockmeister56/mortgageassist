@@ -1,5 +1,5 @@
 // Botemia Bridge for Mortgage Assist Demo
-// Generated: 2/16/2026, 5:43:08 PM
+// Generated: 2/16/2026, 6:10:46 PM
 // Client ID: mortgage-assist-demo
 // Version: 5.0 - FULL SMART SCREEN WITH BACKDROP
 
@@ -10,7 +10,7 @@
     window.BotemiaConfig = {
     "id": "mortgage-assist-demo",
     "name": "Mortgage Assist Demo",
-    "agentId": "agent_7b0776ef6b855de5",
+    "agentId": "",
     "widgetId": "",
     "apiKey": "",
     "environment": "production",
@@ -85,7 +85,7 @@
             "action": "showSmartNavigation"
         }
     },
-    "updatedAt": "2026-02-17T01:43:08.340Z"
+    "updatedAt": "2026-02-17T02:10:46.919Z"
 };
 
     // ===== AUTO-TRIGGER CONTROL =====
@@ -166,7 +166,7 @@
         const closeBtnHover = bgColor.includes('black') ? '#555555' : '#dddddd';
 
         // Create content card with custom settings
-                const card = document.createElement('div');
+        const card = document.createElement('div');
         card.style.cssText = 
             'background: ' + bgColor + ';' +
             'border-radius: 20px;' +
@@ -329,7 +329,7 @@
             return;
         }
 
-        // Load widget script
+    // Load widget script
         const script = document.createElement('script');
         script.src = 'https://unpkg.com/@lemonsliceai/lemon-slice-widget';
         script.type = 'module';
