@@ -295,16 +295,42 @@
                 }
             }
         }
+
+                       // Clear any existing messages from being processed on startup
+        document.querySelectorAll('.message-bubble, .ai-message, .user-message, .botania-message, [class*="message"]').forEach(el => {
+            el.dataset.botemiaProcessed = 'true';
+        });
         
-        // Watch for Botania's messages in the DOM
+        // Watch for NEW messages only
         const observer = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
-                if (mutation.type === 'childList') {
-                    // Look for Botania's message bubbles
-                    document.querySelectorAll('.message-bubble, .botania-message, [class*="message"], [class*="transcript"]').forEach(el => {
-                        if (el.textContent && !el.dataset.botemiaProcessed) {
-                            el.dataset.botemiaProcessed = 'true';
-                            checkForTriggers(el.textContent);
+                // Only process if nodes were ADDED to the DOM
+                if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                    mutation.addedNodes.forEach(node => {
+                        if (node.nodeType === 1) { // Element node
+                            // Check if the added node itself is a message
+                            if (node.matches && (
+                                node.matches('.message-bubble') || 
+                                node.matches('.botania-message') || 
+                                node.matches('.ai-message') ||
+                                node.matches('.user-message') ||
+                                node.matches('[class*="message"]')
+                            )) {
+                                if (node.textContent && !node.dataset.botemiaProcessed) {
+                                    node.dataset.botemiaProcessed = 'true';
+                                    checkForTriggers(node.textContent);
+                                }
+                            }
+                            
+                            // Also check children of the added node
+                            if (node.querySelectorAll) {
+                                node.querySelectorAll('.message-bubble, .botania-message, .ai-message, .user-message, [class*="message"]').forEach(el => {
+                                    if (el.textContent && !el.dataset.botemiaProcessed) {
+                                        el.dataset.botemiaProcessed = 'true';
+                                        checkForTriggers(el.textContent);
+                                    }
+                                });
+                            }
                         }
                     });
                 }
