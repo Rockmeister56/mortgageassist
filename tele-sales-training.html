@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MobileWise AI - Phone Training Simulator</title>
+    <title>MobileWise AI - Phone Training</title>
     <style>
         * {
             margin: 0;
@@ -13,31 +13,37 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(145deg, #0a0f1e 0%, #0f1a2f 100%);
+            background: linear-gradient(145deg, #05060b 0%, #0d1016 100%);
             color: white;
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             padding: 20px;
         }
 
-        /* Header */
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* Header with Activate button */
         .header {
             display: flex;
             align-items: center;
             gap: 15px;
-            margin-bottom: 20px;
-            padding: 20px;
+            padding: 15px 25px;
             background: rgba(255,255,255,0.05);
-            border-radius: 15px;
-            border: 1px solid rgba(248,196,0,0.3);
+            border-radius: 12px;
+            border: 1px solid #003996; /* Blue */
         }
 
         .logo {
-            font-size: 2.5rem;
+            font-size: 2rem;
             animation: pulse 3s infinite;
         }
 
@@ -48,136 +54,113 @@
         }
 
         .header h1 {
-            font-size: 2rem;
-            background: linear-gradient(135deg, #ffffff, #f8c400);
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, #ffffff, #3b82f6);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        .header h2 {
-            color: #f8c400;
-            font-size: 1.2rem;
+        .activate-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s;
+            white-space: nowrap;
             margin-left: auto;
         }
 
-        /* Main Grid */
-        .main-grid {
-            display: grid;
-            grid-template-columns: 350px 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
+        .activate-btn:hover {
+            background: #2563eb;
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(59,130,246,0.3);
         }
 
-        /* Left Panel - Script Selector */
-        .script-panel {
+        /* Personality Selector - Now full width */
+        .personality-card {
             background: rgba(255,255,255,0.05);
-            border-radius: 15px;
-            padding: 20px;
-            border: 1px solid rgba(248,196,0,0.3);
-            height: fit-content;
+            border-radius: 12px;
+            border: 1px solid #3b82f6;
+            padding: 15px 25px;
         }
 
-        .panel-title {
-            color: #f8c400;
-            font-size: 1.3rem;
-            margin-bottom: 20px;
+        .selector {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 30px;
+            width: 100%;
         }
 
-        .script-upload-area {
-            border: 2px dashed #f8c400;
-            border-radius: 10px;
-            padding: 30px 20px;
-            text-align: center;
-            margin-bottom: 20px;
-            cursor: pointer;
-            transition: all 0.3s;
-            background: rgba(0,0,0,0.2);
-        }
-
-        .script-upload-area:hover {
-            background: rgba(248,196,0,0.1);
-            transform: scale(1.02);
-        }
-
-        .script-upload-area i {
-            font-size: 3rem;
-            color: #f8c400;
-            margin-bottom: 10px;
-        }
-
-        .script-upload-area p {
-            color: rgba(255,255,255,0.8);
-        }
-
-        .script-upload-area small {
-            color: rgba(255,255,255,0.5);
-            font-size: 0.8rem;
-        }
-
-        #fileInput {
-            display: none;
-        }
-
-        .quick-scripts {
-            margin-top: 20px;
-        }
-
-        .quick-scripts h3 {
-            color: #a0c8ff;
-            font-size: 1rem;
-            margin-bottom: 10px;
-        }
-
-        .script-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .script-btn {
-            background: rgba(0,0,0,0.3);
-            border: 1px solid rgba(248,196,0,0.3);
-            color: white;
-            padding: 12px;
+        .arrow {
+            background: rgba(59,130,246,0.1);
+            border: 1px solid #3b82f6;
+            color: #3b82f6;
+            width: 40px;
+            height: 40px;
             border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
             cursor: pointer;
-            text-align: left;
             transition: all 0.2s;
         }
 
-        .script-btn:hover {
-            background: rgba(248,196,0,0.2);
-            border-color: #f8c400;
-            transform: translateX(5px);
+        .arrow:hover {
+            background: #3b82f6;
+            color: white;
+            transform: scale(1.05);
         }
 
-        .script-btn.active {
-            background: #f8c400;
-            color: black;
+        .persona-info {
+            flex: 1;
+            text-align: center;
+        }
+
+        .persona-name {
+            font-size: 1.5rem;
+            color: #3b82f6;
             font-weight: bold;
+            margin-bottom: 5px;
         }
 
-        /* Right Panel - PDF Viewer */
-        .pdf-panel {
+        .trigger-phrase {
+            color: rgba(255,255,255,0.7);
+            font-size: 1rem;
+            font-style: italic;
+        }
+
+        /* PDF Viewer - Takes remaining space */
+        .pdf-container {
+            flex: 1;
             background: rgba(255,255,255,0.05);
-            border-radius: 15px;
-            padding: 20px;
-            border: 1px solid rgba(248,196,0,0.3);
+            border-radius: 12px;
+            border: 1px solid #3b82f6;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
         .pdf-header {
+            padding: 12px 20px;
+            background: rgba(0,0,0,0.3);
+            border-bottom: 1px solid #3b82f6;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
         }
 
         .pdf-header h3 {
-            color: #f8c400;
+            color: #3b82f6;
+            font-size: 1rem;
         }
 
         #filename {
@@ -186,18 +169,14 @@
         }
 
         .pdf-viewer {
-            width: 100%;
-            height: 600px;
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 10px;
-            background: rgba(0,0,0,0.3);
+            flex: 1;
+            background: rgba(0,0,0,0.2);
         }
 
         #pdfViewer {
             width: 100%;
             height: 100%;
             border: none;
-            border-radius: 10px;
         }
 
         .pdf-placeholder {
@@ -211,205 +190,121 @@
         }
 
         .pdf-placeholder i {
-            font-size: 4rem;
-            margin-bottom: 15px;
+            font-size: 3rem;
+            margin-bottom: 10px;
+            color: #3b82f6;
         }
 
-        /* Bottom Panel - Training Area */
-        .training-panel {
-            background: rgba(255,255,255,0.05);
-            border-radius: 15px;
-            padding: 20px;
-            border: 1px solid rgba(248,196,0,0.3);
-            margin-top: 20px;
-        }
-
-        .training-header {
+        /* Bottom Bar */
+        .bottom-bar {
             display: flex;
+            gap: 15px;
             align-items: center;
-            gap: 20px;
-            margin-bottom: 20px;
+            padding: 12px 20px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            border: 1px solid #3b82f6;
         }
 
-        .persona-selector {
-            flex: 1;
-        }
-
-        .persona-selector select {
-            width: 100%;
-            padding: 12px;
-            background: rgba(0,0,0,0.3);
-            border: 1px solid #f8c400;
+        .upload-btn {
+            background: rgba(59,130,246,0.1);
+            border: 1px solid #3b82f6;
+            color: #3b82f6;
+            padding: 10px 20px;
             border-radius: 8px;
-            color: white;
-            font-size: 1rem;
-        }
-
-        .start-call-btn {
-            background: #f8c400;
-            color: black;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 8px;
-            font-weight: bold;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             transition: all 0.2s;
         }
 
-        .start-call-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(248,196,0,0.3);
-        }
-
-        .call-status {
-            color: #00c853;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* Agent ID Section */
-        .agent-section {
-            margin-top: 20px;
-            padding: 15px;
-            background: rgba(0,0,0,0.2);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            gap: 20px;
+        .upload-btn:hover {
+            background: rgba(59,130,246,0.2);
         }
 
         .agent-input {
             flex: 1;
-            padding: 10px;
+            padding: 10px 15px;
             background: rgba(0,0,0,0.3);
-            border: 1px solid rgba(248,196,0,0.3);
-            border-radius: 5px;
+            border: 1px solid #3b82f6;
+            border-radius: 8px;
             color: white;
+            font-size: 0.95rem;
         }
 
-        .save-agent {
-            background: #f8c400;
-            color: black;
+        .agent-input::placeholder {
+            color: rgba(255,255,255,0.3);
+        }
+
+        .save-btn {
+            background: #3b82f6;
+            color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-weight: bold;
             cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .save-btn:hover {
+            background: #2563eb;
+            transform: scale(1.05);
+        }
+
+        #fileInput {
+            display: none;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Header -->
+        <!-- Header with Activate button -->
         <div class="header">
             <div class="logo">🤖</div>
-            <h1>MobileWise AI</h1>
-            <h2>Phone Training Simulator</h2>
+            <h1>MobileWise AI - Phone Training</h1>
+            <button class="activate-btn" onclick="activateJack()">
+                <i class="fas fa-bolt"></i> ACTIVATE JACK
+            </button>
         </div>
 
-        <!-- Main Grid -->
-        <div class="main-grid">
-            <!-- Left Panel - Script Selector -->
-            <div class="script-panel">
-                <div class="panel-title">
-                    <i class="fas fa-script"></i> Sales Scripts
+        <!-- Personality Selector - Full width -->
+        <div class="personality-card">
+            <div class="selector">
+                <div class="arrow" onclick="prevPersonality()">◀</div>
+                <div class="persona-info">
+                    <div class="persona-name" id="personaName">The Skeptic</div>
+                    <div class="trigger-phrase" id="triggerPhrase">"You're Jack, the skeptic"</div>
                 </div>
+                <div class="arrow" onclick="nextPersonality()">▶</div>
+            </div>
+        </div>
 
-                <!-- Upload Area -->
-                <div class="script-upload-area" onclick="document.getElementById('fileInput').click()">
+        <!-- PDF Viewer -->
+        <div class="pdf-container">
+            <div class="pdf-header">
+                <h3><i class="fas fa-file-pdf"></i> Tommy's Script</h3>
+                <span id="filename">No script loaded</span>
+            </div>
+            <div class="pdf-viewer">
+                <div id="pdfViewer" class="pdf-placeholder">
                     <i class="fas fa-cloud-upload-alt"></i>
-                    <p>Click to upload PDF script</p>
-                    <small>or drag and drop</small>
-                </div>
-                <input type="file" id="fileInput" accept=".pdf" style="display: none;">
-
-                <!-- Quick Scripts -->
-                <div class="quick-scripts">
-                    <h3>Quick Select</h3>
-                    <div class="script-buttons">
-                        <button class="script-btn active" onclick="loadScript('skeptic')">
-                            <i class="fas fa-user"></i> The Skeptic
-                        </button>
-                        <button class="script-btn" onclick="loadScript('interrupter')">
-                            <i class="fas fa-user"></i> The Interrupter
-                        </button>
-                        <button class="script-btn" onclick="loadScript('price')">
-                            <i class="fas fa-user"></i> The Price Shopper
-                        </button>
-                        <button class="script-btn" onclick="loadScript('busy')">
-                            <i class="fas fa-user"></i> The Busy Professional
-                        </button>
-                        <button class="script-btn" onclick="loadScript('first')">
-                            <i class="fas fa-user"></i> First-Time Buyer
-                        </button>
-                        <button class="script-btn" onclick="loadScript('know')">
-                            <i class="fas fa-user"></i> The Know-It-All
-                        </button>
-                        <button class="script-btn" onclick="loadScript('silencer')">
-                            <i class="fas fa-user"></i> The Silencer
-                        </button>
-                        <button class="script-btn" onclick="loadScript('emotional')">
-                            <i class="fas fa-user"></i> The Emotional Wreck
-                        </button>
-                        <button class="script-btn" onclick="loadScript('negotiator')">
-                            <i class="fas fa-user"></i> The Negotiator
-                        </button>
-                        <button class="script-btn" onclick="loadScript('comparison')">
-                            <i class="fas fa-user"></i> Comparison Shopper
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Right Panel - PDF Viewer -->
-            <div class="pdf-panel">
-                <div class="pdf-header">
-                    <h3><i class="fas fa-file-pdf"></i> Script Viewer</h3>
-                    <span id="filename">No script loaded</span>
-                </div>
-                <div class="pdf-viewer">
-                    <div id="pdfViewer" class="pdf-placeholder">
-                        <i class="fas fa-file-pdf"></i>
-                        <p>Upload a PDF or select a script to begin</p>
-                    </div>
+                    <p>Upload your sales script below</p>
                 </div>
             </div>
         </div>
 
-        <!-- Bottom Panel - Training Area -->
-        <div class="training-panel">
-            <div class="training-header">
-                <div class="persona-selector">
-                    <select id="personaSelect">
-                        <option value="skeptic">The Skeptic</option>
-                        <option value="interrupter">The Interrupter</option>
-                        <option value="price">The Price Shopper</option>
-                        <option value="busy">The Busy Professional</option>
-                        <option value="first">First-Time Buyer</option>
-                        <option value="know">The Know-It-All</option>
-                        <option value="silencer">The Silencer</option>
-                        <option value="emotional">The Emotional Wreck</option>
-                        <option value="negotiator">The Negotiator</option>
-                        <option value="comparison">Comparison Shopper</option>
-                    </select>
-                </div>
-                <button class="start-call-btn" onclick="startCall()">
-                    <i class="fas fa-phone"></i> Start Call with Jack
-                </button>
-                <div class="call-status">
-                    <span class="status-dot"></span> Ready
-                </div>
+        <!-- Bottom Bar -->
+        <div class="bottom-bar">
+            <div class="upload-btn" onclick="document.getElementById('fileInput').click()">
+                <i class="fas fa-upload"></i> Upload Script
             </div>
-
-            <!-- Agent ID Section -->
-            <div class="agent-section">
-                <i class="fas fa-key"></i>
-                <input type="text" class="agent-input" id="agentId" placeholder="Enter Botemia Agent ID" value="agent_7b0776ef6b855de5">
-                <button class="save-agent" onclick="saveAgentId()">Save Agent</button>
-            </div>
+            <input type="file" id="fileInput" accept=".pdf" hidden>
+            
+            <input type="text" class="agent-input" id="agentId" placeholder="Agent ID" value="agent_7b0776ef6b855de5">
+            
+            <button class="save-btn" onclick="saveAgentId()">Save</button>
         </div>
     </div>
 
@@ -417,89 +312,111 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <script>
-        // PDF Upload Handler
+        // Jack's 10 personalities
+        const personalities = [
+            { name: 'The Skeptic', trigger: "You're Jack, the skeptic" },
+            { name: 'The Interrupter', trigger: "You're Jack, the interrupter" },
+            { name: 'The Price Shopper', trigger: "You're Jack, shopping for rates" },
+            { name: 'The Busy Professional', trigger: "You're Jack, in a hurry" },
+            { name: 'The First-Time Buyer', trigger: "You're Jack, first-time buyer" },
+            { name: 'The Know-It-All', trigger: "You're Jack, experienced investor" },
+            { name: 'The Silencer', trigger: "You're Jack, I don't talk much" },
+            { name: 'The Emotional Wreck', trigger: "You're Jack, stressed out" },
+            { name: 'The Negotiator', trigger: "You're Jack, let's make a deal" },
+            { name: 'The Comparison Shopper', trigger: "You're Jack, shopping around" }
+        ];
+
+        let currentIndex = 0;
+        let uploadedScript = null;
+
+        // Update display
+        function updatePersonality() {
+            const p = personalities[currentIndex];
+            document.getElementById('personaName').textContent = p.name;
+            document.getElementById('triggerPhrase').textContent = `"${p.trigger}"`;
+        }
+
+        // Navigation
+        function nextPersonality() {
+            currentIndex = (currentIndex + 1) % personalities.length;
+            updatePersonality();
+        }
+
+        function prevPersonality() {
+            currentIndex = (currentIndex - 1 + personalities.length) % personalities.length;
+            updatePersonality();
+        }
+
+        // Activate Jack
+        function activateJack() {
+            const agentId = document.getElementById('agentId').value;
+            const personality = personalities[currentIndex];
+            
+            console.log(`🎯 Activating Jack as: ${personality.name}`);
+            console.log(`🔑 Trigger phrase: "${personality.trigger}"`);
+            console.log(`🤖 Agent ID: ${agentId}`);
+
+            // Visual feedback
+            const btn = event.currentTarget;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check"></i> ACTIVATED!';
+            btn.style.background = '#10b981';
+            
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.style.background = '#3b82f6';
+            }, 1500);
+
+            // Here's where we'll send to Botemia
+            if (window.opener && window.opener.postMessage) {
+                window.opener.postMessage({
+                    type: 'MODULE_TRIGGERED',
+                    module: 'personality',
+                    triggerPhrase: personality.trigger
+                }, '*');
+            } else {
+                alert(`Jack activated as ${personality.name}! (Say: "${personality.trigger}")`);
+            }
+        }
+
+        // PDF Upload
         document.getElementById('fileInput').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file && file.type === 'application/pdf') {
-                const fileURL = URL.createObjectURL(file);
-                document.getElementById('pdfViewer').innerHTML = `<iframe src="${fileURL}" width="100%" height="100%" style="border: none;"></iframe>`;
+                if (uploadedScript) {
+                    URL.revokeObjectURL(uploadedScript.url);
+                }
+                
+                const url = URL.createObjectURL(file);
+                uploadedScript = { url, name: file.name };
+                
+                document.getElementById('pdfViewer').innerHTML = `<iframe src="${url}" width="100%" height="100%" style="border: none;"></iframe>`;
                 document.getElementById('filename').textContent = file.name;
             }
         });
-
-        // Load pre-defined scripts
-        function loadScript(scriptType) {
-            // Update active button
-            document.querySelectorAll('.script-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            
-            // Here you would load the actual PDF for each script type
-            // For now, we'll just show a placeholder
-            document.getElementById('pdfViewer').innerHTML = `
-                <div class="pdf-placeholder">
-                    <i class="fas fa-file-pdf"></i>
-                    <p>Loading script for ${scriptType}...</p>
-                </div>
-            `;
-            
-            // Update persona selector
-            document.getElementById('personaSelect').value = scriptType;
-        }
-
-        // Start call with Jack
-        function startCall() {
-            const persona = document.getElementById('personaSelect').value;
-            const agentId = document.getElementById('agentId').value;
-            
-            // Here you would trigger the Botemia widget with the selected persona
-            console.log(`Starting call with Jack as ${persona} using agent ${agentId}`);
-            
-            // Update status
-            const statusDot = document.querySelector('.status-dot');
-            statusDot.style.background = '#00c853';
-            statusDot.style.boxShadow = '0 0 10px #00c853';
-            
-            // This is where you'd trigger the Botemia widget
-            // window.BotemiaConfig.agentId = agentId;
-            // Then trigger the persona with "You're Jack, the X"
-        }
 
         // Save Agent ID
         function saveAgentId() {
             const agentId = document.getElementById('agentId').value;
-            localStorage.setItem('botemia_agent_id', agentId);
-            alert('Agent ID saved!');
+            localStorage.setItem('jack_agent_id', agentId);
+            
+            const btn = event.currentTarget;
+            const originalText = btn.textContent;
+            btn.textContent = 'Saved!';
+            btn.style.background = '#10b981';
+            
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.style.background = '#3b82f6';
+            }, 1500);
         }
 
-        // Load saved Agent ID
+        // Initialize
         window.onload = function() {
-            const savedAgent = localStorage.getItem('botemia_agent_id');
-            if (savedAgent) {
-                document.getElementById('agentId').value = savedAgent;
-            }
+            updatePersonality();
+            const saved = localStorage.getItem('jack_agent_id');
+            if (saved) document.getElementById('agentId').value = saved;
         };
-
-        // Drag and drop support
-        const dropArea = document.querySelector('.script-upload-area');
-        
-        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-            dropArea.addEventListener(eventName, preventDefaults, false);
-        });
-
-        function preventDefaults(e) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-
-        dropArea.addEventListener('drop', function(e) {
-            const file = e.dataTransfer.files[0];
-            if (file && file.type === 'application/pdf') {
-                document.getElementById('fileInput').files = e.dataTransfer.files;
-                const fileURL = URL.createObjectURL(file);
-                document.getElementById('pdfViewer').innerHTML = `<iframe src="${fileURL}" width="100%" height="100%" style="border: none;"></iframe>`;
-                document.getElementById('filename').textContent = file.name;
-            }
-        });
     </script>
 </body>
 </html>
