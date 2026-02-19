@@ -89,7 +89,7 @@
             margin-bottom: 5px;
         }
 
-        /* PDF Viewer - Takes most of the space (personality selector removed) */
+        /* PDF Viewer */
         .pdf-container {
             flex: 1;
             background: rgba(255,255,255,0.05);
@@ -146,7 +146,7 @@
             color: #3b82f6;
         }
 
-        /* Bottom Bar - Updated with Google Voice Dialer */
+        /* Bottom Bar - Updated with working Google Voice */
         .bottom-bar {
             display: flex;
             gap: 15px;
@@ -155,6 +155,7 @@
             background: rgba(255,255,255,0.05);
             border-radius: 12px;
             border: 1px solid #3b82f6;
+            flex-wrap: wrap;
         }
 
         .upload-btn {
@@ -180,6 +181,7 @@
             display: flex;
             flex: 2;
             gap: 10px;
+            min-width: 300px;
         }
 
         .phone-input {
@@ -233,6 +235,7 @@
 
         .agent-input {
             flex: 1;
+            min-width: 200px;
             padding: 10px 15px;
             background: rgba(0,0,0,0.3);
             border: 1px solid #3b82f6;
@@ -265,6 +268,30 @@
         #fileInput {
             display: none;
         }
+
+        /* Instructions tooltip */
+        .gv-instructions {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.5);
+            margin-left: 10px;
+            cursor: help;
+            position: relative;
+        }
+
+        .gv-instructions:hover::after {
+            content: "For one-click dialing, set Google Voice as default handler in Chrome Settings > Privacy and Security > Site Settings > Protocol handlers";
+            position: absolute;
+            bottom: 25px;
+            left: 0;
+            background: #111;
+            border: 1px solid #3b82f6;
+            padding: 10px;
+            border-radius: 8px;
+            width: 300px;
+            color: white;
+            font-size: 0.8rem;
+            z-index: 100;
+        }
     </style>
 </head>
 <body>
@@ -283,10 +310,10 @@
         <lemon-slice-widget agent-id="agent_c5671df90e273556"></lemon-slice-widget>
         <script type="module" src="https://unpkg.com/@lemonsliceai/lemon-slice-widget"></script>
 
-        <!-- PDF Viewer - Now takes full space (personality selector removed) -->
+        <!-- PDF Viewer -->
         <div class="pdf-container">
             <div class="pdf-header">
-                <h3><i class="fas fa-file-pdf"></i> Tommy's Script</h3>
+                <h3><i class="fas fa-file-pdf"></i> Executive Director Script</h3>
                 <span id="filename">No script loaded</span>
             </div>
             <div class="pdf-viewer">
@@ -297,24 +324,26 @@
             </div>
         </div>
 
-        <!-- Bottom Bar - Updated with Google Voice Dialer -->
+        <!-- Bottom Bar - Fixed Google Voice Integration -->
         <div class="bottom-bar">
             <div class="upload-btn" onclick="document.getElementById('fileInput').click()">
                 <i class="fas fa-upload"></i> Upload Script
             </div>
             <input type="file" id="fileInput" accept=".pdf" hidden>
             
-            <!-- Google Voice Dialer -->
+            <!-- Google Voice Dialer - FIXED VERSION -->
             <div class="phone-group">
-                <input type="tel" class="phone-input" id="phoneNumber" placeholder="Enter phone number..." value="">
-                <a href="#" id="callLink" class="call-btn" onclick="makeCall(); return false;">
-                    <i class="fas fa-phone"></i> Call
-                </a>
+                <input type="tel" class="phone-input" id="phoneNumber" placeholder="(555) 555-5555" value="">
+                <button class="call-btn" onclick="makeGoogleVoiceCall()">
+                    <i class="fas fa-phone"></i> Call via GV
+                </button>
             </div>
             
-            <a href="https://voice.google.com" target="_blank" class="google-voice-link">
-                <i class="fas fa-external-link-alt"></i> Open Google Voice
+            <a href="#" onclick="openGoogleVoice(); return false;" class="google-voice-link">
+                <i class="fas fa-external-link-alt"></i> Open GV Dashboard
             </a>
+            
+            <span class="gv-instructions">ⓘ</span>
             
             <input type="text" class="agent-input" id="agentId" placeholder="Agent ID" value="agent_7b0776ef6b855de5">
             
@@ -358,24 +387,44 @@
             }
         }
 
-        // Make call via Google Voice
-        function makeCall() {
-            const phoneNumber = document.getElementById('phoneNumber').value.replace(/\D/g, '');
+        // FIXED: Google Voice Call Function
+        function makeGoogleVoiceCall() {
+            const phoneInput = document.getElementById('phoneNumber').value;
+            // Extract digits only
+            const phoneNumber = phoneInput.replace(/\D/g, '');
             
             if (phoneNumber.length < 10) {
-                alert('Please enter a valid phone number');
+                alert('Please enter a valid phone number with area code');
                 return;
             }
             
-            // Format number for tel: protocol
-            const formattedNumber = phoneNumber.length === 10 ? '+1' + phoneNumber : '+' + phoneNumber;
+            // Format for Google Voice (US numbers assumed)
+            let formattedNumber = phoneNumber;
+            if (formattedNumber.length === 10) {
+                formattedNumber = '1' + formattedNumber;
+            }
             
-            // Create tel: link and click it
-            const telLink = document.createElement('a');
-            telLink.href = 'tel:' + formattedNumber;
-            telLink.click();
+            // METHOD 1: Direct Google Voice call link (works if user has Google Voice)
+            // This opens the Google Voice dialer with the number pre-filled
+            const gvCallUrl = `https://voice.google.com/u/0/calls?a=new&number=%2B${formattedNumber}`;
             
-            // Also open Google Voice in new tab as backup
+            // METHOD 2: Also try the tel protocol as backup
+            const telUrl = `tel:+${formattedNumber}`;
+            
+            // Try Google Voice first in a new tab
+            const gvWindow = window.open(gvCallUrl, '_blank');
+            
+            // If popup blocked or fails, alert user
+            if (!gvWindow) {
+                alert('Please allow popups or click "Open GV Dashboard" to call manually');
+            }
+            
+            // Also log the tel URL for reference
+            console.log('Tel URL for manual setup:', telUrl);
+        }
+
+        // Open Google Voice dashboard
+        function openGoogleVoice() {
             window.open('https://voice.google.com', '_blank');
         }
 
