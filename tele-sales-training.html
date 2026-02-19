@@ -146,12 +146,12 @@
             color: #3b82f6;
         }
 
-        /* Bottom Bar - Updated with working Google Voice */
+        /* Bottom Bar - TextNow Version */
         .bottom-bar {
             display: flex;
             gap: 15px;
             align-items: center;
-            padding: 12px 20px;
+            padding: 15px 20px;
             background: rgba(255,255,255,0.05);
             border-radius: 12px;
             border: 1px solid #3b82f6;
@@ -176,17 +176,17 @@
             background: rgba(59,130,246,0.2);
         }
 
-        /* Phone input group */
+        /* Phone group with TextNow */
         .phone-group {
             display: flex;
             flex: 2;
             gap: 10px;
-            min-width: 300px;
+            min-width: 350px;
         }
 
         .phone-input {
             flex: 1;
-            padding: 10px 15px;
+            padding: 12px 15px;
             background: rgba(0,0,0,0.3);
             border: 1px solid #3b82f6;
             border-radius: 8px;
@@ -202,7 +202,7 @@
             background: #10b981;
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 12px 25px;
             border-radius: 8px;
             font-weight: bold;
             cursor: pointer;
@@ -211,6 +211,7 @@
             gap: 8px;
             transition: all 0.2s;
             white-space: nowrap;
+            font-size: 1rem;
         }
 
         .call-btn:hover {
@@ -218,25 +219,27 @@
             transform: scale(1.05);
         }
 
-        .google-voice-link {
-            color: #3b82f6;
-            text-decoration: none;
-            font-size: 0.9rem;
+        .textnow-badge {
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
+            padding: 8px 15px;
+            background: rgba(16,185,129,0.1);
+            border-radius: 8px;
+            border: 1px solid #10b981;
+            color: #10b981;
+            font-size: 0.9rem;
             white-space: nowrap;
-            padding: 0 10px;
         }
 
-        .google-voice-link:hover {
-            text-decoration: underline;
+        .textnow-badge i {
+            font-size: 1rem;
         }
 
         .agent-input {
             flex: 1;
             min-width: 200px;
-            padding: 10px 15px;
+            padding: 12px 15px;
             background: rgba(0,0,0,0.3);
             border: 1px solid #3b82f6;
             border-radius: 8px;
@@ -244,15 +247,11 @@
             font-size: 0.95rem;
         }
 
-        .agent-input::placeholder {
-            color: rgba(255,255,255,0.3);
-        }
-
         .save-btn {
             background: #3b82f6;
             color: white;
             border: none;
-            padding: 10px 25px;
+            padding: 12px 25px;
             border-radius: 8px;
             font-weight: bold;
             cursor: pointer;
@@ -269,28 +268,24 @@
             display: none;
         }
 
-        /* Instructions tooltip */
-        .gv-instructions {
-            font-size: 0.8rem;
-            color: rgba(255,255,255,0.5);
-            margin-left: 10px;
-            cursor: help;
-            position: relative;
+        /* Setup instructions */
+        .setup-note {
+            background: rgba(16,185,129,0.05);
+            border-left: 3px solid #10b981;
+            padding: 8px 15px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            color: #10b981;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            margin-top: 5px;
         }
 
-        .gv-instructions:hover::after {
-            content: "For one-click dialing, set Google Voice as default handler in Chrome Settings > Privacy and Security > Site Settings > Protocol handlers";
-            position: absolute;
-            bottom: 25px;
-            left: 0;
-            background: #111;
-            border: 1px solid #3b82f6;
-            padding: 10px;
-            border-radius: 8px;
-            width: 300px;
-            color: white;
-            font-size: 0.8rem;
-            z-index: 100;
+        .setup-note a {
+            color: #10b981;
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -306,14 +301,14 @@
             </button>
         </div>
 
-        <!-- Widget appears here -->
+        <!-- Widget -->
         <lemon-slice-widget agent-id="agent_c5671df90e273556"></lemon-slice-widget>
         <script type="module" src="https://unpkg.com/@lemonsliceai/lemon-slice-widget"></script>
 
         <!-- PDF Viewer -->
         <div class="pdf-container">
             <div class="pdf-header">
-                <h3><i class="fas fa-file-pdf"></i> Executive Director Script</h3>
+                <h3><i class="fas fa-file-pdf"></i> Tommy's Script</h3>
                 <span id="filename">No script loaded</span>
             </div>
             <div class="pdf-viewer">
@@ -324,30 +319,34 @@
             </div>
         </div>
 
-        <!-- Bottom Bar - Fixed Google Voice Integration -->
+        <!-- Bottom Bar - TextNow Integration -->
         <div class="bottom-bar">
             <div class="upload-btn" onclick="document.getElementById('fileInput').click()">
                 <i class="fas fa-upload"></i> Upload Script
             </div>
             <input type="file" id="fileInput" accept=".pdf" hidden>
             
-            <!-- Google Voice Dialer - FIXED VERSION -->
+            <!-- TextNow Call Group -->
             <div class="phone-group">
                 <input type="tel" class="phone-input" id="phoneNumber" placeholder="(555) 555-5555" value="">
-                <button class="call-btn" onclick="makeGoogleVoiceCall()">
-                    <i class="fas fa-phone"></i> Call via GV
+                <button class="call-btn" onclick="callWithTextNow()">
+                    <i class="fas fa-phone"></i> Call via TextNow
                 </button>
             </div>
             
-            <a href="#" onclick="openGoogleVoice(); return false;" class="google-voice-link">
-                <i class="fas fa-external-link-alt"></i> Open GV Dashboard
-            </a>
-            
-            <span class="gv-instructions">ⓘ</span>
+            <div class="textnow-badge">
+                <i class="fas fa-check-circle"></i> Free calls
+            </div>
             
             <input type="text" class="agent-input" id="agentId" placeholder="Agent ID" value="agent_7b0776ef6b855de5">
             
             <button class="save-btn" onclick="saveAgentId()">Save</button>
+
+            <!-- Setup reminder -->
+            <div class="setup-note">
+                <i class="fas fa-info-circle"></i>
+                New? <a href="https://www.textnow.com" target="_blank">Sign up free at TextNow.com</a> (30 seconds)
+            </div>
         </div>
     </div>
 
@@ -361,9 +360,6 @@
         function activateJack() {
             const agentId = document.getElementById('agentId').value;
             
-            console.log(`🎯 Activating Jack`);
-            console.log(`🤖 Agent ID: ${agentId}`);
-
             // Visual feedback
             const btn = event.currentTarget;
             const originalText = btn.innerHTML;
@@ -383,14 +379,13 @@
                     triggerPhrase: "You're Jack"
                 }, '*');
             } else {
-                alert(`Jack activated!`);
+                alert('Jack activated!');
             }
         }
 
-        // FIXED: Google Voice Call Function
-        function makeGoogleVoiceCall() {
+        // TextNow Call Function - WORKS!
+        function callWithTextNow() {
             const phoneInput = document.getElementById('phoneNumber').value;
-            // Extract digits only
             const phoneNumber = phoneInput.replace(/\D/g, '');
             
             if (phoneNumber.length < 10) {
@@ -398,34 +393,8 @@
                 return;
             }
             
-            // Format for Google Voice (US numbers assumed)
-            let formattedNumber = phoneNumber;
-            if (formattedNumber.length === 10) {
-                formattedNumber = '1' + formattedNumber;
-            }
-            
-            // METHOD 1: Direct Google Voice call link (works if user has Google Voice)
-            // This opens the Google Voice dialer with the number pre-filled
-            const gvCallUrl = `https://voice.google.com/u/0/calls?a=new&number=%2B${formattedNumber}`;
-            
-            // METHOD 2: Also try the tel protocol as backup
-            const telUrl = `tel:+${formattedNumber}`;
-            
-            // Try Google Voice first in a new tab
-            const gvWindow = window.open(gvCallUrl, '_blank');
-            
-            // If popup blocked or fails, alert user
-            if (!gvWindow) {
-                alert('Please allow popups or click "Open GV Dashboard" to call manually');
-            }
-            
-            // Also log the tel URL for reference
-            console.log('Tel URL for manual setup:', telUrl);
-        }
-
-        // Open Google Voice dashboard
-        function openGoogleVoice() {
-            window.open('https://voice.google.com', '_blank');
+            // Open TextNow with number pre-filled
+            window.open(`https://www.textnow.com/calls?number=${phoneNumber}`, '_blank');
         }
 
         // PDF Upload
