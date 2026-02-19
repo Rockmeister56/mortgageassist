@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎸 JACK THE RIPPER - TRIGGER RESPONSE KB</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+        }
+        body {
+            background: #1a1a1a;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #0a0a0a;
+            border: 3px solid #d4af37;
+            border-radius: 20px;
+            padding: 25px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #d4af37;
+            padding-bottom: 20px;
+        }
+        .header h1 {
+            font-size: 3em;
+            color: #d4af37;
+        }
+        .header p {
+            color: #888;
+            font-size: 1.2em;
+        }
+        .nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .nav-btn {
+            background: #222;
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            border: 1px solid #444;
+        }
+        .nav-btn:hover {
+            background: #d4af37;
+            color: #000;
+        }
+        .section {
+            display: none;
+        }
+        .section.active {
+            display: block;
+        }
+        .trigger-card {
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .trigger-phrase {
+            background: #221a0a;
+            border-left: 5px solid #d4af37;
+            padding: 15px;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            color: #fff;
+            font-style: italic;
+        }
+        .response {
+            background: #2a1a1a;
+            border-left: 5px solid #ff4444;
+            padding: 12px;
+            margin: 10px 0;
+            color: #ffaaaa;
+        }
+        .response strong {
+            color: #ff4444;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎸 JACK THE RIPPER</h1>
+            <p>Trigger Response Knowledge Base</p>
+        </div>
+
+        <div class="nav">
+            <div class="nav-btn" onclick="showSection('work')">📞 Work With You</div>
+            <div class="nav-btn" onclick="showSection('tv')">📺 Just Ask AI</div>
+            <div class="nav-btn" onclick="showSection('report')">📱 Free Report</div>
+        </div>
+
+        <!-- WORK WITH YOU SECTION -->
+        <div id="work-section" class="section active">
+            
+            <div class="trigger-card">
+                <div class="trigger-phrase">"Is that something you'd be interested in me working with you on?"</div>
+                <div class="response"><strong>🎭 JACK:</strong> "What do you mean exactly?"</div>
+                <div class="response"><strong>🎭 JACK:</strong> "Tell me more about that."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "Not interested right now."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "I'm happy with what I have."</div>
+            </div>
+
+            <div class="trigger-card">
+                <div class="trigger-phrase">"I'd love to work with you to get the same results."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "How does it actually work?"</div>
+                <div class="response"><strong>🎭 JACK:</strong> "Sounds interesting. Tell me more."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "I don't know if that's for me."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "What kind of results are we talking?"</div>
+            </div>
+
+            <div class="trigger-card">
+                <div class="trigger-phrase">"I'll call you back in 10 minutes to see what you think. Fair?"</div>
+                <div class="response"><strong>🎭 JACK:</strong> "Yeah, that's fair. Call me then."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "Sure, I'll check it out."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "I'm busy, just tell me now."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "I probably won't have time today."</div>
+            </div>
+
+            <div class="trigger-card">
+                <div class="trigger-phrase">"What time works best for you?"</div>
+                <div class="response"><strong>🎭 JACK:</strong> "Maybe around 2pm today?"</div>
+                <div class="response"><strong>🎭 JACK:</strong> "How about tomorrow morning?"</div>
+                <div class="response"><strong>🎭 JACK:</strong> "I'll have to get back to you."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "Not sure, let me check my calendar."</div>
+            </div>
+
+            <div class="trigger-card">
+                <div class="trigger-phrase">"But considering your ad budget could be cut in half for the same or better lead results, would it be worth 90 seconds to meet Boteemia?"</div>
+                <div class="response"><strong>🎭 JACK:</strong> "Fine, send me the link."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "No, I'm really not interested."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "Maybe some other time."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "You're persistent, I'll give you that. Send it."</div>
+            </div>
+
+            <div class="trigger-card">
+                <div class="trigger-phrase">"Tell you what - just go to boost300.com when you have a free minute. It's 90 seconds. If you're not impressed, no hard feelings. Deal?"</div>
+                <div class="response"><strong>🎭 JACK:</strong> "Deal. I'll check it out."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "I'll try to remember."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "I doubt I'll have time."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "Alright, you got a deal."</div>
+            </div>
+
+            <div class="trigger-card">
+                <div class="trigger-phrase">"What if I could show you how to get 3x the results without changing your process? Just 90 seconds at boost300.com to see what's possible. If you're still happy after that, I'll never call again. Fair?"</div>
+                <div class="response"><strong>🎭 JACK:</strong> "Fair enough. Send me the link."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "I'm good, thanks anyway."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "Maybe just send info."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "You're confident. I like that. Send it."</div>
+            </div>
+
+            <div class="trigger-card">
+                <div class="trigger-phrase">"A 90-second demo at boost300.com will show you more than a 10-page PDF. Go there now while we're talking - I'll wait 60 seconds. If you're not amazed, we're done. Deal?"</div>
+                <div class="response"><strong>🎭 JACK:</strong> "Alright, hold on..."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "I'd rather just get info."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "Fine, but make it quick."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "You're bold. I respect that. Okay."</div>
+            </div>
+
+            <div class="trigger-card">
+                <div class="trigger-phrase">"Go to boost300.com for 90 seconds, meet Boteemia, and then we can talk numbers. Sound good?"</div>
+                <div class="response"><strong>🎭 JACK:</strong> "Yeah, that's fair. Send me there."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "Just tell me a range."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "I need to know cost first."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "Alright, show me."</div>
+            </div>
+
+            <div class="trigger-card">
+                <div class="trigger-phrase">"Let me send you to boost300.com right now for 90 seconds. No commitment, just education. Then if you want to talk next month, I'll call you then. Deal?"</div>
+                <div class="response"><strong>🎭 JACK:</strong> "Fine, send me there."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "I'll take my chances."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "Who are my competitors?"</div>
+                <div class="response"><strong>🎭 JACK:</strong> "You're not gonna stop, are you? Fine."</div>
+            </div>
+
+            <div class="trigger-card">
+                <div class="trigger-phrase">"90 seconds at boost300.com. If you still don't believe after meeting Boteemia, I'll never mention AI again. Fair?"</div>
+                <div class="response"><strong>🎭 JACK:</strong> "Fine. I'll look."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "I doubt it'll change my mind."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "Not interested."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "You're making it really hard to say no. Send it."</div>
+            </div>
+        </div>
+
+        <!-- TV SHOW SECTION -->
+        <div id="tv-section" class="section">
+            
+            <div class="trigger-card">
+                <div class="trigger-phrase">"Have you ever been interviewed before or on any type of show or podcast?"</div>
+                <div class="response"><strong>🎭 JACK:</strong> "Yeah, I was interviewed on a local podcast about 2 years ago."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "No, I've never done anything like that. I don't really like being in front of the camera."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "No, I haven't. What's this show all about?"</div>
+                <div class="response"><strong>🎭 JACK:</strong> "I've done a few radio interviews, but never TV."</div>
+            </div>
+
+            <div class="trigger-card">
+                <div class="trigger-phrase">"Would you be interested in a free copy of Brett's book that would include more information on the show and allow you to sign up at your convenience?"</div>
+                <div class="response"><strong>🎭 JACK:</strong> "Sounds interesting. Is there any cost?"</div>
+                <div class="response"><strong>🎭 JACK:</strong> "I appreciate it, but I don't have time."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "Sure, that sounds really interesting. You can send it to my email."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "What's the catch?"</div>
+            </div>
+
+            <div class="trigger-card">
+                <div class="trigger-phrase">"No hidden fees, no surprises. All you need is either a phone or a webcam, and you'll be good to go."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "Okay, that sounds reasonable. Send me the info."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "I'll think about it."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "Still not sure it's for me."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "Just a phone? I can do that."</div>
+            </div>
+
+            <div class="trigger-card">
+                <div class="trigger-phrase">"Let me send you the book anyway. Read it when you have time. If it's not for you, no problem. If it is, you know how to find us. Deal?"</div>
+                <div class="response"><strong>🎭 JACK:</strong> "Fine, send it."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "No thanks."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "Maybe."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "You're persistent. I'll take a look."</div>
+            </div>
+
+            <div class="trigger-card">
+                <div class="trigger-phrase">"And [Name]? I look forward to seeing you on the show."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "Thanks, I'll check it out."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "We'll see."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "Appreciate it."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "You might just see me there."</div>
+            </div>
+        </div>
+
+        <!-- FREE REPORT SECTION -->
+        <div id="report-section" class="section">
+            
+            <div class="trigger-card">
+                <div class="trigger-phrase">"Have you heard about our smart AI Guide Boteemia?"</div>
+                <div class="response"><strong>🎭 JACK:</strong> "No I haven't, and I really don't have time right now."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "No I haven't. What's a Humanoid AI Web Assistant?"</div>
+                <div class="response"><strong>🎭 JACK:</strong> "Vaguely. Tell me more."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "I think I got an email about it."</div>
+            </div>
+
+            <div class="trigger-card">
+                <div class="trigger-phrase">"Let's do this - let me send you over an example of what Boteemia can do for your website and we'll take it from there. How's that sound?"</div>
+                <div class="response"><strong>🎭 JACK:</strong> "Sure, that sounds fine. You can send it to my email."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "I'd rather just talk now."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "Not interested."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "Alright, send it over."</div>
+            </div>
+
+            <div class="trigger-card">
+                <div class="trigger-phrase">"Do you currently know your conversion rate, or average cost per qualified lead?"</div>
+                <div class="response"><strong>🎭 JACK:</strong> "No, I haven't a clue."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "Roughly, but I'm sure it could be better."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "Why do you ask?"</div>
+                <div class="response"><strong>🎭 JACK:</strong> "I know exactly what my numbers are."</div>
+            </div>
+
+            <div class="trigger-card">
+                <div class="trigger-phrase">"Are you online right now by chance?"</div>
+                <div class="response"><strong>🎭 JACK:</strong> "Yes, I am."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "No, I'm not."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "I can be in a minute."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "Why, what do you need?"</div>
+            </div>
+
+            <div class="trigger-card">
+                <div class="trigger-phrase">"Wouldn't that be a good thing, right?"</div>
+                <div class="response"><strong>🎭 JACK:</strong> "Sure would!"</div>
+                <div class="response"><strong>🎭 JACK:</strong> "Obviously, but how do I know it works?"</div>
+                <div class="response"><strong>🎭 JACK:</strong> "In theory, yeah."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "If it actually does what you say."</div>
+            </div>
+
+            <div class="trigger-card">
+                <div class="trigger-phrase">"Would you be interested in that?"</div>
+                <div class="response"><strong>🎭 JACK:</strong> "Yes, I would be interested in that."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "Maybe, tell me more."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "Not really."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "What's the catch?"</div>
+            </div>
+
+            <div class="trigger-card">
+                <div class="trigger-phrase">"With that said, when's a good time to follow up? Can we put it on the calendar, please?"</div>
+                <div class="response"><strong>🎭 JACK:</strong> "How about next Tuesday at 2pm?"</div>
+                <div class="response"><strong>🎭 JACK:</strong> "Thursday morning works."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "Just call me whenever."</div>
+                <div class="response"><strong>🎭 JACK:</strong> "I'll reach out if I'm interested."</div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>🎸 JACK THE RIPPER - TRIGGER RESPONSE KNOWLEDGE BASE</p>
+            <p>Tommy says the trigger → Jack responds</p>
+        </div>
+    </div>
+
+    <script>
+        function showSection(section) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(section + '-section').classList.add('active');
+        }
+    </script>
+</body>
+</html>
