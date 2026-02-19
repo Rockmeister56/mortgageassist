@@ -39,7 +39,7 @@
             padding: 15px 25px;
             background: rgba(255,255,255,0.05);
             border-radius: 12px;
-            border: 1px solid #003996; /* Blue */
+            border: 1px solid #003996;
         }
 
         .logo {
@@ -84,61 +84,12 @@
             box-shadow: 0 0 20px rgba(59,130,246,0.3);
         }
 
-        /* Personality Selector - Now full width */
-        .personality-card {
-            background: rgba(255,255,255,0.05);
-            border-radius: 12px;
-            border: 1px solid #3b82f6;
-            padding: 15px 25px;
-        }
-
-        .selector {
-            display: flex;
-            align-items: center;
-            gap: 30px;
-            width: 100%;
-        }
-
-        .arrow {
-            background: rgba(59,130,246,0.1);
-            border: 1px solid #3b82f6;
-            color: #3b82f6;
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .arrow:hover {
-            background: #3b82f6;
-            color: white;
-            transform: scale(1.05);
-        }
-
-        .persona-info {
-            flex: 1;
-            text-align: center;
-        }
-
-        .persona-name {
-            font-size: 1.5rem;
-            color: #3b82f6;
-            font-weight: bold;
+        /* Widget */
+        lemon-slice-widget {
             margin-bottom: 5px;
         }
 
-        .trigger-phrase {
-            color: rgba(255,255,255,0.7);
-            font-size: 1rem;
-            font-style: italic;
-        }
-
-        /* PDF Viewer - Takes remaining space */
+        /* PDF Viewer - Takes most of the space (personality selector removed) */
         .pdf-container {
             flex: 1;
             background: rgba(255,255,255,0.05);
@@ -195,7 +146,7 @@
             color: #3b82f6;
         }
 
-        /* Bottom Bar */
+        /* Bottom Bar - Updated with Google Voice Dialer */
         .bottom-bar {
             display: flex;
             gap: 15px;
@@ -217,10 +168,67 @@
             align-items: center;
             gap: 8px;
             transition: all 0.2s;
+            white-space: nowrap;
         }
 
         .upload-btn:hover {
             background: rgba(59,130,246,0.2);
+        }
+
+        /* Phone input group */
+        .phone-group {
+            display: flex;
+            flex: 2;
+            gap: 10px;
+        }
+
+        .phone-input {
+            flex: 1;
+            padding: 10px 15px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid #3b82f6;
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .phone-input::placeholder {
+            color: rgba(255,255,255,0.3);
+        }
+
+        .call-btn {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .call-btn:hover {
+            background: #059669;
+            transform: scale(1.05);
+        }
+
+        .google-voice-link {
+            color: #3b82f6;
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            white-space: nowrap;
+            padding: 0 10px;
+        }
+
+        .google-voice-link:hover {
+            text-decoration: underline;
         }
 
         .agent-input {
@@ -246,6 +254,7 @@
             font-weight: bold;
             cursor: pointer;
             transition: all 0.2s;
+            white-space: nowrap;
         }
 
         .save-btn:hover {
@@ -272,21 +281,9 @@
 
         <!-- Widget appears here -->
         <lemon-slice-widget agent-id="agent_c5671df90e273556"></lemon-slice-widget>
-<script type="module" src="https://unpkg.com/@lemonsliceai/lemon-slice-widget"></script>
+        <script type="module" src="https://unpkg.com/@lemonsliceai/lemon-slice-widget"></script>
 
-        <!-- Personality Selector - Full width -->
-        <div class="personality-card">
-            <div class="selector">
-                <div class="arrow" onclick="prevPersonality()">◀</div>
-                <div class="persona-info">
-                    <div class="persona-name" id="personaName">The Skeptic</div>
-                    <div class="trigger-phrase" id="triggerPhrase">"You're Jack, the skeptic"</div>
-                </div>
-                <div class="arrow" onclick="nextPersonality()">▶</div>
-            </div>
-        </div>
-
-        <!-- PDF Viewer -->
+        <!-- PDF Viewer - Now takes full space (personality selector removed) -->
         <div class="pdf-container">
             <div class="pdf-header">
                 <h3><i class="fas fa-file-pdf"></i> Tommy's Script</h3>
@@ -300,12 +297,24 @@
             </div>
         </div>
 
-        <!-- Bottom Bar -->
+        <!-- Bottom Bar - Updated with Google Voice Dialer -->
         <div class="bottom-bar">
             <div class="upload-btn" onclick="document.getElementById('fileInput').click()">
                 <i class="fas fa-upload"></i> Upload Script
             </div>
             <input type="file" id="fileInput" accept=".pdf" hidden>
+            
+            <!-- Google Voice Dialer -->
+            <div class="phone-group">
+                <input type="tel" class="phone-input" id="phoneNumber" placeholder="Enter phone number..." value="">
+                <a href="#" id="callLink" class="call-btn" onclick="makeCall(); return false;">
+                    <i class="fas fa-phone"></i> Call
+                </a>
+            </div>
+            
+            <a href="https://voice.google.com" target="_blank" class="google-voice-link">
+                <i class="fas fa-external-link-alt"></i> Open Google Voice
+            </a>
             
             <input type="text" class="agent-input" id="agentId" placeholder="Agent ID" value="agent_7b0776ef6b855de5">
             
@@ -317,48 +326,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <script>
-        // Jack's 10 personalities
-        const personalities = [
-            { name: 'The Skeptic', trigger: "You're Jack, the skeptic" },
-            { name: 'The Interrupter', trigger: "You're Jack, the interrupter" },
-            { name: 'The Price Shopper', trigger: "You're Jack, shopping for rates" },
-            { name: 'The Busy Professional', trigger: "You're Jack, in a hurry" },
-            { name: 'The First-Time Buyer', trigger: "You're Jack, first-time buyer" },
-            { name: 'The Know-It-All', trigger: "You're Jack, experienced investor" },
-            { name: 'The Silencer', trigger: "You're Jack, I don't talk much" },
-            { name: 'The Emotional Wreck', trigger: "You're Jack, stressed out" },
-            { name: 'The Negotiator', trigger: "You're Jack, let's make a deal" },
-            { name: 'The Comparison Shopper', trigger: "You're Jack, shopping around" }
-        ];
-
-        let currentIndex = 0;
         let uploadedScript = null;
-
-        // Update display
-        function updatePersonality() {
-            const p = personalities[currentIndex];
-            document.getElementById('personaName').textContent = p.name;
-            document.getElementById('triggerPhrase').textContent = `"${p.trigger}"`;
-        }
-
-        // Navigation
-        function nextPersonality() {
-            currentIndex = (currentIndex + 1) % personalities.length;
-            updatePersonality();
-        }
-
-        function prevPersonality() {
-            currentIndex = (currentIndex - 1 + personalities.length) % personalities.length;
-            updatePersonality();
-        }
 
         // Activate Jack
         function activateJack() {
             const agentId = document.getElementById('agentId').value;
-            const personality = personalities[currentIndex];
             
-            console.log(`🎯 Activating Jack as: ${personality.name}`);
-            console.log(`🔑 Trigger phrase: "${personality.trigger}"`);
+            console.log(`🎯 Activating Jack`);
             console.log(`🤖 Agent ID: ${agentId}`);
 
             // Visual feedback
@@ -372,16 +346,37 @@
                 btn.style.background = '#3b82f6';
             }, 1500);
 
-            // Here's where we'll send to Botemia
+            // Send to Botemia
             if (window.opener && window.opener.postMessage) {
                 window.opener.postMessage({
                     type: 'MODULE_TRIGGERED',
                     module: 'personality',
-                    triggerPhrase: personality.trigger
+                    triggerPhrase: "You're Jack"
                 }, '*');
             } else {
-                alert(`Jack activated as ${personality.name}! (Say: "${personality.trigger}")`);
+                alert(`Jack activated!`);
             }
+        }
+
+        // Make call via Google Voice
+        function makeCall() {
+            const phoneNumber = document.getElementById('phoneNumber').value.replace(/\D/g, '');
+            
+            if (phoneNumber.length < 10) {
+                alert('Please enter a valid phone number');
+                return;
+            }
+            
+            // Format number for tel: protocol
+            const formattedNumber = phoneNumber.length === 10 ? '+1' + phoneNumber : '+' + phoneNumber;
+            
+            // Create tel: link and click it
+            const telLink = document.createElement('a');
+            telLink.href = 'tel:' + formattedNumber;
+            telLink.click();
+            
+            // Also open Google Voice in new tab as backup
+            window.open('https://voice.google.com', '_blank');
         }
 
         // PDF Upload
@@ -416,9 +411,14 @@
             }, 1500);
         }
 
+        // Format phone number as user types
+        document.getElementById('phoneNumber').addEventListener('input', function(e) {
+            let x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
+            e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
+        });
+
         // Initialize
         window.onload = function() {
-            updatePersonality();
             const saved = localStorage.getItem('jack_agent_id');
             if (saved) document.getElementById('agentId').value = saved;
         };
