@@ -102,15 +102,24 @@
             gap: 10px;
         }
 
-        .pdf-section {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            background: rgba(0,0,0,0.2);
-            border-radius: 8px;
-            overflow: hidden;
-            min-height: 0; /* Important for flex children */
-        }
+       .pdf-section {
+    display: flex;
+    flex-direction: column;
+    background: rgba(0,0,0,0.2);
+    border-radius: 8px;
+    overflow: hidden;
+    min-height: 0;
+}
+
+/* Main script takes 2/3 of the space */
+.pdf-section:first-child {
+    flex: 2;
+}
+
+/* Objections take 1/3 of the space */
+.pdf-section:last-child {
+    flex: 1;
+}
 
         .pdf-header {
             padding: 10px 15px;
