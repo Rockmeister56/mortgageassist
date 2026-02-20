@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MobileWise AI - Phone Training</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(145deg, #05060b 0%, #0d1016 100%);
+            color: white;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* Header with Activate button */
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 25px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            border: 1px solid #003996;
+        }
+
+        .logo {
+            font-size: 2rem;
+            animation: pulse 3s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, #ffffff, #3b82f6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .activate-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s;
+            white-space: nowrap;
+            margin-left: auto;
+        }
+
+        .activate-btn:hover {
+            background: #2563eb;
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(59,130,246,0.3);
+        }
+
+        /* Widget */
+        lemon-slice-widget {
+            margin-bottom: 5px;
+        }
+
+        /* PDF Container - Split View */
+        .pdf-container {
+            flex: 1;
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            border: 1px solid #3b82f6;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            gap: 10px;
+        }
+
+        .pdf-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
+            overflow: hidden;
+            min-height: 0; /* Important for flex children */
+        }
+
+        .pdf-header {
+            padding: 10px 15px;
+            background: rgba(0,0,0,0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .main-header {
+            border-bottom: 2px solid #3b82f6;
+        }
+
+        .objections-header {
+            border-bottom: 2px solid #ef4444;
+        }
+
+        .pdf-header h3 {
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .main-header h3 {
+            color: #3b82f6;
+        }
+
+        .objections-header h3 {
+            color: #ef4444;
+        }
+
+        #mainFilename, #objectionsFilename {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.85rem;
+        }
+
+        .pdf-viewer {
+            flex: 1;
+            background: rgba(0,0,0,0.2);
+            min-height: 0; /* Important for flex children */
+        }
+
+        #mainViewer, #objectionsViewer {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .pdf-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255,255,255,0.3);
+        }
+
+        .pdf-placeholder i {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .main-placeholder i {
+            color: #3b82f6;
+        }
+
+        .objections-placeholder i {
+            color: #ef4444;
+        }
+
+        /* Bottom Bar - Dual PDF Upload */
+        .bottom-bar {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            padding: 12px 20px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            border: 1px solid #3b82f6;
+            flex-wrap: wrap;
+        }
+
+        .upload-btn {
+            background: rgba(59,130,246,0.1);
+            border: 1px solid #3b82f6;
+            color: #3b82f6;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            white-space: nowrap;
+            font-size: 0.95rem;
+        }
+
+        .upload-btn:hover {
+            background: rgba(59,130,246,0.2);
+        }
+
+        .objections-btn {
+            background: rgba(239,68,68,0.1) !important;
+            border-color: #ef4444 !important;
+            color: #ef4444 !important;
+        }
+
+        .objections-btn:hover {
+            background: rgba(239,68,68,0.2) !important;
+        }
+
+        /* Phone group */
+        .phone-group {
+            display: flex;
+            flex: 2;
+            gap: 10px;
+            min-width: 300px;
+        }
+
+        .phone-input {
+            flex: 1;
+            padding: 10px 15px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid #3b82f6;
+            border-radius: 8px;
+            color: white;
+            font-size: 0.95rem;
+        }
+
+        .phone-input::placeholder {
+            color: rgba(255,255,255,0.3);
+        }
+
+        .call-btn {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .call-btn:hover {
+            background: #059669;
+            transform: scale(1.05);
+        }
+
+        .textnow-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            background: rgba(16,185,129,0.1);
+            border-radius: 8px;
+            border: 1px solid #10b981;
+            color: #10b981;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+
+        #fileInput, #objectionsInput {
+            display: none;
+        }
+
+        /* Setup note */
+        .setup-note {
+            background: rgba(16,185,129,0.05);
+            border-left: 3px solid #10b981;
+            padding: 8px 15px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            color: #10b981;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            margin-top: 5px;
+        }
+
+        .setup-note a {
+            color: #10b981;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Header with Activate button -->
+        <div class="header">
+            <div class="logo">🤖</div>
+            <h1>MobileWise AI - Phone Training</h1>
+            <button class="activate-btn" onclick="activateJack()">
+                <i class="fas fa-bolt"></i> ACTIVATE JACK
+            </button>
+        </div>
+
+        <!-- Widget -->
+        <lemon-slice-widget agent-id="agent_c5671df90e273556"></lemon-slice-widget>
+        <script type="module" src="https://unpkg.com/@lemonsliceai/lemon-slice-widget"></script>
+
+        <!-- PDF Container - Split View -->
+        <div class="pdf-container">
+            <!-- Main Script Section -->
+            <div class="pdf-section">
+                <div class="pdf-header main-header">
+                    <h3><i class="fas fa-file-pdf"></i> Main Script</h3>
+                    <span id="mainFilename">No script loaded</span>
+                </div>
+                <div class="pdf-viewer" id="mainViewer">
+                    <div class="pdf-placeholder main-placeholder">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Upload main script</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Objections Section -->
+            <div class="pdf-section">
+                <div class="pdf-header objections-header">
+                    <h3><i class="fas fa-shield-alt"></i> Objection Handlers</h3>
+                    <span id="objectionsFilename">No objections loaded</span>
+                </div>
+                <div class="pdf-viewer" id="objectionsViewer">
+                    <div class="pdf-placeholder objections-placeholder">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Upload objections</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Bar - Dual PDF Upload -->
+        <div class="bottom-bar">
+            <!-- Main Script Upload -->
+            <div class="upload-btn" onclick="document.getElementById('mainScriptInput').click()">
+                <i class="fas fa-file-pdf"></i> Main Script
+            </div>
+            <input type="file" id="mainScriptInput" accept=".pdf" hidden>
+            
+            <!-- Objections Upload -->
+            <div class="upload-btn objections-btn" onclick="document.getElementById('objectionsInput').click()">
+                <i class="fas fa-shield-alt"></i> Objections
+            </div>
+            <input type="file" id="objectionsInput" accept=".pdf" hidden>
+            
+            <!-- Phone Group -->
+            <div class="phone-group">
+                <input type="tel" class="phone-input" id="phoneNumber" placeholder="(555) 555-5555" value="">
+                <button class="call-btn" onclick="callWithTextNow()">
+                    <i class="fas fa-phone"></i> Call
+                </button>
+            </div>
+            
+            <div class="textnow-badge">
+                <i class="fas fa-check-circle"></i> Free
+            </div>
+
+            <!-- Setup note -->
+            <div class="setup-note">
+                <i class="fas fa-info-circle"></i>
+                New? <a href="https://www.textnow.com" target="_blank">Sign up free at TextNow.com</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        let mainScript = null;
+        let objectionsScript = null;
+
+        // Activate Jack
+        function activateJack() {
+            // Visual feedback
+            const btn = event.currentTarget;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check"></i> ACTIVATED!';
+            btn.style.background = '#10b981';
+            
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.style.background = '#3b82f6';
+            }, 1500);
+
+            // Send to Botemia
+            if (window.opener && window.opener.postMessage) {
+                window.opener.postMessage({
+                    type: 'MODULE_TRIGGERED',
+                    module: 'personality',
+                    triggerPhrase: "You're Jack"
+                }, '*');
+            } else {
+                alert('Jack activated!');
+            }
+        }
+
+        // TextNow Call
+        function callWithTextNow() {
+            const phoneInput = document.getElementById('phoneNumber').value;
+            const phoneNumber = phoneInput.replace(/\D/g, '');
+            
+            if (phoneNumber.length < 10) {
+                alert('Please enter a valid phone number with area code');
+                return;
+            }
+            
+            window.open(`https://www.textnow.com/calls?number=${phoneNumber}`, '_blank');
+        }
+
+        // Main Script Upload
+        document.getElementById('mainScriptInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file && file.type === 'application/pdf') {
+                if (mainScript) URL.revokeObjectURL(mainScript.url);
+                const url = URL.createObjectURL(file);
+                mainScript = { url, name: file.name };
+                document.getElementById('mainViewer').innerHTML = `<iframe src="${url}" width="100%" height="100%" style="border: none;"></iframe>`;
+                document.getElementById('mainFilename').textContent = file.name;
+            }
+        });
+
+        // Objections Upload
+        document.getElementById('objectionsInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file && file.type === 'application/pdf') {
+                if (objectionsScript) URL.revokeObjectURL(objectionsScript.url);
+                const url = URL.createObjectURL(file);
+                objectionsScript = { url, name: file.name };
+                document.getElementById('objectionsViewer').innerHTML = `<iframe src="${url}" width="100%" height="100%" style="border: none;"></iframe>`;
+                document.getElementById('objectionsFilename').textContent = file.name;
+            }
+        });
+
+        // Format phone number
+        document.getElementById('phoneNumber').addEventListener('input', function(e) {
+            let x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
+            e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
+        });
+    </script>
+</body>
+</html>
