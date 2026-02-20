@@ -300,9 +300,11 @@
     </div>
     
     <!-- Right side - Phone number and Call button -->
-   <button class="call-btn" onclick="callWithGoogleVoice()">
-    <i class="fas fa-phone"></i> Click to Call
-</button>
+    <div class="phone-section">
+        <input type="tel" class="phone-input" id="phoneNumber" placeholder="(555) 555-5555" value="">
+        <button class="call-btn" onclick="callWithGoogleVoice()">
+            <i class="fas fa-phone"></i> Click to Call
+        </button>
     </div>
 </div>
 
@@ -313,38 +315,95 @@
     let mainScript = null;
     let objectionsScript = null;
 
-    // Activate Jack with avatar control
-    function activateJack() {
-        const btn = event.currentTarget;
-        const originalText = btn.innerHTML;
-        btn.innerHTML = '<i class="fas fa-check"></i> ON';
-        btn.style.background = '#10b981';
-        
-        // Activate the avatar widget
+    // Activate Jack with proper widget controls
+async function activateJack() {
+    const btn = event.currentTarget;
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-check"></i> ACTIVATING...';
+    btn.style.background = '#10b981';
+    btn.disabled = true;
+    
+    try {
+        // Find the widget
         const widget = document.querySelector('lemon-slice-widget');
+        
         if (widget) {
-            // Force mic and volume on
-            widget.setAttribute('mic-enabled', 'true');
-            widget.setAttribute('volume-enabled', 'true');
+            console.log('✅ Widget found, activating...');
+            
+            // Step 1: Set state to active (opens the chat)
             widget.setAttribute('controlled-widget-state', 'active');
             
-            showStatus('🎙️ Jack activated - mic & volume on');
+            // Small delay for widget to initialize
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            // Step 2: Turn on microphone (this starts the room automatically)
+            if (typeof widget.micOn === 'function') {
+                await widget.micOn();
+                console.log('✅ Microphone turned on');
+            } else {
+                console.log('⚠️ micOn method not available, trying alternative...');
+                // Alternative: try to send a message which should start the room
+                await widget.sendMessage('Hello Jack, ready to practice!');
+            }
+            
+            // Step 3: Ensure volume is on (most widgets handle this automatically)
+            widget.setAttribute('volume-enabled', 'true');
+            
+            // Show success message in console
+            console.log('🎯 Jack activated - mic on and ready!');
+            
+            // Optional: Show visual feedback
+            showStatus('🎙️ Jack ready - mic ON');
+        } else {
+            console.error('❌ Widget not found');
+            showStatus('❌ Widget not found', 'error');
         }
-        
-        // Send message if in popup mode
-        if (window.opener && window.opener.postMessage) {
-            window.opener.postMessage({
-                type: 'MODULE_TRIGGERED',
-                module: 'personality',
-                triggerPhrase: "You're Jack"
-            }, '*');
-        }
-        
+    } catch (error) {
+        console.error('Error activating Jack:', error);
+        showStatus('❌ Activation failed', 'error');
+    } finally {
+        // Reset button after 2 seconds
         setTimeout(() => {
             btn.innerHTML = originalText;
             btn.style.background = '#3b82f6';
-        }, 1500);
+            btn.disabled = false;
+        }, 2000);
     }
+}
+
+// Helper function for status messages
+function showStatus(message, type = 'success') {
+    let statusDiv = document.getElementById('jack-status');
+    if (!statusDiv) {
+        statusDiv = document.createElement('div');
+        statusDiv.id = 'jack-status';
+        statusDiv.style.cssText = `
+            position: fixed;
+            bottom: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: ${type === 'success' ? '#10b981' : '#ef4444'};
+            color: white;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            z-index: 10000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            border: 1px solid ${type === 'success' ? '#34d399' : '#f87171'};
+        `;
+        document.body.appendChild(statusDiv);
+    } else {
+        statusDiv.style.background = type === 'success' ? '#10b981' : '#ef4444';
+        statusDiv.style.borderColor = type === 'success' ? '#34d399' : '#f87171';
+    }
+    
+    statusDiv.textContent = message;
+    statusDiv.style.display = 'block';
+    
+    setTimeout(() => {
+        statusDiv.style.display = 'none';
+    }, 3000);
+}
 
     // Google Voice Call
 function callWithGoogleVoice() {
