@@ -107,142 +107,156 @@
             color: #ef4444;
         }
 
-        /* Bottom Bar - Now with Activate button */
-        .bottom-bar {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            padding: 10px 15px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 12px;
-            border: 1px solid #3b82f6;
-            flex-wrap: wrap;
-        }
-
-        .upload-btn {
-            background: rgba(59,130,246,0.1);
-            border: 1px solid #3b82f6;
-            color: #3b82f6;
-            padding: 8px 15px;
-            border-radius: 6px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.2s;
-            white-space: nowrap;
-            font-size: 0.9rem;
-        }
-
-        .upload-btn:hover {
-            background: rgba(59,130,246,0.2);
-        }
-
-        .objections-btn {
-            background: rgba(239,68,68,0.1) !important;
-            border-color: #ef4444 !important;
-            color: #ef4444 !important;
-        }
-
-        .objections-btn:hover {
-            background: rgba(239,68,68,0.2) !important;
-        }
-
-        /* Activate button in footer */
-        .activate-btn {
-            background: #3b82f6;
-            color: white;
-            border: none;
-            padding: 8px 18px;
-            border-radius: 6px;
-            font-weight: bold;
-            font-size: 0.9rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.2s;
-            white-space: nowrap;
-        }
-
-        .activate-btn:hover {
-            background: #2563eb;
-            transform: scale(1.05);
-        }
-
-        /* Phone group */
-        .phone-group {
-            display: flex;
-            flex: 2;
-            gap: 8px;
-            min-width: 260px;
-        }
-
-        /* Make phone group smaller */
-.phone-group {
-    flex: 0.8;  /* Reduced from 2 to 0.8 */
-    min-width: 220px;  /* Smaller minimum width */
+       /* Bottom Bar - Fixed layout */
+.bottom-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 15px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 12px;
+    border: 1px solid #3b82f6;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
-/* Make phone input slightly smaller */
+/* Left button group */
+.left-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.upload-btn {
+    background: rgba(59,130,246,0.1);
+    border: 1px solid #3b82f6;
+    color: #3b82f6;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.2s;
+    white-space: nowrap;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.upload-btn:hover {
+    background: rgba(59,130,246,0.2);
+}
+
+.objections-btn {
+    background: rgba(239,68,68,0.1) !important;
+    border-color: #ef4444 !important;
+    color: #ef4444 !important;
+}
+
+.objections-btn:hover {
+    background: rgba(239,68,68,0.2) !important;
+}
+
+.activate-btn {
+    background: #3b82f6;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 0.85rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+    transition: all 0.2s;
+}
+
+.activate-btn:hover {
+    background: #2563eb;
+    transform: scale(1.05);
+}
+
+/* Center - Phone section with fixed width */
+.phone-section {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0 auto; /* Centers in available space */
+}
+
 .phone-input {
-    padding: 8px 10px;  /* Slightly smaller padding */
-    font-size: 0.85rem;  /* Slightly smaller text */
-}
-
-/* Make call button more compact */
-.call-btn {
-    padding: 8px 12px;  /* Reduced horizontal padding */
+    width: 160px; /* Fixed width - perfect for phone numbers */
+    padding: 8px 10px;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid #3b82f6;
+    border-radius: 6px;
+    color: white;
     font-size: 0.85rem;
 }
 
-        .phone-input {
-            flex: 1;
-            padding: 8px 12px;
-            background: rgba(0,0,0,0.3);
-            border: 1px solid #3b82f6;
-            border-radius: 6px;
-            color: white;
-            font-size: 0.9rem;
-        }
+.phone-input::placeholder {
+    color: rgba(255,255,255,0.3);
+}
 
-        .phone-input::placeholder {
-            color: rgba(255,255,255,0.3);
-        }
+.call-btn {
+    background: #10b981;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+}
 
-        .call-btn {
-            background: #10b981;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.2s;
-            white-space: nowrap;
-            font-size: 0.9rem;
-        }
+.call-btn:hover {
+    background: #059669;
+    transform: scale(1.05);
+}
 
-        .call-btn:hover {
-            background: #059669;
-            transform: scale(1.05);
-        }
+.textnow-badge {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 10px;
+    background: rgba(16,185,129,0.1);
+    border-radius: 6px;
+    border: 1px solid #10b981;
+    color: #10b981;
+    font-size: 0.75rem;
+    white-space: nowrap;
+}
 
-        .textnow-badge {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 12px;
-            background: rgba(16,185,129,0.1);
-            border-radius: 6px;
-            border: 1px solid #10b981;
-            color: #10b981;
-            font-size: 0.8rem;
-            white-space: nowrap;
-        }
+/* Right side - Filename badges */
+.right-badges {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.file-badge {
+    background: rgba(0,0,0,0.3);
+    padding: 4px 8px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.7);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.hidden {
+    display: none !important;
+}
 
         #mainScriptInput, #objectionsInput {
             display: none;
@@ -324,47 +338,49 @@
 
         <!-- Bottom Bar - Now with Activate button -->
         <div class="bottom-bar">
-            <!-- Main Script Upload -->
-            <div class="upload-btn" onclick="document.getElementById('mainScriptInput').click()">
-                <i class="fas fa-file-pdf"></i> Main
-            </div>
-            <input type="file" id="mainScriptInput" accept=".pdf" hidden>
-            
-            <!-- Objections Upload -->
-            <div class="upload-btn objections-btn" onclick="document.getElementById('objectionsInput').click()">
-                <i class="fas fa-shield-alt"></i> Obj
-            </div>
-            <input type="file" id="objectionsInput" accept=".pdf" hidden>
-            
-            <!-- Activate Button -->
-            <button class="activate-btn" onclick="activateJack()">
-                <i class="fas fa-bolt"></i> ACTIVATE
-            </button>
-            
-            <!-- Phone Group -->
-            <div class="phone-group">
-                <input type="tel" class="phone-input" id="phoneNumber" placeholder="(555) 555-5555" value="">
-                <button class="call-btn" onclick="callWithTextNow()">
-                    <i class="fas fa-phone"></i> Call
-                </button>
-            </div>
-            
-            <div class="textnow-badge">
-                <i class="fas fa-check-circle"></i> Free
-            </div>
+    <!-- Left side - Action buttons -->
+    <div class="left-actions">
+        <div class="upload-btn" onclick="document.getElementById('mainScriptInput').click()">
+            <i class="fas fa-file-pdf"></i> Main
+        </div>
+        <input type="file" id="mainScriptInput" accept=".pdf" hidden>
+        
+        <div class="upload-btn objections-btn" onclick="document.getElementById('objectionsInput').click()">
+            <i class="fas fa-shield-alt"></i> Obj
+        </div>
+        <input type="file" id="objectionsInput" accept=".pdf" hidden>
+        
+        <button class="activate-btn" onclick="activateJack()">
+            <i class="fas fa-bolt"></i> ACTIVATE
+        </button>
+    </div>
+    
+    <!-- Center - Phone dialer (fixed width) -->
+    <div class="phone-section">
+        <input type="tel" class="phone-input" id="phoneNumber" placeholder="(555) 555-5555" value="">
+        <button class="call-btn" onclick="callWithTextNow()">
+            <i class="fas fa-phone"></i> Call
+        </button>
+        <div class="textnow-badge">
+            <i class="fas fa-check-circle"></i> Free
+        </div>
+    </div>
+    
+    <!-- Right side - Filename badges -->
+    <div class="right-badges">
+        <div id="mainFilename" class="file-badge hidden">
+            <i class="fas fa-file"></i> <span></span>
+        </div>
+        <div id="objectionsFilename" class="file-badge hidden">
+            <i class="fas fa-shield-alt"></i> <span></span>
+        </div>
+    </div>
+</div>
 
-            <!-- Filename display (small) -->
-            <div id="mainFilename" class="file-badge" style="display: none;">
-                <i class="fas fa-file"></i> <span></span>
-            </div>
-            <div id="objectionsFilename" class="file-badge" style="display: none;">
-                <i class="fas fa-shield-alt"></i> <span></span>
-            </div>
-
-            <!-- Setup note -->
-            <div class="setup-note">
-                <i class="fas fa-info-circle"></i>
-                <a href="https://www.textnow.com" target="_blank">TextNow</a> for free calls
+<!-- Setup note - below the bar -->
+<div class="setup-note">
+    <i class="fas fa-info-circle"></i>
+    <a href="https://www.textnow.com" target="_blank">TextNow</a> for free calls
             </div>
         </div>
     </div>
