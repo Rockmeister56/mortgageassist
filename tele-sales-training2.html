@@ -315,7 +315,7 @@
     let mainScript = null;
     let objectionsScript = null;
 
-    // Activate Jack with proper widget controls
+    // Activate Jack with proper widget controls - MIC & VOLUME both ON
 async function activateJack() {
     const btn = event.currentTarget;
     const originalText = btn.innerHTML;
@@ -334,26 +334,44 @@ async function activateJack() {
             widget.setAttribute('controlled-widget-state', 'active');
             
             // Small delay for widget to initialize
-            await new Promise(resolve => setTimeout(resolve, 500));
+            await new Promise(resolve => setTimeout(resolve, 800));
             
             // Step 2: Turn on microphone (this starts the room automatically)
             if (typeof widget.micOn === 'function') {
                 await widget.micOn();
                 console.log('✅ Microphone turned on');
-            } else {
-                console.log('⚠️ micOn method not available, trying alternative...');
-                // Alternative: try to send a message which should start the room
-                await widget.sendMessage('Hello Jack, ready to practice!');
             }
             
-            // Step 3: Ensure volume is on (most widgets handle this automatically)
+            // Step 3: Try to unmute/volume up
+            // Method A: If volumeOn method exists
+            if (typeof widget.volumeOn === 'function') {
+                await widget.volumeOn();
+                console.log('✅ Volume turned on via volumeOn()');
+            } 
+            // Method B: If setVolume method exists
+            else if (typeof widget.setVolume === 'function') {
+                await widget.setVolume(1.0); // Full volume
+                console.log('✅ Volume set to 100% via setVolume()');
+            }
+            // Method C: Try to unmute if mute method exists
+            else if (typeof widget.unmute === 'function') {
+                await widget.unmute();
+                console.log('✅ Unmuted via unmute()');
+            }
+            
+            // Step 4: Set volume-related attributes (backup method)
             widget.setAttribute('volume-enabled', 'true');
+            widget.setAttribute('muted', 'false');
+            widget.setAttribute('volume', '1.0');
             
-            // Show success message in console
-            console.log('🎯 Jack activated - mic on and ready!');
+            // Step 5: Try sending a test message to ensure audio is active
+            if (typeof widget.sendMessage === 'function') {
+                await widget.sendMessage('Ready to practice!');
+                console.log('✅ Test message sent');
+            }
             
-            // Optional: Show visual feedback
-            showStatus('🎙️ Jack ready - mic ON');
+            console.log('🎯 Jack activated - mic ON and volume UP!');
+            showStatus('🎙️🔊 Jack ready - mic & volume ON');
         } else {
             console.error('❌ Widget not found');
             showStatus('❌ Widget not found', 'error');
@@ -390,6 +408,7 @@ function showStatus(message, type = 'success') {
             z-index: 10000;
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
             border: 1px solid ${type === 'success' ? '#34d399' : '#f87171'};
+            font-weight: bold;
         `;
         document.body.appendChild(statusDiv);
     } else {
