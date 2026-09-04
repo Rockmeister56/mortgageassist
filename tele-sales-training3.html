@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MobileWise AI - Phone Training</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(145deg, #05060b 0%, #0d1016 100%);
+            color: white;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* Widget - moved up */
+        lemon-slice-widget {
+            margin-bottom: 0;
+        }
+
+        /* PDF Container - Takes most of the space, starts at top */
+        .pdf-container {
+            flex: 1;
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            border: 1px solid #3b82f6;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            gap: 10px;
+        }
+
+        .pdf-section {
+            display: flex;
+            flex-direction: column;
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
+            overflow: hidden;
+            min-height: 0;
+        }
+
+        /* Main script takes 50% of space */
+        .pdf-section:first-child {
+            flex: 1;
+        }
+
+        /* Objections takes 50% of space (doubled from before) */
+        .pdf-section:last-child {
+            flex: 1;
+        }
+
+        /* Removed headers completely - more space for content */
+        .pdf-viewer {
+            flex: 1;
+            background: rgba(0,0,0,0.2);
+            min-height: 0;
+            height: 100%;
+        }
+
+        #mainViewer, #objectionsViewer {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .pdf-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255,255,255,0.3);
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+        }
+
+        .pdf-placeholder i {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .main-placeholder i {
+            color: #3b82f6;
+        }
+
+        .objections-placeholder i {
+            color: #ef4444;
+        }
+
+       /* Bottom Bar - Clean layout */
+.bottom-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 12px;
+    border: 1px solid #3b82f6;
+}
+
+/* Left button group - evenly spaced */
+.left-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Even spacing between buttons */
+}
+
+.upload-btn {
+    background: rgba(59,130,246,0.1);
+    border: 1px solid #3b82f6;
+    color: #3b82f6;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    font-size: 1rem;
+    white-space: nowrap;
+    transition: all 0.2s;
+}
+
+.upload-btn:hover {
+    background: rgba(59,130,246,0.2);
+}
+
+.objections-btn {
+    background: rgba(239,68,68,0.1) !important;
+    border-color: #ef4444 !important;
+    color: #ef4444 !important;
+}
+
+.activate-btn {
+    background: #3b82f6;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    transition: all 0.2s;
+}
+
+.activate-btn:hover {
+    background: #2563eb;
+    transform: scale(1.05);
+}
+
+/* Right side - Phone section */
+.phone-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.phone-input {
+    width: 180px;
+    padding: 10px 12px;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid #3b82f6;
+    border-radius: 8px;
+    color: white;
+    font-size: 1rem;
+}
+
+.phone-input::placeholder {
+    color: rgba(255,255,255,0.3);
+}
+
+.call-btn {
+    background: #10b981;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    transition: all 0.2s;
+}
+
+.call-btn:hover {
+    background: #059669;
+    transform: scale(1.05);
+}
+
+/* Hide Free badge - removed completely */
+.textnow-badge {
+    display: none;
+}
+
+/* Setup note - below */
+.setup-note {
+    margin-top: 8px;
+    padding: 6px 15px;
+    background: rgba(16,185,129,0.05);
+    border-left: 2px solid #10b981;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    color: #10b981;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.setup-note a {
+    color: #10b981;
+    text-decoration: none;
+}
+
+.setup-note a:hover {
+    text-decoration: underline;
+}
+
+        /* Simple filename display */
+        .filename-display {
+            font-size: 0.8rem;
+            color: #3b82f6;
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Widget at the very top -->
+        <lemon-slice-widget agent-id="agent_c5671df90e273556"></lemon-slice-widget>
+        <script type="module" src="https://unpkg.com/@lemonsliceai/lemon-slice-widget"></script>
+
+        <!-- PDF Container - Now starts at top, no header -->
+        <div class="pdf-container">
+            <!-- Main Script Section - No header -->
+            <div class="pdf-section">
+                <div class="pdf-viewer" id="mainViewer">
+                    <div class="pdf-placeholder main-placeholder">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Upload main script</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Objections Section - No header -->
+            <div class="pdf-section">
+                <div class="pdf-viewer" id="objectionsViewer">
+                    <div class="pdf-placeholder objections-placeholder">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Upload objections</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Bar - Now with Activate button -->
+       <div class="bottom-bar">
+    <!-- Left side - Three buttons evenly spaced -->
+    <div class="left-actions">
+        <div class="upload-btn" onclick="document.getElementById('mainScriptInput').click()">
+            <i class="fas fa-file-pdf"></i> Main PDF Upload
+        </div>
+        <input type="file" id="mainScriptInput" accept=".pdf" hidden>
+        
+        <div class="upload-btn objections-btn" onclick="document.getElementById('objectionsInput').click()">
+            <i class="fas fa-shield-alt"></i> Objections PDF Upload
+        </div>
+        <input type="file" id="objectionsInput" accept=".pdf" hidden>
+        
+        <button class="activate-btn" onclick="activateJack()">
+            <i class="fas fa-bolt"></i> ACTIVATE JACK THE RIPPER
+        </button>
+    </div>
+    
+    <!-- Right side - Phone number and Call button -->
+    <div class="phone-section">
+        <input type="tel" class="phone-input" id="phoneNumber" placeholder="(555) 555-5555" value="">
+        <button class="call-btn" onclick="callWithGoogleVoice()">
+            <i class="fas fa-phone"></i> Click to Call
+        </button>
+    </div>
+</div>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+    let mainScript = null;
+    let objectionsScript = null;
+
+    // Activate Jack with proper widget controls - MIC & VOLUME both ON
+async function activateJack() {
+    const btn = event.currentTarget;
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-check"></i> ACTIVATING...';
+    btn.style.background = '#10b981';
+    btn.disabled = true;
+    
+    try {
+        // Find the widget
+        const widget = document.querySelector('lemon-slice-widget');
+        
+        if (widget) {
+            console.log('✅ Widget found, activating...');
+            
+            // Step 1: Set state to active (opens the chat)
+            widget.setAttribute('controlled-widget-state', 'active');
+            
+            // Small delay for widget to initialize
+            await new Promise(resolve => setTimeout(resolve, 800));
+            
+            // Step 2: Turn on microphone (this starts the room automatically)
+            if (typeof widget.micOn === 'function') {
+                await widget.micOn();
+                console.log('✅ Microphone turned on');
+            }
+            
+            // Step 3: Try to unmute/volume up
+            // Method A: If volumeOn method exists
+            if (typeof widget.volumeOn === 'function') {
+                await widget.volumeOn();
+                console.log('✅ Volume turned on via volumeOn()');
+            } 
+            // Method B: If setVolume method exists
+            else if (typeof widget.setVolume === 'function') {
+                await widget.setVolume(1.0); // Full volume
+                console.log('✅ Volume set to 100% via setVolume()');
+            }
+            // Method C: Try to unmute if mute method exists
+            else if (typeof widget.unmute === 'function') {
+                await widget.unmute();
+                console.log('✅ Unmuted via unmute()');
+            }
+            
+            // Step 4: Set volume-related attributes (backup method)
+            widget.setAttribute('volume-enabled', 'true');
+            widget.setAttribute('muted', 'false');
+            widget.setAttribute('volume', '1.0');
+            
+            // Step 5: Try sending a test message to ensure audio is active
+            if (typeof widget.sendMessage === 'function') {
+                await widget.sendMessage('Ready to practice!');
+                console.log('✅ Test message sent');
+            }
+            
+            console.log('🎯 Jack activated - mic ON and volume UP!');
+            showStatus('🎙️🔊 Jack ready - mic & volume ON');
+        } else {
+            console.error('❌ Widget not found');
+            showStatus('❌ Widget not found', 'error');
+        }
+    } catch (error) {
+        console.error('Error activating Jack:', error);
+        showStatus('❌ Activation failed', 'error');
+    } finally {
+        // Reset button after 2 seconds
+        setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.style.background = '#3b82f6';
+            btn.disabled = false;
+        }, 2000);
+    }
+}
+
+// Helper function for status messages
+function showStatus(message, type = 'success') {
+    let statusDiv = document.getElementById('jack-status');
+    if (!statusDiv) {
+        statusDiv = document.createElement('div');
+        statusDiv.id = 'jack-status';
+        statusDiv.style.cssText = `
+            position: fixed;
+            bottom: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: ${type === 'success' ? '#10b981' : '#ef4444'};
+            color: white;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            z-index: 10000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            border: 1px solid ${type === 'success' ? '#34d399' : '#f87171'};
+            font-weight: bold;
+        `;
+        document.body.appendChild(statusDiv);
+    } else {
+        statusDiv.style.background = type === 'success' ? '#10b981' : '#ef4444';
+        statusDiv.style.borderColor = type === 'success' ? '#34d399' : '#f87171';
+    }
+    
+    statusDiv.textContent = message;
+    statusDiv.style.display = 'block';
+    
+    setTimeout(() => {
+        statusDiv.style.display = 'none';
+    }, 3000);
+}
+
+    // Google Voice Call
+function callWithGoogleVoice() {
+    const phoneInput = document.getElementById('phoneNumber').value;
+    const phoneNumber = phoneInput.replace(/\D/g, '');
+    
+    if (phoneNumber.length < 10) {
+        alert('Please enter a valid phone number with area code');
+        return;
+    }
+    
+    // Format for Google Voice (US numbers)
+    let formattedNumber = phoneNumber;
+    if (formattedNumber.length === 10) {
+        formattedNumber = '1' + formattedNumber;
+    }
+    
+    // Open Google Voice with number pre-filled
+    window.open(`https://voice.google.com/u/0/calls?a=new&number=%2B${formattedNumber}`, '_blank');
+    
+    // Show confirmation
+    alert('Google Voice opened - click the call button there');
+}
+
+    // Status helper
+    function showStatus(message) {
+        let statusDiv = document.getElementById('jack-status');
+        if (!statusDiv) {
+            statusDiv = document.createElement('div');
+            statusDiv.id = 'jack-status';
+            statusDiv.style.cssText = `
+                position: fixed;
+                bottom: 100px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: #10b981;
+                color: white;
+                padding: 8px 20px;
+                border-radius: 30px;
+                font-size: 0.9rem;
+                z-index: 1000;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                border: 1px solid #34d399;
+            `;
+            document.body.appendChild(statusDiv);
+        }
+        
+        statusDiv.textContent = message;
+        statusDiv.style.display = 'block';
+        
+        setTimeout(() => {
+            statusDiv.style.display = 'none';
+        }, 2000);
+    }
+
+    // Main Script Upload
+    document.getElementById('mainScriptInput').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file && file.type === 'application/pdf') {
+            if (mainScript) URL.revokeObjectURL(mainScript.url);
+            const url = URL.createObjectURL(file);
+            mainScript = { url, name: file.name };
+            document.getElementById('mainViewer').innerHTML = `<iframe src="${url}" width="100%" height="100%" style="border: none;"></iframe>`;
+            showStatus('📄 Main script loaded');
+        }
+    });
+
+    // Objections Upload
+    document.getElementById('objectionsInput').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file && file.type === 'application/pdf') {
+            if (objectionsScript) URL.revokeObjectURL(objectionsScript.url);
+            const url = URL.createObjectURL(file);
+            objectionsScript = { url, name: file.name };
+            document.getElementById('objectionsViewer').innerHTML = `<iframe src="${url}" width="100%" height="100%" style="border: none;"></iframe>`;
+            showStatus('🛡️ Objections loaded');
+        }
+    });
+
+    // Format phone number
+    document.getElementById('phoneNumber').addEventListener('input', function(e) {
+        let x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
+        e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
+    });
+
+    // Auto-hide filename badges (they're not in HTML anymore)
+    window.onload = function() {
+        // Any initialization needed
+    };
+
+    // Connect Activate button to avatar
+document.addEventListener('DOMContentLoaded', function() {
+    const activateBtn = document.querySelector('.activate-btn');
+    
+    if (activateBtn) {
+        activateBtn.addEventListener('click', function() {
+            // Method 1: If the widget has a built-in activate method
+            const widget = document.querySelector('lemon-slice-widget');
+            if (widget) {
+                // Try to activate the widget
+                if (typeof widget.activate === 'function') {
+                    widget.activate();
+                }
+                
+                // Force mic and volume on
+                widget.setAttribute('mic-enabled', 'true');
+                widget.setAttribute('volume-enabled', 'true');
+                
+                // Some widgets use 'active' state
+                widget.setAttribute('controlled-widget-state', 'active');
+                
+                // Show status
+                showStatus('Jack activated - mic on, volume on');
+            }
+            
+            // Method 2: If widget needs a custom event
+            const event = new CustomEvent('activateJack', {
+                detail: { mic: true, volume: true }
+            });
+            document.dispatchEvent(event);
+        });
+    }
+});
+
+// Helper function to show status
+function showStatus(message) {
+    // Check if status div exists, if not create it
+    let statusDiv = document.getElementById('jack-status');
+    if (!statusDiv) {
+        statusDiv = document.createElement('div');
+        statusDiv.id = 'jack-status';
+        statusDiv.style.cssText = `
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #10b981;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        `;
+        document.body.appendChild(statusDiv);
+    }
+    
+    statusDiv.textContent = message;
+    statusDiv.style.display = 'block';
+    
+    setTimeout(() => {
+        statusDiv.style.display = 'none';
+    }, 2000);
+}
+</script>
+</body>
+</html>
